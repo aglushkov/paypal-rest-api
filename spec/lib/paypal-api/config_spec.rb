@@ -19,7 +19,7 @@ RSpec.describe PaypalAPI::Config do
   end
 
   context "with default params" do
-    it "generetes config" do
+    it "generates config" do
       expect(config.client_id).to eq client_id
       expect(config.client_secret).to eq client_secret
       expect(config.live).to be false
@@ -45,7 +45,7 @@ RSpec.describe PaypalAPI::Config do
     let(:http_opts) { {open_timeout: 5, read_timeout: 5} }
     let(:retries) { {enabled: false} }
 
-    it "generetes config by merging defaults with provided values" do
+    it "generates config by merging defaults with provided values" do
       expect(config.client_id).to eq client_id
       expect(config.client_secret).to eq client_secret
       expect(config.live).to be true

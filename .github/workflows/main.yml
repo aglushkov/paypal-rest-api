@@ -13,8 +13,28 @@ jobs:
     name: Ruby ${{ matrix.ruby }}
     strategy:
       matrix:
-        ruby:
-          - '3.3.4'
+        include:
+          - ruby: "head"
+            gemfile: "Gemfile"
+          - ruby: "3.3"
+            gemfile: "Gemfile"
+          - ruby: "3.2"
+            gemfile: "Gemfile"
+          - ruby: "3.1"
+            gemfile: "Gemfile"
+          - ruby: "3.0"
+            gemfile: "Gemfile"
+          - ruby: "2.7"
+            gemfile: "gemfiles/old.gemfile"
+          - ruby: "2.6"
+            gemfile: "gemfiles/old.gemfile"
+          - ruby: "jruby-9.4.8"
+            gemfile: "Gemfile"
+          - ruby: "truffleruby-24.0.2"
+            gemfile: "Gemfile"
+
+    env:
+      BUNDLE_GEMFILE: ${{ matrix.gemfile }}
 
     steps:
     - uses: actions/checkout@v4
@@ -23,5 +43,23 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby }}
         bundler-cache: true
-    - name: Run the default task
-      run: bundle exec rake
+
+    - name: Install codespell
+      if: startsWith(matrix.ruby, '3.3')
+      run: |
+        python -m pip install --upgrade pip
+        pip install codespell==2.3.0
+    - name: Check spelling with codespell
+      if: startsWith(matrix.ruby, '3.3')
+      run: codespell --skip="./sig,./doc,./coverage,./vendor" || exit 1
+
+    - name: Check Code Standards
+      if: startsWith(matrix.ruby, '3.3')
+      run: bundle exec rubocop
+
+    - name: Markdown linter
+      if: startsWith(matrix.ruby, '3.3')
+      run: bundle exec mdl README.md CHANGELOG.md RELEASE.md
+
+    - name: Run Tests
+      run: bundle exec rspec

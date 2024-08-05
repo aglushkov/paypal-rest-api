@@ -35,11 +35,11 @@ module PaypalAPI
     end
 
     def [](key)
-      body[key.to_sym] if body
+      body[key.to_sym] if body.is_a?(Hash)
     end
 
     def fetch(key)
-      data = body || {}
+      data = body.is_a?(Hash) ? body : {}
       data.fetch(key.to_sym)
     end
 
