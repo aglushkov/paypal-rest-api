@@ -9,7 +9,7 @@ module PaypalAPI
   end
 
   #
-  # Raised when PayPal reponds with any status code except 200, 201, 202, 204
+  # Raised when PayPal responds with any status code except 200, 201, 202, 204
   #
   class FailedRequest < Error
     def initialize(message = nil, request:, response:)

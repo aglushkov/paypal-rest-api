@@ -10,7 +10,7 @@ bundle add paypal-api
 
 - No dependencies;
 - Automatic authorization & reauthorization;
-- Auto-retries (configurated);
+- Auto-retries (configured);
 - Automatically added Paypal-Request-Id header for idempotent requests if not
   provided;
 
@@ -82,7 +82,7 @@ response = PaypalAPI.delete(path, query: query, body: body, headers: headers)
 
 ## Configuration options
 
-PaypalAPI client accepts this additinal options: `:live`, `:retries`, `:http_opts`
+PaypalAPI client accepts this additional options: `:live`, `:retries`, `:http_opts`
 
 ### Option `:live`
 

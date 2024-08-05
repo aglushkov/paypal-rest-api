@@ -1,0 +1,52 @@
+PATH
+  remote: ..
+  specs:
+    paypal-api (0.0.1)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    addressable (2.8.6)
+      public_suffix (>= 2.0.2, < 6.0)
+    bigdecimal (3.1.8)
+    crack (1.0.0)
+      bigdecimal
+      rexml
+    diff-lcs (1.5.1)
+    hashdiff (1.1.1)
+    public_suffix (5.1.1)
+    rexml (3.3.4)
+      strscan
+    rspec (3.13.0)
+      rspec-core (~> 3.13.0)
+      rspec-expectations (~> 3.13.0)
+      rspec-mocks (~> 3.13.0)
+    rspec-core (3.13.0)
+      rspec-support (~> 3.13.0)
+    rspec-expectations (3.13.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-mocks (3.13.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-support (3.13.1)
+    strscan (3.1.0)
+    timecop (0.9.10)
+    webmock (3.23.1)
+      addressable (>= 2.8.0)
+      crack (>= 0.3.2)
+      hashdiff (>= 0.4.0, < 2.0.0)
+
+PLATFORMS
+  ruby
+  x86_64-linux
+
+DEPENDENCIES
+  addressable (= 2.8.6)
+  paypal-api!
+  rspec (~> 3.11)
+  timecop (~> 0.9)
+  webmock (~> 3.23)
+
+BUNDLED WITH
+   2.4.22

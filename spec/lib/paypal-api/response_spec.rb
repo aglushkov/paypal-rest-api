@@ -49,6 +49,8 @@ RSpec.describe PaypalAPI::Response do
       expect(response.http_status).to equal 200
       expect(response.http_body).to equal body
       expect(response.body).to eq(body)
+      expect(response[:foo]).to be_nil
+      expect { response.fetch(:foo) }.to raise_error KeyError
     end
   end
 

@@ -18,6 +18,6 @@ Gem::Specification.new do |spec|
   spec.metadata["documentation_uri"] = "https://www.rubydoc.info/gems/serega"
   spec.metadata["changelog_uri"] = spec.homepage + "/blob/master/CHANGELOG.md"
 
-  spec.files = Dir["lib/**/*.rb"] << "README.md"
+  spec.files = Dir["lib/**/*.rb"] << "VERSION" << "README.md"
   spec.require_paths = ["lib"]
 end

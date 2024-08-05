@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
 module PaypalAPI
-  VERSION = "0.0.1"
+  # PaypalAPI gem version
+  #
+  # @return [String] SemVer gem version
+  #
+  VERSION = File.read(File.join(File.dirname(__FILE__), "../../VERSION")).strip
 end

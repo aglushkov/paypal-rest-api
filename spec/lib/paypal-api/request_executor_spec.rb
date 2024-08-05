@@ -35,7 +35,7 @@ RSpec.describe PaypalAPI::RequestExecutor do
     end
   end
 
-  context "with network error happenning during request" do
+  context "with network error happening during request" do
     let(:retries_enabled) { true }
 
     PaypalAPI::NetworkErrorBuilder::ERRORS.each do |error_class|
@@ -52,7 +52,7 @@ RSpec.describe PaypalAPI::RequestExecutor do
     end
   end
 
-  context "with 409, 429, 5** request error happenning during request" do
+  context "with 409, 429, 5** request error happening during request" do
     let(:retries_enabled) { true }
 
     {
