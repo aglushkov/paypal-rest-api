@@ -36,7 +36,10 @@ module PaypalAPI
         uri = http_request.uri
         request.requested_at = Time.now
 
-        Net::HTTP.start(uri.hostname, uri.port, use_ssl: true, **http_opts) { |http| http.request(http_request) }
+        Net::HTTP.start(uri.hostname, uri.port, use_ssl: true, **http_opts) do |http|
+          http.max_retries = 0 # we have custom retries logic
+          http.request(http_request)
+        end
       end
 
       def retry_on_network_error(request, error, retry_number)

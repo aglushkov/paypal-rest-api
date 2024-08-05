@@ -23,7 +23,7 @@ RSpec.describe PaypalAPI::Config do
       expect(config.client_id).to eq client_id
       expect(config.client_secret).to eq client_secret
       expect(config.live).to be false
-      expect(config.http_opts).to eq(max_retries: 0)
+      expect(config.http_opts).to eq({})
       expect(config.retries).to eq(enabled: true, count: 3, sleep: [0.25, 0.75, 1.5])
       expect(config.url).to eq "https://api-m.sandbox.paypal.com"
       expect(config).to be_frozen
@@ -49,7 +49,7 @@ RSpec.describe PaypalAPI::Config do
       expect(config.client_id).to eq client_id
       expect(config.client_secret).to eq client_secret
       expect(config.live).to be true
-      expect(config.http_opts).to eq({max_retries: 0, open_timeout: 5, read_timeout: 5})
+      expect(config.http_opts).to eq({open_timeout: 5, read_timeout: 5})
       expect(config.retries).to eq({enabled: false, count: 3, sleep: [0.25, 0.75, 1.5]})
       expect(config.url).to eq "https://api-m.paypal.com"
       expect(config).to be_frozen

@@ -6,7 +6,7 @@ module PaypalAPI
 
   DEFAULTS = {
     live: false,
-    http_opts: {max_retries: 0}.freeze, # we have custo mretries config
+    http_opts: {}.freeze,
     retries: {enabled: true, count: 3, sleep: [0.25, 0.75, 1.5].freeze}.freeze
   }.freeze
 
