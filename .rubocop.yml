@@ -1,0 +1,48 @@
+require:
+  - standard
+  - rubocop-performance
+  - rubocop-rspec
+  - rubocop-rake
+
+inherit_gem:
+  standard: config/base.yml
+
+AllCops:
+  NewCops: enable
+  Exclude:
+    - .github/**/*
+    - coverage/**/*
+    - doc/**/*
+    - pkg/**/*
+    - sig/**/*
+    - vendor/bundle/**/*
+
+Style/ArgumentsForwarding:
+  UseAnonymousForwarding: false # for ruby 2.7 compatability
+
+Style/FrozenStringLiteralComment:
+  Enabled: true
+
+RSpec/ExampleLength:
+  Enabled: false
+
+# RSpec/FilePath:
+#   Enabled: false
+
+RSpec/IndexedLet:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Enabled: false
+
+RSpec/SpecFilePathFormat:
+  Enabled: false
+
+RSpec/VerifiedDoubles:
+  Enabled: false
