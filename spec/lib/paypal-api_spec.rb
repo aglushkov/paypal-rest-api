@@ -28,7 +28,7 @@ RSpec.describe PaypalAPI do
   end
 
   {
-    authorization: PaypalAPI::Authentication,
+    authentication: PaypalAPI::Authentication,
     orders: PaypalAPI::Orders,
     payments: PaypalAPI::Payments,
     webhooks: PaypalAPI::Webhooks

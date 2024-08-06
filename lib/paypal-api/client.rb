@@ -44,7 +44,7 @@ module PaypalAPI
     # @return [AccessToken] new AccessToken object
     #
     def refresh_access_token
-      response = authorization.generate_access_token
+      response = authentication.generate_access_token
 
       @access_token = AccessToken.new(
         requested_at: response.requested_at,

@@ -85,8 +85,9 @@ module PaypalAPI
       end
     end
 
-    # @!method authorization
-    #   @return [Authorization]
+    #
+    # @!method authentication
+    #   @return [Authentication]
     #
     # @!method orders
     #   @return [Orders]
@@ -98,7 +99,7 @@ module PaypalAPI
     #   @return [Webhooks]
     #
     %i[
-      authorization
+      authentication
       orders
       payments
       webhooks
