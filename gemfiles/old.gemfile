@@ -10,4 +10,4 @@ gem "timecop", "~> 0.9"
 
 gem "addressable", "2.8.6"
 
-gemspec name: "paypal-api", path: "../"
+gemspec name: "paypal-rest-api", path: "../"

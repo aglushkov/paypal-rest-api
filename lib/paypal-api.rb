@@ -21,29 +21,6 @@ module PaypalAPI
       end
     end
 
-    # DEPRECATED
-    #
-    # billing_agreements
-    # billing_plans
-    # invoices_v1
-    # orders_v1
-    # partner_referrals_v1
-    # payments_v1
-
-    # NOT ADDED YET
-    #
-    # shipment_tracking
-    # catalog_products
-    # disputes
-    # identity
-    # invoices
-    # partner_referrals
-    # payment_experience
-    # payment_method_tokens
-    # payounts
-    # referenced_payouts
-    # subscriptions
-    # transaction_search
     %i[
       authorization
       orders
