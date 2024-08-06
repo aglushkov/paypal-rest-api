@@ -46,7 +46,12 @@ GEM
     public_suffix (6.0.1)
     racc (1.8.1)
     racc (1.8.1-java)
+    rack (3.1.7)
+    rackup (2.1.0)
+      rack (>= 3)
+      webrick (~> 1.8)
     rainbow (3.1.1)
+    redcarpet (3.6.0)
     regexp_parser (2.9.2)
     rexml (3.3.4)
       strscan
@@ -111,6 +116,8 @@ GEM
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
+    webrick (1.8.1)
+    yard (0.9.36)
 
 PLATFORMS
   java
@@ -120,6 +127,8 @@ PLATFORMS
 DEPENDENCIES
   mdl (~> 0.13.0)
   paypal-rest-api!
+  rackup (~> 2.1)
+  redcarpet (~> 3.5)
   rspec (~> 3.13)
   rubocop (~> 1.64)
   rubocop-rake (~> 0.6)
@@ -128,6 +137,7 @@ DEPENDENCIES
   standard (~> 1.39)
   timecop (~> 0.9)
   webmock (~> 3.23)
+  yard
 
 BUNDLED WITH
    2.5.17

@@ -22,3 +22,8 @@ gem "webmock", "~> 3.23"
 gem "timecop", "~> 0.9"
 
 gem "mdl", "~> 0.13.0", require: false
+
+# For yard docs
+gem "yard", require: false
+gem "rackup", "~> 2.1", require: false
+gem "redcarpet", "~> 3.5", require: false

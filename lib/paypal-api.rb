@@ -2,25 +2,101 @@
 
 #
 # PaypalAPI is a main gem module.
+#
 # It can store global PaypalAPI::Client for easier access to APIs.
 #
-# For example:
-#   # setup client in an initializer
-#   PaypalAPI.client = PaypalAPI::Client.new(...)
+# @example Initializing new global client
+#   PaypalAPI.client = PaypalAPI::Client.new(
+#     client_id: ENV.fetch('PAYPAL_CLIENT_ID'),
+#     client_secret: ENV.fetch('PAYPAL_CLIENT_SECRET'),
+#     live: false
+#   )
 #
-#   # And then use anywhere
+#   # And then call any APIs without mentioning the client
 #   PaypalAPI::Webhooks.list # or PaypalAPI.webhooks.list
 #
 module PaypalAPI
   class << self
+    # Sets client
     attr_writer :client
 
+    # @!method post
+    #
+    #   Executes POST http request
+    #
+    #   @param path [String] Request path
+    #   @param query [Hash, nil] Request query parameters
+    #   @param body [Hash, nil] Request body parameters
+    #   @param headers [Hash, nil] Request headers
+    #
+    #   @return [Response] Response object
+    #
+    #
+    # @!method get
+    #
+    #   Executes GET http request
+    #
+    #   @param path [String] Request path
+    #   @param query [Hash, nil] Request query parameters
+    #   @param body [Hash, nil] Request body parameters
+    #   @param headers [Hash, nil] Request headers
+    #
+    #   @return [Response] Response object
+    #
+    #
+    # @!method patch
+    #
+    #   Executes PATCH http request
+    #
+    #   @param path [String] Request path
+    #   @param query [Hash, nil] Request query parameters
+    #   @param body [Hash, nil] Request body parameters
+    #   @param headers [Hash, nil] Request headers
+    #
+    #   @return [Response] Response object
+    #
+    #
+    # @!method put
+    #
+    #   Executes PUT http request
+    #
+    #   @param path [String] Request path
+    #   @param query [Hash, nil] Request query parameters
+    #   @param body [Hash, nil] Request body parameters
+    #   @param headers [Hash, nil] Request headers
+    #
+    #   @return [Response] Response object
+    #
+
+    # @!method delete
+    #
+    #   Executes DELETE http request
+    #
+    #   @param path [String] Request path
+    #   @param query [Hash, nil] Request query parameters
+    #   @param body [Hash, nil] Request body parameters
+    #   @param headers [Hash, nil] Request headers
+    #
+    #   @return [Response] Response object
+    #
     [:post, :get, :patch, :put, :delete].each do |method_name|
       define_method(method_name) do |path, query: nil, body: nil, headers: nil|
         client.public_send(method_name, path, query: query, body: body, headers: headers)
       end
     end
 
+    # @!method authorization
+    #   @return [Authorization]
+    #
+    # @!method orders
+    #   @return [Orders]
+    #
+    # @!method payments
+    #   @return [Payments]
+    #
+    # @!method webhooks
+    #   @return [Webhooks]
+    #
     %i[
       authorization
       orders
@@ -32,6 +108,7 @@ module PaypalAPI
       end
     end
 
+    # Globally set Client object
     def client
       raise "#{name}.client must be set" unless @client
 

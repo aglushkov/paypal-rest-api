@@ -1,0 +1,6 @@
+--readme README.md
+--title 'PayPal Rest API Gem Documentation'
+--charset utf-8
+--markup markdown
+--markup-provider redcarpet
+lib/**/*.rb'

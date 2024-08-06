@@ -7,6 +7,16 @@ module PaypalAPI
   class Client
     attr_reader :config
 
+    # Initializes Client
+    #
+    # @param client_id [String] PayPal client id
+    # @param client_secret [String] PayPal client secret
+    # @param live [Boolean] PayPal live/sandbox mode
+    # @param http_opts [Hash] Net::Http opts for all requests
+    # @param retries [Hash] Retries configuration
+    #
+    # @return [Client] Initialized client
+    #
     def initialize(client_id:, client_secret:, live: nil, http_opts: nil, retries: nil)
       @config = PaypalAPI::Config.new(
         client_id: client_id,
@@ -19,10 +29,20 @@ module PaypalAPI
       @access_token = nil
     end
 
+    #
+    # Checks cached access token is expired and returns it or generates new one
+    #
+    # @return [AccessToken] AccessToken object
+    #
     def access_token
       (@access_token.nil? || @access_token.expired?) ? refresh_access_token : @access_token
     end
 
+    #
+    # Generates and caches new AccessToken
+    #
+    # @return [AccessToken] new AccessToken object
+    #
     def refresh_access_token
       response = authorization.generate_access_token
 
@@ -34,38 +54,92 @@ module PaypalAPI
       )
     end
 
+    #
+    # Executes POST http request
+    #
+    # @param path [String] Request path
+    # @param query [Hash, nil] Request query parameters
+    # @param body [Hash, nil] Request body parameters
+    # @param headers [Hash, nil] Request headers
+    #
+    # @return [Response] Response object
+    #
     def post(path, query: nil, body: nil, headers: nil)
       execute_request(Net::HTTP::Post, path, query: query, body: body, headers: headers)
     end
 
+    #
+    # Executes GET http request
+    #
+    # @param path [String] Request path
+    # @param query [Hash, nil] Request query parameters
+    # @param body [Hash, nil] Request body parameters
+    # @param headers [Hash, nil] Request headers
+    #
+    # @return [Response] Response object
+    #
     def get(path, query: nil, body: nil, headers: nil)
       execute_request(Net::HTTP::Get, path, query: query, body: body, headers: headers)
     end
 
+    #
+    # Executes PATCH http request
+    #
+    # @param path [String] Request path
+    # @param query [Hash, nil] Request query parameters
+    # @param body [Hash, nil] Request body parameters
+    # @param headers [Hash, nil] Request headers
+    #
+    # @return [Response] Response object
+    #
     def patch(path, query: nil, body: nil, headers: nil)
       execute_request(Net::HTTP::Patch, path, query: query, body: body, headers: headers)
     end
 
+    #
+    # Executes PUT http request
+    #
+    # @param path [String] Request path
+    # @param query [Hash, nil] Request query parameters
+    # @param body [Hash, nil] Request body parameters
+    # @param headers [Hash, nil] Request headers
+    #
+    # @return [Response] Response object
+    #
     def put(path, query: nil, body: nil, headers: nil)
       execute_request(Net::HTTP::Put, path, query: query, body: body, headers: headers)
     end
 
+    #
+    # Executes DELETE http request
+    #
+    # @param path [String] Request path
+    # @param query [Hash, nil] Request query parameters
+    # @param body [Hash, nil] Request body parameters
+    # @param headers [Hash, nil] Request headers
+    #
+    # @return [Response] Response object
+    #
     def delete(path, query: nil, body: nil, headers: nil)
       execute_request(Net::HTTP::Delete, path, query: query, body: body, headers: headers)
     end
 
-    def authorization
+    # @return [Authentication] Authentication APIs collection
+    def authentication
       Authentication.new(self)
     end
 
+    # @return [Orders] Orders APIs collection
     def orders
       Orders.new(self)
     end
 
+    # @return [Payments] Payments APIs collection
     def payments
       Payments.new(self)
     end
 
+    # @return [Webhooks] Webhooks APIs collection
     def webhooks
       Webhooks.new(self)
     end
