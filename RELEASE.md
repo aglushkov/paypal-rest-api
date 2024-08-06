@@ -29,7 +29,7 @@
 1. Make local gem release
 
     ```
-    gem build serega.gemspec
+    gem build paypal-rest-api.gemspec
     ```
 
 1. Repeat
@@ -70,5 +70,5 @@
 1. Push new gem version
 
     ```
-    gem push paypal-api-$(cat "VERSION").gem
+    gem push paypal-rest-api-$(cat "VERSION").gem
     ```

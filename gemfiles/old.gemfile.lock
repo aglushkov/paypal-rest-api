@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    paypal-api (0.0.1)
+    paypal-rest-api (0.0.1)
 
 GEM
   remote: https://rubygems.org/
@@ -43,7 +43,7 @@ PLATFORMS
 
 DEPENDENCIES
   addressable (= 2.8.6)
-  paypal-api!
+  paypal-rest-api!
   rspec (~> 3.11)
   timecop (~> 0.9)
   webmock (~> 3.23)

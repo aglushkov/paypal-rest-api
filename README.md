@@ -3,7 +3,7 @@
 ## Installation
 
 ```bash
-bundle add paypal-api
+bundle add paypal-rest-api
 ```
 
 ## Features

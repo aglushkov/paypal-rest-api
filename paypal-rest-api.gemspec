@@ -3,7 +3,7 @@
 require_relative "lib/paypal-api/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "paypal-api"
+  spec.name = "paypal-rest-api"
   spec.version = PaypalAPI::VERSION
   spec.authors = ["Andrey Glushkov"]
   spec.email = ["aglushkov@shakuro.com"]

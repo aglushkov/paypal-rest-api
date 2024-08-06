@@ -5,7 +5,7 @@ require_relative "simplecov_helper"
 require "webmock/rspec"
 WebMock.disable_net_connect!
 
-require "paypal-api"
+require "paypal-rest-api"
 require "support/shared_examples/endpoint"
 
 RSpec.configure do |config|
