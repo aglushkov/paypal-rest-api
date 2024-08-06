@@ -7,6 +7,9 @@ module PaypalAPI
   # https://developer.paypal.com/docs/api/orders/v2/
   #
   class Orders < Collection
+    #
+    # Common class and instance methods
+    #
     module APIs
       #
       # @see https://developer.paypal.com/docs/api/orders/v2/#orders_authorize

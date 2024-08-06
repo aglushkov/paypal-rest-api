@@ -8,6 +8,9 @@ module PaypalAPI
   # https://developer.paypal.com/docs/api/payments/v2
   #
   class Payments < Collection
+    #
+    # Common class and instance methods
+    #
     module APIs
       #
       # @see https://developer.paypal.com/docs/api/payments/v2/#authorizations_capture

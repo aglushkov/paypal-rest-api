@@ -5,6 +5,7 @@ module PaypalAPI
   # Executes PaypalAPI::Request and returns PaypalAPI::Response or raises PaypalAPI::Error
   #
   class RequestExecutor
+    # List of Net::HTTP responses that must be retried
     RETRYABLE_RESPONSES = [
       Net::HTTPServerError,    # 5xx
       Net::HTTPConflict,       # 409
@@ -12,6 +13,13 @@ module PaypalAPI
     ].freeze
 
     class << self
+      #
+      # Executes prepared Request, handles retries and preparation of errors
+      #
+      # @param [Request] request
+      #
+      # @return [Response] Response
+      #
       def call(request)
         http_response = execute(request)
         response = Response.new(http_response, requested_at: request.requested_at)

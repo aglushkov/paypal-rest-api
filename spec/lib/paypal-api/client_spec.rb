@@ -28,12 +28,12 @@ RSpec.describe PaypalAPI::Client do
     end
 
     context "when not set" do
-      let(:authorization) { instance_double(PaypalAPI::Authentication, generate_access_token: response) }
+      let(:authentication) { instance_double(PaypalAPI::Authentication, generate_access_token: response) }
       let(:response) { instance_double(PaypalAPI::Response) }
       let(:new_access_token) { instance_double(PaypalAPI::AccessToken) }
 
       before do
-        allow(PaypalAPI::Authentication).to receive(:new).with(client).and_return(authorization)
+        allow(PaypalAPI::Authentication).to receive(:new).with(client).and_return(authentication)
         allow(PaypalAPI::AccessToken).to receive(:new).and_return(new_access_token)
         allow(response).to receive(:fetch).with(:access_token).and_return("ACCESS_TOKEN")
         allow(response).to receive(:fetch).with(:token_type).and_return("TOKEN_TYPE")
@@ -54,13 +54,13 @@ RSpec.describe PaypalAPI::Client do
 
     context "when expired" do
       let(:old_access_token) { instance_double(PaypalAPI::AccessToken, expired?: true) }
-      let(:authorization) { instance_double(PaypalAPI::Authentication, generate_access_token: response) }
+      let(:authentication) { instance_double(PaypalAPI::Authentication, generate_access_token: response) }
       let(:response) { instance_double(PaypalAPI::Response) }
       let(:new_access_token) { instance_double(PaypalAPI::AccessToken) }
 
       before do
         client.instance_variable_set(:@access_token, old_access_token)
-        allow(PaypalAPI::Authentication).to receive(:new).with(client).and_return(authorization)
+        allow(PaypalAPI::Authentication).to receive(:new).with(client).and_return(authentication)
         allow(PaypalAPI::AccessToken).to receive(:new).and_return(new_access_token)
         allow(response).to receive(:fetch).with(:access_token).and_return("ACCESS_TOKEN")
         allow(response).to receive(:fetch).with(:token_type).and_return("TOKEN_TYPE")
@@ -82,13 +82,13 @@ RSpec.describe PaypalAPI::Client do
   end
 
   describe "#refresh_access_token" do
-    let(:authorization) { instance_double(PaypalAPI::Authentication, generate_access_token: response) }
+    let(:authentication) { instance_double(PaypalAPI::Authentication, generate_access_token: response) }
     let(:response) { instance_double(PaypalAPI::Response) }
     let(:new_access_token) { instance_double(PaypalAPI::AccessToken) }
 
     before do
       client.instance_variable_set(:@access_token, "OLD_TOKEN")
-      allow(PaypalAPI::Authentication).to receive(:new).with(client).and_return(authorization)
+      allow(PaypalAPI::Authentication).to receive(:new).with(client).and_return(authentication)
       allow(PaypalAPI::AccessToken).to receive(:new).and_return(new_access_token)
       allow(response).to receive(:fetch).with(:access_token).and_return("ACCESS_TOKEN")
       allow(response).to receive(:fetch).with(:token_type).and_return("TOKEN_TYPE")
@@ -182,7 +182,7 @@ RSpec.describe PaypalAPI::Client do
 
   describe "resources" do
     resources = {
-      authorization: PaypalAPI::Authentication,
+      authentication: PaypalAPI::Authentication,
       orders: PaypalAPI::Orders,
       payments: PaypalAPI::Payments,
       webhooks: PaypalAPI::Webhooks

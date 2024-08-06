@@ -62,7 +62,11 @@ Also PaypalAPI client can be added globally and class methods can be used instea
 
 ```ruby
 # in config/initializers/paypal_api.rb
-PaypalAPI.client = PaypalAPI::Client.new(...)
+PaypalAPI.client = PaypalAPI::Client.new(
+  client_id: ENV['PAYPAL_CLIENT_ID'],
+  client_secret: ENV['PAYPAL_CLIENT_SECRET'],
+  live: false
+)
 
 # in your business logic
 response = PaypalAPI.orders.create(body: body)
@@ -91,7 +95,7 @@ When `live` is `false` all requests will be send to the sandbox endpoints.
 
 ```ruby
 client = PaypalAPI::Client.new(
-  live: true,
+  live: true
   # ...
 )
 ```
@@ -167,7 +171,16 @@ All errors have additional methods:
 begin
   response = PaypalAPI.payments.capture(authorization_id, body: body)
 rescue PaypalAPI::Error => error
-  YourLogger.error(...)
+  YourLogger.error(
+    error,
+    context: {
+      error_name: error.error_name,
+      error_message: error.error_message,
+      error_debug_id: error.error_debug_id,
+      error_details: error.error_details
+    }
+  )
+  # `error.request` and `error.response` methods can be used also
 end
 
 ```

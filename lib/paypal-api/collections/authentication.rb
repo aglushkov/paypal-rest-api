@@ -33,7 +33,7 @@ module PaypalAPI
       #
       # @param query [Hash, nil] Request query string parameters
       # @param body [Hash, nil] Request body parameters
-      # @param body [Hash, nil] Request headers
+      # @param headers [Hash, nil] Request headers
       #
       # @raise [Error] on network error or non 2** status code returned from PayPal
       # @return [Response] detailed http request-response representation

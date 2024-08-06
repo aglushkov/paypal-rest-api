@@ -1,21 +1,35 @@
 # frozen_string_literal: true
 
 module PaypalAPI
-  LIVE_URL = "https://api-m.paypal.com"
-  SANDBOX_URL = "https://api-m.sandbox.paypal.com"
-
-  DEFAULTS = {
-    live: false,
-    http_opts: {}.freeze,
-    retries: {enabled: true, count: 3, sleep: [0.25, 0.75, 1.5].freeze}.freeze
-  }.freeze
-
   #
   # Stores configuration for PaypalAPI Client
   #
   class Config
+    # Live PayPal URL
+    LIVE_URL = "https://api-m.paypal.com"
+
+    # Sandbox PayPal URL
+    SANDBOX_URL = "https://api-m.sandbox.paypal.com"
+
+    # Default config options
+    DEFAULTS = {
+      live: false,
+      http_opts: {}.freeze,
+      retries: {enabled: true, count: 3, sleep: [0.25, 0.75, 1.5].freeze}.freeze
+    }.freeze
+
     attr_reader :client_id, :client_secret, :live, :http_opts, :retries
 
+    # Initializes Config
+    #
+    # @param client_id [String] PayPal client id
+    # @param client_secret [String] PayPal client secret
+    # @param live [Boolean] PayPal live/sandbox mode
+    # @param http_opts [Hash] Net::Http opts for all requests
+    # @param retries [Hash] Retries configuration
+    #
+    # @return [Client] Initialized config object
+    #
     def initialize(client_id:, client_secret:, live: nil, http_opts: nil, retries: nil)
       @client_id = client_id
       @client_secret = client_secret
@@ -25,10 +39,14 @@ module PaypalAPI
       freeze
     end
 
+    # @return [String] PayPal live or sandbox URL
     def url
       live ? LIVE_URL : SANDBOX_URL
     end
 
+    #
+    # Instance representation string. Default was overwritten to hide secrets
+    #
     def inspect
       "#<#{self.class.name} live: #{live}>"
     end

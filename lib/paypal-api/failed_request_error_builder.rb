@@ -7,6 +7,7 @@ module PaypalAPI
   # Builds PaypalAPI::FailedRequest error
   #
   class FailedRequestErrorBuilder
+    # Matchings for Net::HTTP response class to PaypalAPI::Error class
     RESPONSE_ERROR_MAP = {
       Net::HTTPBadRequest => BadRequestError,                     # 400
       Net::HTTPUnauthorized => UnauthorizedError,                 # 401
@@ -23,6 +24,13 @@ module PaypalAPI
     }.freeze
 
     class << self
+      # Builds FailedRequestError instance
+      #
+      # @param request [Request] Original request
+      # @param response [Response] Original response
+      #
+      # @return [FailedRequestError] Built FailedRequestError
+      #
       def call(request:, response:)
         http_response = response.http_response
         error_message = "#{http_response.code} #{http_response.message}"
