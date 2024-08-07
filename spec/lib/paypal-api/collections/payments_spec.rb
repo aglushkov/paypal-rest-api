@@ -2,21 +2,27 @@
 
 RSpec.describe PaypalAPI::Payments do
   it_behaves_like "endpoint",
+    api_method: :show_authorized,
+    http_method: :get,
+    path: "/v2/payments/authorizations/%<authorization_id>s",
+    path_args: {authorization_id: "123"}
+
+  it_behaves_like "endpoint",
     api_method: :capture,
     http_method: :post,
     path: "/v2/payments/authorizations/%<authorization_id>s/capture",
     path_args: {authorization_id: "123"}
 
   it_behaves_like "endpoint",
-    api_method: :refund,
+    api_method: :reauthorize,
     http_method: :post,
-    path: "/v2/payments/captures/%<capture_id>s/refund",
-    path_args: {capture_id: "123"}
+    path: "/v2/payments/authorizations/%<authorization_id>s/reauthorize",
+    path_args: {authorization_id: "123"}
 
   it_behaves_like "endpoint",
-    api_method: :show_authorized,
-    http_method: :get,
-    path: "/v2/payments/authorizations/%<authorization_id>s",
+    api_method: :void,
+    http_method: :post,
+    path: "/v2/payments/authorizations/%<authorization_id>s/void",
     path_args: {authorization_id: "123"}
 
   it_behaves_like "endpoint",
@@ -26,8 +32,14 @@ RSpec.describe PaypalAPI::Payments do
     path_args: {capture_id: "123"}
 
   it_behaves_like "endpoint",
-    api_method: :void,
+    api_method: :refund,
     http_method: :post,
-    path: "/v2/payments/authorizations/%<authorization_id>s/void",
-    path_args: {authorization_id: "123"}
+    path: "/v2/payments/captures/%<capture_id>s/refund",
+    path_args: {capture_id: "123"}
+
+  it_behaves_like "endpoint",
+    api_method: :show_refund,
+    http_method: :get,
+    path: "/v2/payments/refunds/%<refund_id>s",
+    path_args: {refund_id: "123"}
 end

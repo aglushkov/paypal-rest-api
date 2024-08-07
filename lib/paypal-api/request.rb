@@ -13,10 +13,30 @@ module PaypalAPI
   # - assigns content-type header
   #
   class Request
-    attr_reader :client, :http_request
+    # @return [Client] Current PaypalAPI Client
+    attr_reader :client
+
+    # @return [Net::HTTPRequest] Generated Net::HTTPRequest
+    attr_reader :http_request
+
+    # @return [Time, nil] Time when request was sent
     attr_accessor :requested_at
 
     # rubocop:disable Metrics/ParameterLists
+
+    # Initializes Request object
+    #
+    # @param client [Client] PaypalAPI client
+    # @param request_type [Class] One of: Net::HTTP::Post, Net::HTTP::Get,
+    #  Net::HTTP::Put, Net::HTTP::Patch, Net::HTTP::Delete
+    # @param path [String] Request path
+    #
+    # @param query [Hash, nil] Request query
+    # @param body [Hash, nil] Request body
+    # @param headers [Hash, nil] Request headers
+    #
+    # @return [Request] Request object
+    #
     def initialize(client, request_type, path, body: nil, query: nil, headers: nil)
       @client = client
       @http_request = build_http_request(request_type, path, body: body, query: query, headers: headers)
