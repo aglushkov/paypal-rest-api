@@ -5,7 +5,7 @@ module PaypalAPI
   # Use in conjunction with the Orders API to authorize payments, capture authorized payments,
   # refund payments that have already been captured, and show payment information.
   #
-  # https://developer.paypal.com/docs/api/payments/v2
+  # @see https://developer.paypal.com/docs/api/payments/v2
   #
   class Payments < Collection
     #

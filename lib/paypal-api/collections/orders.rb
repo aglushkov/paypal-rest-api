@@ -4,7 +4,7 @@ module PaypalAPI
   #
   # Create, update, retrieve, authorize, and capture orders.
   #
-  # https://developer.paypal.com/docs/api/orders/v2/
+  # @see https://developer.paypal.com/docs/api/orders/v2/
   #
   class Orders < Collection
     #
@@ -22,7 +22,6 @@ module PaypalAPI
       #
       # @see https://developer.paypal.com/docs/api/orders/v2/#orders_create
       #
-      # @param id [String] Order ID
       # @macro request
       #
       def create(query: nil, body: nil, headers: nil)

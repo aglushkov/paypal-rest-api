@@ -45,7 +45,7 @@ bundle update \
 1. Add CHANGELOG, README notices, test them:
 
 ```
-mdl README.md  RELEASE.md CHANGELOG.md
+mdl README.md RELEASE.md CHANGELOG.md
 ```
 
 1. Commit all changes.
