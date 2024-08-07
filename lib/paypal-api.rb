@@ -65,19 +65,27 @@ module PaypalAPI
     # @!method authentication
     #   @return [Authentication]
     #
+    # @!method catalog_products
+    #   @return [CatalogProducts]
+    #
     # @!method orders
     #   @return [Orders]
     #
     # @!method payments
     #   @return [Payments]
     #
+    # @!method shipment_tracking
+    #   @return [ShipmentTracking]
+    #
     # @!method webhooks
     #   @return [Webhooks]
     #
     %i[
       authentication
+      catalog_products
       orders
       payments
+      shipment_tracking
       webhooks
     ].each do |method_name|
       define_method(method_name) do
@@ -105,6 +113,8 @@ require_relative "paypal-api/request"
 require_relative "paypal-api/request_executor"
 require_relative "paypal-api/response"
 require_relative "paypal-api/collections/authentication"
+require_relative "paypal-api/collections/catalog_products"
 require_relative "paypal-api/collections/orders"
 require_relative "paypal-api/collections/payments"
+require_relative "paypal-api/collections/shipment_tracking"
 require_relative "paypal-api/collections/webhooks"

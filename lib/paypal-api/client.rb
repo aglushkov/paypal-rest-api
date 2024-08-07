@@ -112,6 +112,11 @@ module PaypalAPI
       Authentication.new(self)
     end
 
+    # @return [CatalogProducts] Catalog Products APIs collection
+    def catalog_products
+      CatalogProducts.new(self)
+    end
+
     # @return [Orders] Orders APIs collection
     def orders
       Orders.new(self)
@@ -120,6 +125,11 @@ module PaypalAPI
     # @return [Payments] Payments APIs collection
     def payments
       Payments.new(self)
+    end
+
+    # @return [ShipmentTracking] Shipment Tracking APIs collection
+    def shipment_tracking
+      ShipmentTracking.new(self)
     end
 
     # @return [Webhooks] Webhooks APIs collection
