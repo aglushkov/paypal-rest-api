@@ -20,45 +20,7 @@ module PaypalAPI
     # Sets client
     attr_writer :client
 
-    # @!method post
-    #
-    #   Executes POST http request
-    #
-    #   @param path [String] Request path
-    #   @param query [Hash, nil] Request query parameters
-    #   @param body [Hash, nil] Request body parameters
-    #   @param headers [Hash, nil] Request headers
-    #
-    #   @return [Response] Response object
-    #
-    #
-    # @!method get
-    #
-    #   Executes GET http request
-    #
-    #   @param path [String] Request path
-    #   @param query [Hash, nil] Request query parameters
-    #   @param body [Hash, nil] Request body parameters
-    #   @param headers [Hash, nil] Request headers
-    #
-    #   @return [Response] Response object
-    #
-    #
-    # @!method patch
-    #
-    #   Executes PATCH http request
-    #
-    #   @param path [String] Request path
-    #   @param query [Hash, nil] Request query parameters
-    #   @param body [Hash, nil] Request body parameters
-    #   @param headers [Hash, nil] Request headers
-    #
-    #   @return [Response] Response object
-    #
-    #
-    # @!method put
-    #
-    #   Executes PUT http request
+    # @!macro [new] request
     #
     #   @param path [String] Request path
     #   @param query [Hash, nil] Request query parameters
@@ -68,16 +30,30 @@ module PaypalAPI
     #   @return [Response] Response object
     #
 
-    # @!method delete
+    # @!method post(path, query: nil, body: nil, headers: nil)
+    #
+    #   Executes POST http request
+    #   @macro request
+    #
+    # @!method get(path, query: nil, body: nil, headers: nil)
+    #
+    #   Executes GET http request
+    #   @macro request
+    #
+    # @!method patch(path, query: nil, body: nil, headers: nil)
+    #
+    #   Executes PATCH http request
+    #   @macro request
+    #
+    # @!method put(path, query: nil, body: nil, headers: nil)
+    #
+    #   Executes PUT http request
+    #   @macro request
+
+    # @!method delete(path, query: nil, body: nil, headers: nil)
     #
     #   Executes DELETE http request
-    #
-    #   @param path [String] Request path
-    #   @param query [Hash, nil] Request query parameters
-    #   @param body [Hash, nil] Request body parameters
-    #   @param headers [Hash, nil] Request headers
-    #
-    #   @return [Response] Response object
+    #   @macro request
     #
     [:post, :get, :patch, :put, :delete].each do |method_name|
       define_method(method_name) do |path, query: nil, body: nil, headers: nil|
