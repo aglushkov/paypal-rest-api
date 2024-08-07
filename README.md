@@ -16,9 +16,7 @@ bundle add paypal-rest-api
 
 ## Usage
 
-- All APIs accept `:query`, `:body` and `:headers` keyword parameters.
-- Some APIs (like show, update, delete) require positional parameters with ID of
-  a resource.
+- All APIs accept optional `:query`, `:body` and `:headers` keyword parameters.
 - Response has `#body` method to get parsed JSON body.
   This body has `symbolized` hash keys.
 - Response contains methods to get original HTTP response.
@@ -34,13 +32,13 @@ client = PaypalAPI::Client.new(
   live: false
 )
 
-# APIs calls examples:
+# Usage example:
 response = client.orders.create(body: body)
 response = client.orders.show(order_id)
 response = client.payments.capture(authorization_id, headers: headers)
 response = client.webhooks.list(query: query)
 
-# Client can be used directly to send request to any path
+# Client also can send requests directly, bypassing specific resources methods
 response = client.post(path, query: query, body: body, headers: headers)
 response = client.get(path, query: query, body: body, headers: headers)
 response = client.patch(path, query: query, body: body, headers: headers)
@@ -48,7 +46,7 @@ response = client.put(path, query: query, body: body, headers: headers)
 response = client.delete(path, query: query, body: body, headers: headers)
 
 # Getting response
-response.body # parsed JSON. Parsed with `JSON.load(http_body, symbolyzed_keys: true)`
+response.body # Parsed JSON. JSON is parsed lazyly, keys are symbolized.
 response[:foo] # Gets :foo attribute from parsed body
 response.fetch(:foo) # Fetches :foo attribute from parsed body
 response.http_response # original Net::HTTP::Response
