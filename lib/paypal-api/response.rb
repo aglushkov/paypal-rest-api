@@ -7,7 +7,11 @@ module PaypalAPI
   # PaypalAPI::Response object
   #
   class Response
-    attr_reader :http_response, :requested_at
+    # @return [Net::HTTP::Response] Original Net::HTTP::Response object
+    attr_reader :http_response
+
+    # @return [Time] Time when request was sent
+    attr_reader :requested_at
 
     #
     # Initializes Response object
