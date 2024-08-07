@@ -20,7 +20,7 @@ module PaypalAPI
       #
       # Add tracking information for multiple PayPal transactions
       #
-      # @see https://developer.paypal.com/docs/api/orders/v2/#orders_create
+      # @see https://developer.paypal.com/docs/api/tracking/v1/#trackers-batch_post
       #
       # @macro request
       #
@@ -31,7 +31,7 @@ module PaypalAPI
       #
       # Update or cancel tracking information for PayPal transaction
       #
-      # @see https://developer.paypal.com/docs/api/tracking/v1/#trackers-batch_post
+      # @see https://developer.paypal.com/docs/api/tracking/v1/#trackers_put
       #
       # @param id [String] Tracker ID
       # @macro request

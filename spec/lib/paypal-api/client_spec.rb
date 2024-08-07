@@ -183,8 +183,10 @@ RSpec.describe PaypalAPI::Client do
   describe "resources" do
     resources = {
       authentication: PaypalAPI::Authentication,
+      catalog_products: PaypalAPI::CatalogProducts,
       orders: PaypalAPI::Orders,
       payments: PaypalAPI::Payments,
+      shipment_tracking: PaypalAPI::ShipmentTracking,
       webhooks: PaypalAPI::Webhooks
     }
 
