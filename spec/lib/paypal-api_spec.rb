@@ -31,6 +31,7 @@ RSpec.describe PaypalAPI do
     authentication: PaypalAPI::Authentication,
     orders: PaypalAPI::Orders,
     payments: PaypalAPI::Payments,
+    subscriptions: PaypalAPI::Subscriptions,
     webhooks: PaypalAPI::Webhooks
   }.each do |resource_method, resource_class|
     describe "##{resource_method}" do

@@ -132,6 +132,11 @@ module PaypalAPI
       ShipmentTracking.new(self)
     end
 
+    # @return [Subscriptions] Subscriptions APIs collection
+    def subscriptions
+      Subscriptions.new(self)
+    end
+
     # @return [Webhooks] Webhooks APIs collection
     def webhooks
       Webhooks.new(self)
