@@ -86,6 +86,7 @@ module PaypalAPI
       orders
       payments
       shipment_tracking
+      subscriptions
       webhooks
     ].each do |method_name|
       define_method(method_name) do
@@ -117,4 +118,5 @@ require_relative "paypal-api/collections/catalog_products"
 require_relative "paypal-api/collections/orders"
 require_relative "paypal-api/collections/payments"
 require_relative "paypal-api/collections/shipment_tracking"
+require_relative "paypal-api/collections/subscriptions"
 require_relative "paypal-api/collections/webhooks"

@@ -15,6 +15,28 @@ RSpec.describe PaypalAPI::Client do
     expect(client.config).to equal config
   end
 
+  describe "resources" do
+    resources = {
+      authentication: PaypalAPI::Authentication,
+      catalog_products: PaypalAPI::CatalogProducts,
+      orders: PaypalAPI::Orders,
+      payments: PaypalAPI::Payments,
+      shipment_tracking: PaypalAPI::ShipmentTracking,
+      subscriptions: PaypalAPI::Subscriptions,
+      webhooks: PaypalAPI::Webhooks
+    }
+
+    resources.each do |method_name, resource_class|
+      describe "##{method_name}" do
+        before { allow(resource_class).to receive(:new).with(client).and_return("INITIALIZED_RESOURCE_CLASS") }
+
+        it "initializes #{resource_class} instance" do
+          expect(client.public_send(method_name)).to equal "INITIALIZED_RESOURCE_CLASS"
+        end
+      end
+    end
+  end
+
   describe "#access_token" do
     context "when already set" do
       before { client.instance_variable_set(:@access_token, access_token) }
@@ -176,27 +198,6 @@ RSpec.describe PaypalAPI::Client do
           .with(client, http_method, "path", query: nil, body: "body", headers: "headers")
 
         expect(PaypalAPI::RequestExecutor).to have_received(:call).with("REQUEST")
-      end
-    end
-  end
-
-  describe "resources" do
-    resources = {
-      authentication: PaypalAPI::Authentication,
-      catalog_products: PaypalAPI::CatalogProducts,
-      orders: PaypalAPI::Orders,
-      payments: PaypalAPI::Payments,
-      shipment_tracking: PaypalAPI::ShipmentTracking,
-      webhooks: PaypalAPI::Webhooks
-    }
-
-    resources.each do |method_name, resource_class|
-      describe "##{method_name}" do
-        before { allow(resource_class).to receive(:new).with(client).and_return("INITIALIZED_RESOURCE_CLASS") }
-
-        it "initializes #{resource_class} instance" do
-          expect(client.public_send(method_name)).to equal "INITIALIZED_RESOURCE_CLASS"
-        end
       end
     end
   end
