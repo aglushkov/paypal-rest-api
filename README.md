@@ -184,6 +184,95 @@ end
 
 ```
 
+## APIs
+
+### Orders
+
+- `PaypalAPI::Orders.create`
+- `PaypalAPI::Orders.show`
+- `PaypalAPI::Orders.update`
+- `PaypalAPI::Orders.confirm`
+- `PaypalAPI::Orders.authorize`
+- `PaypalAPI::Orders.capture`
+- `PaypalAPI::Orders.track`
+- `PaypalAPI::Orders.update_tracker`
+
+### Payments
+
+- `PaypalAPI::AuthorizedPayment.show`
+- `PaypalAPI::AuthorizedPayment.capture`
+- `PaypalAPI::AuthorizedPayment.reauthorize`
+- `PaypalAPI::AuthorizedPayment.void`
+
+<!-- -->
+
+- `PaypalAPI::CapturedPayment.show`
+- `PaypalAPI::CapturedPayment.refund`
+
+<!-- -->
+
+- `PaypalAPI::Refunds.show`
+
+### Webhooks
+
+- `PaypalAPI::Webhooks.create`
+- `PaypalAPI::Webhooks.list`
+- `PaypalAPI::Webhooks.show`
+- `PaypalAPI::Webhooks.update`
+- `PaypalAPI::Webhooks.delete`
+- `PaypalAPI::Webhooks.event_types`
+- `PaypalAPI::Webhooks.verify`
+
+<!-- -->
+
+- `PaypalAPI::WebhookEvents.available`
+- `PaypalAPI::WebhookEvents.list`
+- `PaypalAPI::WebhookEvents.show`
+- `PaypalAPI::WebhookEvents.resend`
+- `PaypalAPI::WebhookEvents.simulate`
+
+<!-- -->
+
+- `PaypalAPI::WebhookLookups.create`
+- `PaypalAPI::WebhookLookups.list`
+- `PaypalAPI::WebhookLookups.show`
+- `PaypalAPI::WebhookLookups.delete`
+
+### Subscriptions
+
+- `PaypalAPI::Subscriptions.create`
+- `PaypalAPI::Subscriptions.show`
+- `PaypalAPI::Subscriptions.update`
+- `PaypalAPI::Subscriptions.revise`
+- `PaypalAPI::Subscriptions.suspend`
+- `PaypalAPI::Subscriptions.cancel`
+- `PaypalAPI::Subscriptions.activate`
+- `PaypalAPI::Subscriptions.capture`
+- `PaypalAPI::Subscriptions.transactions`
+
+### Shipment Tracking
+
+- `PaypalAPI::ShipmentTracking.add`
+- `PaypalAPI::ShipmentTracking.update`
+- `PaypalAPI::ShipmentTracking.show`
+
+### Catalog Products
+
+- `PaypalAPI::CatalogProducts.create`
+- `PaypalAPI::CatalogProducts.list`
+- `PaypalAPI::CatalogProducts.show`
+- `PaypalAPI::CatalogProducts.update`
+
+<!-- -->
+
+- `PaypalAPI::SubscriptionPlans.create`
+- `PaypalAPI::SubscriptionPlans.list`
+- `PaypalAPI::SubscriptionPlans.show`
+- `PaypalAPI::SubscriptionPlans.update`
+- `PaypalAPI::SubscriptionPlans.activate`
+- `PaypalAPI::SubscriptionPlans.deactivate`
+- `PaypalAPI::SubscriptionPlans.update_pricing`
+
 ## Development
 
 ```bash

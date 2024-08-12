@@ -25,7 +25,10 @@ RSpec.describe PaypalAPI::Client do
       refunds: PaypalAPI::Refunds,
       shipment_tracking: PaypalAPI::ShipmentTracking,
       subscriptions: PaypalAPI::Subscriptions,
-      webhooks: PaypalAPI::Webhooks
+      subscription_plans: PaypalAPI::SubscriptionPlans,
+      webhooks: PaypalAPI::Webhooks,
+      webhook_events: PaypalAPI::WebhookEvents,
+      webhook_lookups: PaypalAPI::WebhookLookups
     }
 
     resources.each do |method_name, resource_class|
