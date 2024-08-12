@@ -16,36 +16,66 @@ bundle add paypal-rest-api
 
 ## Usage
 
-- All APIs accept optional `:query`, `:body` and `:headers` keyword parameters.
-- Response has `#body` method to get parsed JSON body.
-  This body has `symbolized` hash keys.
-- Response contains methods to get original HTTP response.
-- Failed request error (for non `2**` status codes) contains HTTP request and
-  response
-- Failed request error (for network errors) contains request and original error
+There are two options:
+
+- Setting global client
+- Setting local client (for possibility to use multiple PayPal environments)
+
+### Setting global client
 
 ```ruby
-# Initiate client
+# in config/initializers/paypal_rest_api.rb
+PaypalAPI.client = PaypalAPI::Client.new(
+  client_id: ENV['PAYPAL_CLIENT_ID'],
+  client_secret: ENV['PAYPAL_CLIENT_SECRET'],
+  live: false
+)
+
+# in your business logic
+response = PaypalAPI::Orders.show(order_id)
+response = PaypalAPI::Orders.create(body: body)
+```
+
+### Setting local client
+
+```ruby
+# in your business logic
 client = PaypalAPI::Client.new(
   client_id: ENV['PAYPAL_CLIENT_ID'],
   client_secret: ENV['PAYPAL_CLIENT_SECRET'],
   live: false
 )
 
-# Usage example:
-response = client.orders.create(body: body)
 response = client.orders.show(order_id)
-response = client.authorized_payments.capture(authorization_id, headers: headers)
-response = client.webhooks.list(query: query)
+response = client.orders.create(body: body)
+```
 
-# Client also can send requests directly, bypassing specific resources methods
+### Client REST methods
+
+Client can call HTTP methods directly:
+
+```ruby
 response = client.post(path, query: query, body: body, headers: headers)
 response = client.get(path, query: query, body: body, headers: headers)
 response = client.patch(path, query: query, body: body, headers: headers)
 response = client.put(path, query: query, body: body, headers: headers)
 response = client.delete(path, query: query, body: body, headers: headers)
 
-# Getting response
+# Or, after setting global client:
+response = PaypalAPI.post(path, query: query, body: body, headers: headers)
+response = PaypalAPI.get(path, query: query, body: body, headers: headers)
+response = PaypalAPI.patch(path, query: query, body: body, headers: headers)
+response = PaypalAPI.put(path, query: query, body: body, headers: headers)
+response = PaypalAPI.delete(path, query: query, body: body, headers: headers)
+```
+
+### Parsing response
+
+`response.body` is a main method that returns parsed JSON respoonse as a HASH.
+
+There are also many others helpful methods:
+
+```
 response.body # Parsed JSON. JSON is parsed lazyly, keys are symbolized.
 response[:foo] # Gets :foo attribute from parsed body
 response.fetch(:foo) # Fetches :foo attribute from parsed body
@@ -54,32 +84,6 @@ response.http_body # original response string
 response.http_status # Integer http status
 response.http_headers # Hash with response headers (keys are strings)
 response.requested_at # Time when request was sent
-```
-
-Also PaypalAPI client can be added globally and class methods can be used instead:
-
-```ruby
-# in config/initializers/paypal_api.rb
-PaypalAPI.client = PaypalAPI::Client.new(
-  client_id: ENV['PAYPAL_CLIENT_ID'],
-  client_secret: ENV['PAYPAL_CLIENT_SECRET'],
-  live: false
-)
-
-# in your business logic
-response = PaypalAPI.orders.create(body: body)
-response = PaypalAPI.webhooks.verify(body: body)
-
-# same
-PaypalAPI::Orders.create(body: body)
-PaypalAPI::Webhooks.verify(body: body)
-
-# Also now PaypalAPI class can be used as a client
-response = PaypalAPI.post(path, query: query, body: body, headers: headers)
-response = PaypalAPI.get(path, query: query, body: body, headers: headers)
-response = PaypalAPI.patch(path, query: query, body: body, headers: headers)
-response = PaypalAPI.put(path, query: query, body: body, headers: headers)
-response = PaypalAPI.delete(path, query: query, body: body, headers: headers)
 ```
 
 ## Configuration options
@@ -173,6 +177,7 @@ rescue PaypalAPI::Error => error
   YourLogger.error(
     error,
     context: {
+      paypal_request_id: error.paypal_request_id,
       error_name: error.error_name,
       error_message: error.error_message,
       error_debug_id: error.error_debug_id,
@@ -185,6 +190,13 @@ end
 ```
 
 ## APIs
+
+All API endpoints accept this parameters:
+
+- `resource_id` - Resource ID (Unless `create`/`list` endpoint)
+- `query` - Hash with request query params
+- `body` - Hash with request body params
+- `headers` - Hash with request headers
 
 ### Orders
 
@@ -276,7 +288,6 @@ end
 ## Development
 
 ```bash
-  bundle install
   rubocop
   rspec
   mdl README.md CHANGELOG.md RELEASE.md
@@ -284,7 +295,7 @@ end
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at <https://github.com/aglushkov/paypal-api>.
+Bug reports and pull requests are welcome on GitHub at <https://github.com/aglushkov/paypal-rest-api>.
 
 ## License
 
