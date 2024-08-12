@@ -168,7 +168,7 @@ All errors have additional methods:
 
 ```ruby
 begin
-  response = PaypalAPI.payments.capture(authorization_id, body: body)
+  response = PaypalAPI.authorized_payments.capture(authorization_id, body: body)
 rescue PaypalAPI::Error => error
   YourLogger.error(
     error,
