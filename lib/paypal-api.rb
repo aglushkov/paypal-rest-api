@@ -65,26 +65,37 @@ module PaypalAPI
     # @!method authentication
     #   @return [Authentication]
     #
+    # @!method authorized_payments
+    #   @return [AuthorizedPayments]
+    #
+    # @!method captured_payments
+    #   @return [CapturedPayments]
+    #
     # @!method catalog_products
     #   @return [CatalogProducts]
     #
     # @!method orders
     #   @return [Orders]
     #
-    # @!method payments
-    #   @return [Payments]
+    # @!method refunds
+    #   @return [Refunds]
     #
     # @!method shipment_tracking
     #   @return [ShipmentTracking]
+    #
+    # @!method subscriptions
+    #   @return [Subscriptions]
     #
     # @!method webhooks
     #   @return [Webhooks]
     #
     %i[
       authentication
+      authorized_payments
+      captured_payments
       catalog_products
       orders
-      payments
+      refunds
       shipment_tracking
       subscriptions
       webhooks
@@ -114,9 +125,11 @@ require_relative "paypal-api/request"
 require_relative "paypal-api/request_executor"
 require_relative "paypal-api/response"
 require_relative "paypal-api/collections/authentication"
+require_relative "paypal-api/collections/authorized_payments"
+require_relative "paypal-api/collections/captured_payments"
 require_relative "paypal-api/collections/catalog_products"
 require_relative "paypal-api/collections/orders"
-require_relative "paypal-api/collections/payments"
+require_relative "paypal-api/collections/refunds"
 require_relative "paypal-api/collections/shipment_tracking"
 require_relative "paypal-api/collections/subscriptions"
 require_relative "paypal-api/collections/webhooks"
