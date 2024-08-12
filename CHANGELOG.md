@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.0.3] - 2024-08-12
+
 - Added `#paypal_request_id` method to errors
 - Added Subscriptions APIs
 - Added Shipment Tracking APIs
