@@ -250,6 +250,16 @@ end
 - `PaypalAPI::Subscriptions.capture`
 - `PaypalAPI::Subscriptions.transactions`
 
+<!-- -->
+
+- `PaypalAPI::SubscriptionPlans.create`
+- `PaypalAPI::SubscriptionPlans.list`
+- `PaypalAPI::SubscriptionPlans.show`
+- `PaypalAPI::SubscriptionPlans.update`
+- `PaypalAPI::SubscriptionPlans.activate`
+- `PaypalAPI::SubscriptionPlans.deactivate`
+- `PaypalAPI::SubscriptionPlans.update_pricing`
+
 ### Shipment Tracking
 
 - `PaypalAPI::ShipmentTracking.add`
@@ -263,22 +273,13 @@ end
 - `PaypalAPI::CatalogProducts.show`
 - `PaypalAPI::CatalogProducts.update`
 
-<!-- -->
-
-- `PaypalAPI::SubscriptionPlans.create`
-- `PaypalAPI::SubscriptionPlans.list`
-- `PaypalAPI::SubscriptionPlans.show`
-- `PaypalAPI::SubscriptionPlans.update`
-- `PaypalAPI::SubscriptionPlans.activate`
-- `PaypalAPI::SubscriptionPlans.deactivate`
-- `PaypalAPI::SubscriptionPlans.update_pricing`
-
 ## Development
 
 ```bash
   bundle install
   rubocop
   rspec
+  mdl README.md CHANGELOG.md RELEASE.md
 ```
 
 ## Contributing
