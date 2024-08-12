@@ -2,12 +2,11 @@
 
 module PaypalAPI
   #
-  # Use in conjunction with the Orders API to authorize payments, capture authorized payments,
-  # refund payments that have already been captured, and show payment information.
+  # Authorized payments APIs `/v2/payments/authorizations`
   #
   # @see https://developer.paypal.com/docs/api/payments/v2
   #
-  class Payments < Collection
+  class AuthorizedPayments < Collection
     #
     # Common class and instance methods
     #
@@ -26,7 +25,7 @@ module PaypalAPI
       # @param authorization_id [String] Authorization ID
       # @macro request
       #
-      def show_authorized(authorization_id, query: nil, body: nil, headers: nil)
+      def show(authorization_id, query: nil, body: nil, headers: nil)
         client.get("/v2/payments/authorizations/#{authorization_id}", query: query, body: body, headers: headers)
       end
 
@@ -62,42 +61,6 @@ module PaypalAPI
       #
       def void(authorization_id, query: nil, body: nil, headers: nil)
         client.post("/v2/payments/authorizations/#{authorization_id}/void", query: query, body: body, headers: headers)
-      end
-
-      #
-      # Show captured payment details
-      #
-      # @see https://developer.paypal.com/docs/api/payments/v2/#captures_get
-      #
-      # @param capture_id [String] Capture ID
-      # @macro request
-      #
-      def show_captured(capture_id, query: nil, body: nil, headers: nil)
-        client.get("/v2/payments/captures/#{capture_id}", query: query, body: body, headers: headers)
-      end
-
-      #
-      # Refund captured payment
-      #
-      # @see https://developer.paypal.com/docs/api/payments/v2/#captures_refund
-      #
-      # @param capture_id [String] Capture ID
-      # @macro request
-      #
-      def refund(capture_id, query: nil, body: nil, headers: nil)
-        client.post("/v2/payments/captures/#{capture_id}/refund", query: query, body: body, headers: headers)
-      end
-
-      #
-      # Show refund details
-      #
-      # @see https://developer.paypal.com/docs/api/payments/v2/#refunds_get
-      #
-      # @param refund_id [String]
-      # @macro request
-      #
-      def show_refund(refund_id, query: nil, body: nil, headers: nil)
-        client.get("/v2/payments/refunds/#{refund_id}", query: query, body: body, headers: headers)
       end
     end
 

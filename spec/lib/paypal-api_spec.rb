@@ -29,8 +29,12 @@ RSpec.describe PaypalAPI do
 
   {
     authentication: PaypalAPI::Authentication,
+    authorized_payments: PaypalAPI::AuthorizedPayments,
+    captured_payments: PaypalAPI::CapturedPayments,
+    catalog_products: PaypalAPI::CatalogProducts,
     orders: PaypalAPI::Orders,
-    payments: PaypalAPI::Payments,
+    refunds: PaypalAPI::Refunds,
+    shipment_tracking: PaypalAPI::ShipmentTracking,
     subscriptions: PaypalAPI::Subscriptions,
     webhooks: PaypalAPI::Webhooks
   }.each do |resource_method, resource_class|

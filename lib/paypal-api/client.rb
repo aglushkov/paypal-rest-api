@@ -107,6 +107,16 @@ module PaypalAPI
       execute_request(Net::HTTP::Delete, path, query: query, body: body, headers: headers)
     end
 
+    # @return [AuthorizedPayments] AuthorizedPayments APIs collection
+    def authorized_payments
+      AuthorizedPayments.new(self)
+    end
+
+    # @return [CapturedPayments] CapturedPayments APIs collection
+    def captured_payments
+      CapturedPayments.new(self)
+    end
+
     # @return [Authentication] Authentication APIs collection
     def authentication
       Authentication.new(self)
@@ -122,9 +132,9 @@ module PaypalAPI
       Orders.new(self)
     end
 
-    # @return [Payments] Payments APIs collection
-    def payments
-      Payments.new(self)
+    # @return [Redunds] Refunds APIs collection
+    def refunds
+      Refunds.new(self)
     end
 
     # @return [ShipmentTracking] Shipment Tracking APIs collection
