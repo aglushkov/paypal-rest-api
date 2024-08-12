@@ -35,7 +35,7 @@ client = PaypalAPI::Client.new(
 # Usage example:
 response = client.orders.create(body: body)
 response = client.orders.show(order_id)
-response = client.payments.capture(authorization_id, headers: headers)
+response = client.authorized_payments.capture(authorization_id, headers: headers)
 response = client.webhooks.list(query: query)
 
 # Client also can send requests directly, bypassing specific resources methods
@@ -139,21 +139,21 @@ All APIs can raise error in case of network error or non-2xx response status cod
 Errors structure:
 
 - `PaypalAPI::Error`
-   - `PaypalAPI::NetworkError` - any network error
-   - `PaypalAPI::FailedRequest` - any non-2xx code error
-      - 400 - `PaypalAPI::BadRequestError`
-      - 401 - `PaypalAPI::UnauthorizedError`
-      - 403 - `PaypalAPI::ForbiddenError`
-      - 404 - `PaypalAPI::NotFoundError`
-      - 405 - `PaypalAPI::MethodNotAllowedError`
-      - 406 - `PaypalAPI::NotAcceptableError`
-      - 409 - `PaypalAPI::ConflictError`
-      - 415 - `PaypalAPI::UnsupportedMediaTypeError`
-      - 422 - `PaypalAPI::UnprocessableEntityError`
-      - 429 - `PaypalAPI::TooManyRequestsError`
-      - 5xx - `PaypalAPI::FatalError`
-         - 500 - `PaypalAPI::InternalServerError`
-         - 503 - `PaypalAPI::ServiceUnavailableError`
+   - `PaypalAPI::Errors::NetworkError` - any network error
+   - `PaypalAPI::Errors::FailedRequest` - any non-2xx code error
+      - 400 - `PaypalAPI::Errors::BadRequest`
+      - 401 - `PaypalAPI::Errors::Unauthorized`
+      - 403 - `PaypalAPI::Errors::Forbidden`
+      - 404 - `PaypalAPI::Errors::NotFound`
+      - 405 - `PaypalAPI::Errors::MethodNotAllowed`
+      - 406 - `PaypalAPI::Errors::NotAcceptable`
+      - 409 - `PaypalAPI::Errors::Conflict`
+      - 415 - `PaypalAPI::Errors::UnsupportedMediaType`
+      - 422 - `PaypalAPI::Errors::UnprocessableEntity`
+      - 429 - `PaypalAPI::Errors::TooManyRequests`
+      - 5xx - `PaypalAPI::Errors::FatalError`
+         - 500 - `PaypalAPI::Errors::InternalServerError`
+         - 503 - `PaypalAPI::Errors::ServiceUnavailable`
 
 All errors have additional methods:
 
@@ -182,26 +182,6 @@ rescue PaypalAPI::Error => error
 end
 
 ```
-
-## APIs
-
-### Orders \[[PayPal](https://developer.paypal.com/docs/api/orders/v2/)\]
-
-- Create order `client.orders.create` or `PaypalAPI::Orders.create` [Rubydoc](https://www.rubydoc.info/gems/paypal-rest-api/PaypalAPI/Orders/APIs#authorize-instance_method)
-- Show order details `client.orders.show` or `PaypalAPI::Orders.show`
-- Update order `client.orders.update` or `PaypalAPI::Orders.update`
-- Confirm the Order `client.orders.confirm` or `PaypalAPI::Orders.confirm`
-- Authorie payment for order `client.orders.authorize` or `PaypalAPI::Orders.authorize`
-
-@see https://developer.paypal.com/docs/api/orders/v2/
-@see https://developer.paypal.com/docs/api/orders/v2/#orders_create
-@see https://developer.paypal.com/docs/api/orders/v2/#orders_get
-@see https://developer.paypal.com/docs/api/orders/v2/#orders_patch
-@see https://developer.paypal.com/docs/api/orders/v2/#orders_confirm
-@see https://developer.paypal.com/docs/api/orders/v2/#orders_authorize
-@see https://developer.paypal.com/docs/api/orders/v2/#orders_capture
-@see https://developer.paypal.com/docs/api/orders/v2/#orders_track_create
-@see https://developer.paypal.com/docs/api/orders/v2/#orders_trackers_patch
 
 ## Development
 

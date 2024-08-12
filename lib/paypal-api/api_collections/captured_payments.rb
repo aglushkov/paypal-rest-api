@@ -6,7 +6,7 @@ module PaypalAPI
   #
   # @see https://developer.paypal.com/docs/api/payments/v2
   #
-  class CapturedPayments < Collection
+  class CapturedPayments < APICollection
     #
     # Common class and instance methods
     #

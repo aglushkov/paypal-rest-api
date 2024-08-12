@@ -45,7 +45,7 @@ RSpec.describe PaypalAPI::RequestExecutor do
         end
 
         it "retries request" do
-          expect { execute }.to raise_error PaypalAPI::NetworkError
+          expect { execute }.to raise_error PaypalAPI::Errors::NetworkError
           expect(Net::HTTP).to have_received(:start).exactly(retries_count + 1).times
         end
       end
@@ -56,10 +56,10 @@ RSpec.describe PaypalAPI::RequestExecutor do
     let(:retries_enabled) { true }
 
     {
-      409 => PaypalAPI::ConflictError,
-      429 => PaypalAPI::TooManyRequestsError,
-      500 => PaypalAPI::InternalServerError,
-      503 => PaypalAPI::ServiceUnavailableError
+      409 => PaypalAPI::Errors::Conflict,
+      429 => PaypalAPI::Errors::TooManyRequests,
+      500 => PaypalAPI::Errors::InternalServerError,
+      503 => PaypalAPI::Errors::ServiceUnavailable
     }.each do |code, error_class|
       context "with #{code} error" do
         before { stub_request(:get, "https://example.com/").to_return(status: code) }
@@ -76,13 +76,13 @@ RSpec.describe PaypalAPI::RequestExecutor do
     let(:retries_enabled) { true }
 
     {
-      400 => PaypalAPI::BadRequestError,
-      403 => PaypalAPI::ForbiddenError,
-      404 => PaypalAPI::NotFoundError,
-      405 => PaypalAPI::MethodNotAllowedError,
-      406 => PaypalAPI::NotAcceptableError,
-      415 => PaypalAPI::UnsupportedMediaTypeError,
-      422 => PaypalAPI::UnprocessableEntityError
+      400 => PaypalAPI::Errors::BadRequest,
+      403 => PaypalAPI::Errors::Forbidden,
+      404 => PaypalAPI::Errors::NotFound,
+      405 => PaypalAPI::Errors::MethodNotAllowed,
+      406 => PaypalAPI::Errors::NotAcceptable,
+      415 => PaypalAPI::Errors::UnsupportedMediaType,
+      422 => PaypalAPI::Errors::UnprocessableEntity
     }.each do |code, error_class|
       context "with #{code} error" do
         before { stub_request(:get, "https://example.com/").to_return(status: code) }
@@ -105,7 +105,7 @@ RSpec.describe PaypalAPI::RequestExecutor do
     end
 
     it "refreshes access token and retries request" do
-      expect { execute }.to raise_error PaypalAPI::UnauthorizedError
+      expect { execute }.to raise_error PaypalAPI::Errors::Unauthorized
 
       # first request
       expect(a_request(:get, "https://example.com/")).to have_been_made.times(retries_count + 1)
@@ -125,7 +125,7 @@ RSpec.describe PaypalAPI::RequestExecutor do
     end
 
     it "returns error without retries" do
-      expect { execute }.to raise_error PaypalAPI::UnauthorizedError
+      expect { execute }.to raise_error PaypalAPI::Errors::Unauthorized
       expect(a_request(:get, /#{PaypalAPI::Authentication::PATH}/o)).to have_been_made.times(1)
     end
   end

@@ -6,7 +6,7 @@ module PaypalAPI
   #
   # @see https://developer.paypal.com/docs/api/subscriptions/v1/
   #
-  class Subscriptions < Collection
+  class Subscriptions < APICollection
     #
     # Common class and instance methods
     #

@@ -2,24 +2,24 @@
 
 RSpec.describe PaypalAPI::FailedRequestErrorBuilder do
   data = [
-    [Net::HTTPBadRequest, PaypalAPI::BadRequestError].freeze,                     # 400
-    [Net::HTTPUnauthorized, PaypalAPI::UnauthorizedError].freeze,                 # 401
-    [Net::HTTPForbidden, PaypalAPI::ForbiddenError].freeze,                       # 403
-    [Net::HTTPNotFound, PaypalAPI::NotFoundError].freeze,                         # 404
-    [Net::HTTPMethodNotAllowed, PaypalAPI::MethodNotAllowedError].freeze,         # 405
-    [Net::HTTPNotAcceptable, PaypalAPI::NotAcceptableError].freeze,               # 406
-    [Net::HTTPConflict, PaypalAPI::ConflictError].freeze,                         # 409
-    [Net::HTTPUnsupportedMediaType, PaypalAPI::UnsupportedMediaTypeError].freeze, # 415
-    [Net::HTTPUnprocessableEntity, PaypalAPI::UnprocessableEntityError].freeze,   # 422
-    [Net::HTTPTooManyRequests, PaypalAPI::TooManyRequestsError].freeze,           # 429
-    [Net::HTTPInternalServerError, PaypalAPI::InternalServerError].freeze,        # 500
-    [Net::HTTPServiceUnavailable, PaypalAPI::ServiceUnavailableError].freeze      # 503
+    [Net::HTTPBadRequest, PaypalAPI::Errors::BadRequest].freeze,                     # 400
+    [Net::HTTPUnauthorized, PaypalAPI::Errors::Unauthorized].freeze,                 # 401
+    [Net::HTTPForbidden, PaypalAPI::Errors::Forbidden].freeze,                       # 403
+    [Net::HTTPNotFound, PaypalAPI::Errors::NotFound].freeze,                         # 404
+    [Net::HTTPMethodNotAllowed, PaypalAPI::Errors::MethodNotAllowed].freeze,         # 405
+    [Net::HTTPNotAcceptable, PaypalAPI::Errors::NotAcceptable].freeze,               # 406
+    [Net::HTTPConflict, PaypalAPI::Errors::Conflict].freeze,                         # 409
+    [Net::HTTPUnsupportedMediaType, PaypalAPI::Errors::UnsupportedMediaType].freeze, # 415
+    [Net::HTTPUnprocessableEntity, PaypalAPI::Errors::UnprocessableEntity].freeze,   # 422
+    [Net::HTTPTooManyRequests, PaypalAPI::Errors::TooManyRequests].freeze,           # 429
+    [Net::HTTPInternalServerError, PaypalAPI::Errors::InternalServerError].freeze,     # 500
+    [Net::HTTPServiceUnavailable, PaypalAPI::Errors::ServiceUnavailable].freeze      # 503
   ].freeze
 
   let(:request) { "REQUEST" }
   let(:failed_request_error) { "ERROR" }
 
-  before { allow(PaypalAPI::FailedRequest).to receive(:new).and_return(failed_request_error) }
+  before { allow(PaypalAPI::Errors::FailedRequest).to receive(:new).and_return(failed_request_error) }
 
   def build_http_response(response_class)
     http_response = response_class.allocate
@@ -33,7 +33,7 @@ RSpec.describe PaypalAPI::FailedRequestErrorBuilder do
       response = PaypalAPI::Response.new(http_response, requested_at: nil)
 
       expect(described_class.call(response: response, request: request)).to equal failed_request_error
-      expect(PaypalAPI::FailedRequest).to have_received(:new).with("CODE MESSAGE", request: request, response: response)
+      expect(PaypalAPI::Errors::FailedRequest).to have_received(:new).with("CODE MESSAGE", request: request, response: response)
     end
   end
 
@@ -43,6 +43,6 @@ RSpec.describe PaypalAPI::FailedRequestErrorBuilder do
     response = PaypalAPI::Response.new(http_response, requested_at: nil)
 
     expect(described_class.call(response: response, request: request)).to equal failed_request_error
-    expect(PaypalAPI::FailedRequest).to have_received(:new).with("CODE MESSAGE", request: request, response: response)
+    expect(PaypalAPI::Errors::FailedRequest).to have_received(:new).with("CODE MESSAGE", request: request, response: response)
   end
 end

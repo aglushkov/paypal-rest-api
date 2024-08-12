@@ -4,11 +4,11 @@ module PaypalAPI
   #
   # Base class for all PayPal API collections classes
   #
-  class Collection
+  class APICollection
     # @return current client
     attr_reader :client
 
-    # Initializes APIs collection
+    # Initializes API collection
     #
     # @param client [Client] current client
     #

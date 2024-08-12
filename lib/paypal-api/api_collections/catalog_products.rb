@@ -6,7 +6,7 @@ module PaypalAPI
   #
   # @see https://developer.paypal.com/docs/api/catalog-products/v1/
   #
-  class CatalogProducts < Collection
+  class CatalogProducts < APICollection
     #
     # Common class and instance methods
     #

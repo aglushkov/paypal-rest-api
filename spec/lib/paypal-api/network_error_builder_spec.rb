@@ -6,7 +6,7 @@ RSpec.describe PaypalAPI::NetworkErrorBuilder do
   it "converts any error" do
     error = described_class.call(error: original_error, request: "request")
 
-    expect(error).to be_a PaypalAPI::NetworkError
+    expect(error).to be_a PaypalAPI::Errors::NetworkError
     expect(error.message).to eq original_error.message
     expect(error.request).to eq "request"
   end
