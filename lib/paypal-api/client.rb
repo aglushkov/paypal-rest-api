@@ -147,9 +147,24 @@ module PaypalAPI
       Subscriptions.new(self)
     end
 
+    # @return [SubscriptionPlans] Subscription Plans APIs collection
+    def subscription_plans
+      SubscriptionPlans.new(self)
+    end
+
     # @return [Webhooks] Webhooks APIs collection
     def webhooks
       Webhooks.new(self)
+    end
+
+    # @return [WebhookEvents] Webhook Events APIs collection
+    def webhook_lookups
+      WebhookLookups.new(self)
+    end
+
+    # @return [WebhookEvents] Webhook Lookups APIs collection
+    def webhook_events
+      WebhookEvents.new(self)
     end
 
     private

@@ -98,7 +98,10 @@ module PaypalAPI
       refunds
       shipment_tracking
       subscriptions
+      subscription_plans
       webhooks
+      webhook_events
+      webhook_lookups
     ].each do |method_name|
       define_method(method_name) do
         client.public_send(method_name)
@@ -132,4 +135,7 @@ require_relative "paypal-api/api_collections/orders"
 require_relative "paypal-api/api_collections/refunds"
 require_relative "paypal-api/api_collections/shipment_tracking"
 require_relative "paypal-api/api_collections/subscriptions"
+require_relative "paypal-api/api_collections/subscription_plans"
 require_relative "paypal-api/api_collections/webhooks"
+require_relative "paypal-api/api_collections/webhook_events"
+require_relative "paypal-api/api_collections/webhook_lookups"

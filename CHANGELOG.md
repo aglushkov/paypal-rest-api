@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+- Split Subscriptions API collection for:
+   - Subscriptions
+   - SubscriptionPlans
+
+- Split Webhooks API collection for:
+   - Webhooks
+   - WebhookEvents
+   - WebhookLookups
+
 ## [0.0.3] - 2024-08-12
 
 - Added `#paypal_request_id` method to errors
