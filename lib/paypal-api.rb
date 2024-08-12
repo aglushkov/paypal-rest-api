@@ -3,25 +3,26 @@
 #
 # PaypalAPI is a main gem module.
 #
-# It can store global PaypalAPI::Client for easier access to APIs.
-#
-# @example Initializing new global client
-#   PaypalAPI.client = PaypalAPI::Client.new(
-#     client_id: ENV.fetch('PAYPAL_CLIENT_ID'),
-#     client_secret: ENV.fetch('PAYPAL_CLIENT_SECRET'),
-#     live: false
-#   )
-#
-#   # And then call any APIs without mentioning the client
-#   PaypalAPI::Webhooks.list # or PaypalAPI.webhooks.list
-#
 module PaypalAPI
   class << self
     # Sets client
+    # @api public
+    #
+    # @example Initializing new global client
+    #   PaypalAPI.client = PaypalAPI::Client.new(
+    #     client_id: ENV.fetch('PAYPAL_CLIENT_ID'),
+    #     client_secret: ENV.fetch('PAYPAL_CLIENT_SECRET'),
+    #     live: false
+    #   )
+    #
+    # @return [Client] PaypalAPI client
     attr_writer :client
 
     # @!macro [new] request
     #
+    #   @api public
+    #   @example
+    #     PaypalAPI.$0("/path1/path2", query: query, body: body, headers: headers)
     #   @param path [String] Request path
     #   @param query [Hash, nil] Request query parameters
     #   @param body [Hash, nil] Request body parameters
@@ -62,32 +63,61 @@ module PaypalAPI
     end
 
     #
+    # @!macro [new] api_collection
+    #   $0 APIs collection
+    #   @api public
+    #   @example
+    #     PaypalAPI.$0
+    #
+
+    #
     # @!method authentication
+    #   @macro api_collection
     #   @return [Authentication]
     #
     # @!method authorized_payments
+    #   @macro api_collection
     #   @return [AuthorizedPayments]
     #
     # @!method captured_payments
+    #   @macro api_collection
     #   @return [CapturedPayments]
     #
     # @!method catalog_products
+    #   @macro api_collection
     #   @return [CatalogProducts]
     #
     # @!method orders
+    #   @macro api_collection
     #   @return [Orders]
     #
     # @!method refunds
+    #   @macro api_collection
     #   @return [Refunds]
     #
     # @!method shipment_tracking
+    #   @macro api_collection
     #   @return [ShipmentTracking]
     #
     # @!method subscriptions
+    #   @macro api_collection
     #   @return [Subscriptions]
     #
+    # @!method subscription_plans
+    #   @macro api_collection
+    #   @return [SubscriptionPlans]
+    #
     # @!method webhooks
+    #   @macro api_collection
     #   @return [Webhooks]
+    #
+    # @!method webhook_events
+    #   @macro api_collection
+    #   @return [WebhookEvents]
+    #
+    # @!method webhook_lookups
+    #   @macro api_collection
+    #   @return [WebhookLookups]
     #
     %i[
       authentication
@@ -109,6 +139,10 @@ module PaypalAPI
     end
 
     # Globally set Client object
+    # @api public
+    # @example
+    #   PaypalAPI.client
+    # @return [Client]
     def client
       raise "#{name}.client must be set" unless @client
 

@@ -4,8 +4,20 @@ module PaypalAPI
   #
   # AccessToken object stores authorization string and its expire time.
   #
+  # @api private
+  #
   class AccessToken
-    attr_reader :requested_at, :expires_at, :authorization_string
+    # Time when access token request was sent
+    # @return [Time] Time
+    attr_reader :requested_at
+
+    # Time when access token request expires
+    # @return [Time] Time
+    attr_reader :expires_at
+
+    # Authorization string
+    # @return [String] Authorization string
+    attr_reader :authorization_string
 
     #
     # Initializes AccessToken object
@@ -32,7 +44,9 @@ module PaypalAPI
     end
 
     #
-    # Instance representation string. Default was overwritten to hide original access_token
+    # Instance representation string
+    #
+    # @return [String] Inspect value
     #
     def inspect
       "#<#{self.class.name} methods: (requested_at, expires_at, expired?, authorization_string)>"

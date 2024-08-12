@@ -8,6 +8,7 @@ module PaypalAPI
     attr_reader :config
 
     # Initializes Client
+    # @api public
     #
     # @param client_id [String] PayPal client id
     # @param client_secret [String] PayPal client secret
