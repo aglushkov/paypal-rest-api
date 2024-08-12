@@ -4,7 +4,7 @@ module PaypalAPI
   #
   # https://developer.paypal.com/docs/api/webhooks/v1/
   #
-  class Webhooks < Collection
+  class Webhooks < APICollection
     #
     # Common class and instance methods
     #

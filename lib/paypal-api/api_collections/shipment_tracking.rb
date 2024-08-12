@@ -6,7 +6,7 @@ module PaypalAPI
   #
   # @see https://developer.paypal.com/docs/api/tracking/v1/
   #
-  class ShipmentTracking < Collection
+  class ShipmentTracking < APICollection
     #
     # Common class and instance methods
     #

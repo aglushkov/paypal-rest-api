@@ -6,7 +6,7 @@ module PaypalAPI
   #
   # @see https://developer.paypal.com/api/rest/authentication/
   #
-  class Authentication < Collection
+  class Authentication < APICollection
     #
     # Generate access-token API request path
     #

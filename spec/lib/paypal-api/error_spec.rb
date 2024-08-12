@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe PaypalAPI::Error do
-  describe PaypalAPI::FailedRequest do
+  describe PaypalAPI::Errors::FailedRequest do
     let(:request) { instance_double(PaypalAPI::Request) }
     let(:response) do
       instance_double(
@@ -79,7 +79,7 @@ RSpec.describe PaypalAPI::Error do
     end
   end
 
-  describe PaypalAPI::NetworkError do
+  describe PaypalAPI::Errors::NetworkError do
     it "has message and detailed message" do
       original_error = StandardError.new("message")
       request = instance_double(PaypalAPI::Request)

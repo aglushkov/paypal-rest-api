@@ -9,18 +9,18 @@ module PaypalAPI
   class FailedRequestErrorBuilder
     # Matchings for Net::HTTP response class to PaypalAPI::Error class
     RESPONSE_ERROR_MAP = {
-      Net::HTTPBadRequest => BadRequestError,                     # 400
-      Net::HTTPUnauthorized => UnauthorizedError,                 # 401
-      Net::HTTPForbidden => ForbiddenError,                       # 403
-      Net::HTTPNotFound => NotFoundError,                         # 404
-      Net::HTTPMethodNotAllowed => MethodNotAllowedError,         # 405
-      Net::HTTPNotAcceptable => NotAcceptableError,               # 406
-      Net::HTTPConflict => ConflictError,                         # 409
-      Net::HTTPUnsupportedMediaType => UnsupportedMediaTypeError, # 415
-      Net::HTTPUnprocessableEntity => UnprocessableEntityError,   # 422
-      Net::HTTPTooManyRequests => TooManyRequestsError,           # 429
-      Net::HTTPInternalServerError => InternalServerError,        # 500
-      Net::HTTPServiceUnavailable => ServiceUnavailableError      # 503
+      Net::HTTPBadRequest => Errors::BadRequest,                     # 400
+      Net::HTTPUnauthorized => Errors::Unauthorized,                 # 401
+      Net::HTTPForbidden => Errors::Forbidden,                       # 403
+      Net::HTTPNotFound => Errors::NotFound,                         # 404
+      Net::HTTPMethodNotAllowed => Errors::MethodNotAllowed,         # 405
+      Net::HTTPNotAcceptable => Errors::NotAcceptable,               # 406
+      Net::HTTPConflict => Errors::Conflict,                         # 409
+      Net::HTTPUnsupportedMediaType => Errors::UnsupportedMediaType, # 415
+      Net::HTTPUnprocessableEntity => Errors::UnprocessableEntity,   # 422
+      Net::HTTPTooManyRequests => Errors::TooManyRequests,           # 429
+      Net::HTTPInternalServerError => Errors::InternalServerError,   # 500
+      Net::HTTPServiceUnavailable => Errors::ServiceUnavailable      # 503
     }.freeze
 
     class << self
@@ -29,12 +29,12 @@ module PaypalAPI
       # @param request [Request] Original request
       # @param response [Response] Original response
       #
-      # @return [FailedRequestError] Built FailedRequestError
+      # @return [Errors::FailedRequestError] error object
       #
       def call(request:, response:)
         http_response = response.http_response
         error_message = "#{http_response.code} #{http_response.message}"
-        error_class = RESPONSE_ERROR_MAP.fetch(http_response.class, FailedRequest)
+        error_class = RESPONSE_ERROR_MAP.fetch(http_response.class, Errors::FailedRequest)
         error_class.new(error_message, response: response, request: request)
       end
     end

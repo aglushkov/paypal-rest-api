@@ -6,7 +6,7 @@ module PaypalAPI
   #
   # @see https://developer.paypal.com/docs/api/orders/v2/
   #
-  class Orders < Collection
+  class Orders < APICollection
     #
     # Common class and instance methods
     #

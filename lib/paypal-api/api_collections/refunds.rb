@@ -6,7 +6,7 @@ module PaypalAPI
   #
   # @see https://developer.paypal.com/docs/api/payments/v2
   #
-  class Refunds < Collection
+  class Refunds < APICollection
     #
     # Common class and instance methods
     #

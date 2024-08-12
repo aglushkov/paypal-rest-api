@@ -26,10 +26,10 @@ module PaypalAPI
       # @param request [Request] Original request
       # @param error [StandardError] Original error
       #
-      # @return [NetworkError] Built NetworkError
+      # @return [Errors::NetworkError] Built NetworkError
       #
       def call(request:, error:)
-        NetworkError.new(error.message, request: request, error: error)
+        Errors::NetworkError.new(error.message, request: request, error: error)
       end
     end
   end

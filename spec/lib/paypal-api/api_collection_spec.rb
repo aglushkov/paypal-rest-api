@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe PaypalAPI::Collection do
+RSpec.describe PaypalAPI::APICollection do
   let(:client) { "CLIENT" }
   let(:resource) { described_class.new(client) }
 
