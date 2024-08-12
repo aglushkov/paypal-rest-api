@@ -1,8 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe PaypalAPI::Error do
+  let(:request) { instance_double(PaypalAPI::Request, http_request: http_request) }
+  let(:http_request) { instance_double(Net::HTTPRequest) }
+
+  before do
+    allow(http_request).to receive(:[]).with("paypal-request-id").and_return("PAYPAL_REQUEST_ID")
+  end
+
   describe PaypalAPI::Errors::FailedRequest do
-    let(:request) { instance_double(PaypalAPI::Request) }
     let(:response) do
       instance_double(
         PaypalAPI::Response,
@@ -36,6 +42,7 @@ RSpec.describe PaypalAPI::Error do
         expect(error.error_message).to eq "MESSAGE"
         expect(error.error_debug_id).to eq "DEBUG_ID"
         expect(error.error_details).to eq "DETAILS"
+        expect(error.paypal_request_id).to eq "PAYPAL_REQUEST_ID"
       end
     end
 
@@ -58,6 +65,7 @@ RSpec.describe PaypalAPI::Error do
         expect(error.error_message).to eq "ERROR_DESCRIPTIOM"
         expect(error.error_debug_id).to be_nil
         expect(error.error_details).to be_nil
+        expect(error.paypal_request_id).to eq "PAYPAL_REQUEST_ID"
       end
     end
 
@@ -75,6 +83,7 @@ RSpec.describe PaypalAPI::Error do
         expect(error.error_message).to eq http_body.to_s
         expect(error.error_debug_id).to be_nil
         expect(error.error_details).to be_nil
+        expect(error.paypal_request_id).to eq "PAYPAL_REQUEST_ID"
       end
     end
   end
@@ -82,7 +91,6 @@ RSpec.describe PaypalAPI::Error do
   describe PaypalAPI::Errors::NetworkError do
     it "has message and detailed message" do
       original_error = StandardError.new("message")
-      request = instance_double(PaypalAPI::Request)
       error = described_class.new("error", request: request, error: original_error)
 
       expect(error.message).to eq "error"
@@ -93,6 +101,7 @@ RSpec.describe PaypalAPI::Error do
       expect(error.error_message).to eq original_error.message
       expect(error.error_debug_id).to be_nil
       expect(error.error_details).to be_nil
+      expect(error.paypal_request_id).to eq "PAYPAL_REQUEST_ID"
     end
   end
 end

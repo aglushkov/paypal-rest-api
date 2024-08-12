@@ -157,6 +157,7 @@ Errors structure:
 
 All errors have additional methods:
 
+- `#paypal_request_id` - PayPal-Request-Id header sent with request
 - `#response` - Original response object, can be nil in case of NetworkError
 - `#request` - Original request object
 - `#error_name` - Original error name

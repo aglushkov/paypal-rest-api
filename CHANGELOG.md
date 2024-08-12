@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- Added `#paypal_request_id` method to errors
 - Added Subscriptions APIs
 - Added Shipment Tracking APIs
 - Added Catalog Products APIs

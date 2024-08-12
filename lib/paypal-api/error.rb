@@ -5,7 +5,27 @@ module PaypalAPI
   # Common interface for all errors
   #
   class Error < StandardError
-    attr_reader :response, :request, :error_name, :error_message, :error_debug_id, :error_details
+    # @return [Response, nil] Returned response with non-200 status code
+    attr_reader :response
+
+    # @return [Request] Sent request
+    attr_reader :request
+
+    # @return [String] Error name provided by PayPal or Net::HTTP network error name
+    attr_reader :error_name
+
+    # @return [String] Error message provided by PayPal or Net::HTTP network error message
+    attr_reader :error_message
+
+    # @return [String, nil] Error debug_id returned by PayPal
+    attr_reader :error_debug_id
+
+    # @see https://developer.paypal.com/api/rest/responses/#link-examples
+    # @return [Array, nil] Error details returned by PayPal
+    attr_reader :error_details
+
+    # @return [String, nil] PayPal-Request-Id header assigned to request
+    attr_reader :paypal_request_id
   end
 
   #
@@ -27,6 +47,7 @@ module PaypalAPI
         @error_message = data[:message] || data[:error_description] || response.http_body.to_s
         @error_debug_id = data[:debug_id]
         @error_details = data[:details]
+        @paypal_request_id = request.http_request["paypal-request-id"]
       end
     end
 
@@ -43,6 +64,7 @@ module PaypalAPI
         @error_message = error.message
         @error_debug_id = nil
         @error_details = nil
+        @paypal_request_id = request.http_request["paypal-request-id"]
       end
     end
 
