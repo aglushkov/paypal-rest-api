@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Add Disputes APIs
+
 - Split Subscriptions API collection for:
    - Subscriptions
    - SubscriptionPlans
