@@ -32,11 +32,15 @@ RSpec.describe PaypalAPI do
     authorized_payments: PaypalAPI::AuthorizedPayments,
     captured_payments: PaypalAPI::CapturedPayments,
     catalog_products: PaypalAPI::CatalogProducts,
+    disputes: PaypalAPI::Disputes,
     orders: PaypalAPI::Orders,
     refunds: PaypalAPI::Refunds,
     shipment_tracking: PaypalAPI::ShipmentTracking,
     subscriptions: PaypalAPI::Subscriptions,
-    webhooks: PaypalAPI::Webhooks
+    subscription_plans: PaypalAPI::SubscriptionPlans,
+    webhooks: PaypalAPI::Webhooks,
+    webhook_events: PaypalAPI::WebhookEvents,
+    webhook_lookups: PaypalAPI::WebhookLookups
   }.each do |resource_method, resource_class|
     describe "##{resource_method}" do
       it "delegates ##{resource_method} method to client" do

@@ -21,6 +21,7 @@ RSpec.describe PaypalAPI::Client do
       authorized_payments: PaypalAPI::AuthorizedPayments,
       captured_payments: PaypalAPI::CapturedPayments,
       catalog_products: PaypalAPI::CatalogProducts,
+      disputes: PaypalAPI::Disputes,
       orders: PaypalAPI::Orders,
       refunds: PaypalAPI::Refunds,
       shipment_tracking: PaypalAPI::ShipmentTracking,

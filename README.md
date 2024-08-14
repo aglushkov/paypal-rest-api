@@ -285,6 +285,24 @@ All API endpoints accept this parameters:
 - `PaypalAPI::CatalogProducts.show`
 - `PaypalAPI::CatalogProducts.update`
 
+### Disputes
+
+- `PaypalAPI::Disputes.appeal`
+- `PaypalAPI::Disputes.make_offer`
+- `PaypalAPI::Disputes.show`
+- `PaypalAPI::Disputes.update`
+- `PaypalAPI::Disputes.send_message`
+- `PaypalAPI::Disputes.provide_supporting_info`
+- `PaypalAPI::Disputes.update_status`
+- `PaypalAPI::Disputes.deny_offer`
+- `PaypalAPI::Disputes.provide_evidence`
+- `PaypalAPI::Disputes.settle`
+- `PaypalAPI::Disputes.acknowledge_return_item`
+- `PaypalAPI::Disputes.accept_claim`
+- `PaypalAPI::Disputes.list`
+- `PaypalAPI::Disputes.escalate`
+- `PaypalAPI::Disputes.accept_offer`
+
 ## Development
 
 ```bash

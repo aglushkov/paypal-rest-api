@@ -87,6 +87,10 @@ module PaypalAPI
     #   @macro api_collection
     #   @return [CatalogProducts]
     #
+    # @!method disputes
+    #   @macro api_collection
+    #   @return [Disputes]
+    #
     # @!method orders
     #   @macro api_collection
     #   @return [Orders]
@@ -124,6 +128,7 @@ module PaypalAPI
       authorized_payments
       captured_payments
       catalog_products
+      disputes
       orders
       refunds
       shipment_tracking
@@ -165,6 +170,7 @@ require_relative "paypal-api/api_collections/authentication"
 require_relative "paypal-api/api_collections/authorized_payments"
 require_relative "paypal-api/api_collections/captured_payments"
 require_relative "paypal-api/api_collections/catalog_products"
+require_relative "paypal-api/api_collections/disputes"
 require_relative "paypal-api/api_collections/orders"
 require_relative "paypal-api/api_collections/refunds"
 require_relative "paypal-api/api_collections/shipment_tracking"

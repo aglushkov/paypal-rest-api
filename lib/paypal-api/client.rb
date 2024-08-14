@@ -128,6 +128,11 @@ module PaypalAPI
       CatalogProducts.new(self)
     end
 
+    # @return [Disputes] Disputes APIs collection
+    def disputes
+      Disputes.new(self)
+    end
+
     # @return [Orders] Orders APIs collection
     def orders
       Orders.new(self)
