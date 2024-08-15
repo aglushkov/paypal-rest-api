@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Add Users management APIs
+- Add UserInfo APIs
 - Add Disputes APIs
 
 - Split Subscriptions API collection for:
