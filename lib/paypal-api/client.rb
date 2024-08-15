@@ -133,6 +133,16 @@ module PaypalAPI
       Disputes.new(self)
     end
 
+    # @return [InvoiceTemplates] InvoiceTemplates APIs collection
+    def invoice_templates
+      InvoiceTemplates.new(self)
+    end
+
+    # @return [Invoices] Invoices APIs collection
+    def invoices
+      Invoices.new(self)
+    end
+
     # @return [Orders] Orders APIs collection
     def orders
       Orders.new(self)
