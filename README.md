@@ -303,6 +303,18 @@ All API endpoints accept this parameters:
 - `PaypalAPI::Disputes.escalate`
 - `PaypalAPI::Disputes.accept_offer`
 
+### UserInfo
+
+- `PaypalAPI::UserInfo.show`
+
+### Users
+
+- `PaypalAPI::Users.create`
+- `PaypalAPI::Users.list`
+- `PaypalAPI::Users.show`
+- `PaypalAPI::Users.update`
+- `PaypalAPI::Users.delete`
+
 ## Development
 
 ```bash

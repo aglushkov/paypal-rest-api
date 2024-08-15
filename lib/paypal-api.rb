@@ -111,6 +111,14 @@ module PaypalAPI
     #   @macro api_collection
     #   @return [SubscriptionPlans]
     #
+    # @!method user_info
+    #   @macro api_collection
+    #   @return [UserInfo]
+    #
+    # @!method users
+    #   @macro api_collection
+    #   @return [Users]
+    #
     # @!method webhooks
     #   @macro api_collection
     #   @return [Webhooks]
@@ -134,6 +142,8 @@ module PaypalAPI
       shipment_tracking
       subscriptions
       subscription_plans
+      user_info
+      users
       webhooks
       webhook_events
       webhook_lookups
@@ -176,6 +186,8 @@ require_relative "paypal-api/api_collections/refunds"
 require_relative "paypal-api/api_collections/shipment_tracking"
 require_relative "paypal-api/api_collections/subscriptions"
 require_relative "paypal-api/api_collections/subscription_plans"
+require_relative "paypal-api/api_collections/user_info"
+require_relative "paypal-api/api_collections/users"
 require_relative "paypal-api/api_collections/webhooks"
 require_relative "paypal-api/api_collections/webhook_events"
 require_relative "paypal-api/api_collections/webhook_lookups"

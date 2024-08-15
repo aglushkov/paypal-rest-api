@@ -4,7 +4,7 @@ module PaypalAPI
   #
   # Manages customer disputes
   #
-  # @see https://developer.paypal.com/docs/api/orders/v2/
+  # @see https://developer.paypal.com/docs/api/customer-disputes/v1/
   #
   class Disputes < APICollection
     #

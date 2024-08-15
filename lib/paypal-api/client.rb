@@ -158,6 +158,16 @@ module PaypalAPI
       SubscriptionPlans.new(self)
     end
 
+    # @return [UserInfo] User Info APIs collection
+    def user_info
+      UserInfo.new(self)
+    end
+
+    # @return [Users] Users Management APIs collection
+    def users
+      Users.new(self)
+    end
+
     # @return [Webhooks] Webhooks APIs collection
     def webhooks
       Webhooks.new(self)
