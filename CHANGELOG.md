@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- Add Invoices APIs
 - Add Users management APIs
 - Add UserInfo APIs
 - Add Disputes APIs

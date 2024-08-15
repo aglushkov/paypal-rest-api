@@ -22,6 +22,8 @@ RSpec.describe PaypalAPI::Client do
       captured_payments: PaypalAPI::CapturedPayments,
       catalog_products: PaypalAPI::CatalogProducts,
       disputes: PaypalAPI::Disputes,
+      invoice_templates: PaypalAPI::InvoiceTemplates,
+      invoices: PaypalAPI::Invoices,
       orders: PaypalAPI::Orders,
       refunds: PaypalAPI::Refunds,
       shipment_tracking: PaypalAPI::ShipmentTracking,
@@ -39,7 +41,7 @@ RSpec.describe PaypalAPI::Client do
         before { allow(resource_class).to receive(:new).with(client).and_return("INITIALIZED_RESOURCE_CLASS") }
 
         it "initializes #{resource_class} instance" do
-          expect(client.public_send(method_name)).to equal "INITIALIZED_RESOURCE_CLASS"
+          expect(client.public_send(method_name)).to eq "INITIALIZED_RESOURCE_CLASS"
         end
       end
     end

@@ -33,6 +33,8 @@ RSpec.describe PaypalAPI do
     captured_payments: PaypalAPI::CapturedPayments,
     catalog_products: PaypalAPI::CatalogProducts,
     disputes: PaypalAPI::Disputes,
+    invoice_templates: PaypalAPI::InvoiceTemplates,
+    invoices: PaypalAPI::Invoices,
     orders: PaypalAPI::Orders,
     refunds: PaypalAPI::Refunds,
     shipment_tracking: PaypalAPI::ShipmentTracking,

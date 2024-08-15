@@ -315,6 +315,32 @@ All API endpoints accept this parameters:
 - `PaypalAPI::Users.update`
 - `PaypalAPI::Users.delete`
 
+### Invoices
+
+- `PaypalAPI::Invoices.create`
+- `PaypalAPI::Invoices.list`
+- `PaypalAPI::Invoices.show`
+- `PaypalAPI::Invoices.update`
+- `PaypalAPI::Invoices.delete`
+- `PaypalAPI::Invoices.search`
+- `PaypalAPI::Invoices.remind`
+- `PaypalAPI::Invoices.delete_refund`
+- `PaypalAPI::Invoices.delete_payment`
+- `PaypalAPI::Invoices.record_refund`
+- `PaypalAPI::Invoices.record_payment`
+- `PaypalAPI::Invoices.send_invoice`
+- `PaypalAPI::Invoices.cancel`
+- `PaypalAPI::Invoices.generate_qr_code`
+- `PaypalAPI::Invoices.generate_invoice_number`
+
+### InvoiceTemplates
+
+- `PaypalAPI::InvoiceTemplates.create`
+- `PaypalAPI::InvoiceTemplates.list`
+- `PaypalAPI::InvoiceTemplates.show`
+- `PaypalAPI::InvoiceTemplates.update`
+- `PaypalAPI::InvoiceTemplates.delete`
+
 ## Development
 
 ```bash
