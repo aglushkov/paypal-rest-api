@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.0.4] - 2024-08-25
+
 - Add Payouts & ReferencedPayouts APIs
 - Add Invoices APIs
 - Add Users management APIs
