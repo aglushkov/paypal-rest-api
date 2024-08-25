@@ -18,4 +18,18 @@ RSpec.describe PaypalAPI::APICollection do
       expect(described_class.client).to equal client
     end
   end
+
+  describe "#encode" do
+    it "encodes URI component" do
+      expect(resource.encode("a b")).to eq "a%20b"
+      expect(resource.encode("a/b")).to eq "a%2Fb"
+    end
+  end
+
+  describe ".encode" do
+    it "encodes URI component" do
+      expect(described_class.encode("a b")).to eq "a%20b"
+      expect(described_class.encode("a/b")).to eq "a%2Fb"
+    end
+  end
 end

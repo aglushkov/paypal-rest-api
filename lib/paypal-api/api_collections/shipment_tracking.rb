@@ -37,7 +37,7 @@ module PaypalAPI
       # @macro request
       #
       def update(id, query: nil, body: nil, headers: nil)
-        client.put("/v1/shipping/trackers/#{id}", query: query, body: body, headers: headers)
+        client.put("/v1/shipping/trackers/#{encode(id)}", query: query, body: body, headers: headers)
       end
 
       #
@@ -49,7 +49,7 @@ module PaypalAPI
       # @macro request
       #
       def show(id, query: nil, body: nil, headers: nil)
-        client.get("/v1/shipping/trackers/#{id}", query: query, body: body, headers: headers)
+        client.get("/v1/shipping/trackers/#{encode(id)}", query: query, body: body, headers: headers)
       end
     end
 

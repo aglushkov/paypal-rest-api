@@ -26,7 +26,7 @@ module PaypalAPI
       # @macro request
       #
       def show(authorization_id, query: nil, body: nil, headers: nil)
-        client.get("/v2/payments/authorizations/#{authorization_id}", query: query, body: body, headers: headers)
+        client.get("/v2/payments/authorizations/#{encode(authorization_id)}", query: query, body: body, headers: headers)
       end
 
       #
@@ -38,7 +38,7 @@ module PaypalAPI
       # @macro request
       #
       def capture(authorization_id, query: nil, body: nil, headers: nil)
-        client.post("/v2/payments/authorizations/#{authorization_id}/capture", query: query, body: body, headers: headers)
+        client.post("/v2/payments/authorizations/#{encode(authorization_id)}/capture", query: query, body: body, headers: headers)
       end
 
       # Reauthorize authorized payment
@@ -49,7 +49,7 @@ module PaypalAPI
       # @macro request
       #
       def reauthorize(authorization_id, query: nil, body: nil, headers: nil)
-        client.post("/v2/payments/authorizations/#{authorization_id}/reauthorize", query: query, body: body, headers: headers)
+        client.post("/v2/payments/authorizations/#{encode(authorization_id)}/reauthorize", query: query, body: body, headers: headers)
       end
 
       # Void authorized payment
@@ -60,7 +60,7 @@ module PaypalAPI
       # @macro request
       #
       def void(authorization_id, query: nil, body: nil, headers: nil)
-        client.post("/v2/payments/authorizations/#{authorization_id}/void", query: query, body: body, headers: headers)
+        client.post("/v2/payments/authorizations/#{encode(authorization_id)}/void", query: query, body: body, headers: headers)
       end
     end
 

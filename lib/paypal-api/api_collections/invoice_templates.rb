@@ -48,7 +48,7 @@ module PaypalAPI
       # @macro request
       #
       def show(template_id, query: nil, body: nil, headers: nil)
-        client.get("/v2/invoicing/templates/#{template_id}", query: query, body: body, headers: headers)
+        client.get("/v2/invoicing/templates/#{encode(template_id)}", query: query, body: body, headers: headers)
       end
 
       #
@@ -60,7 +60,7 @@ module PaypalAPI
       # @macro request
       #
       def update(template_id, query: nil, body: nil, headers: nil)
-        client.put("/v2/invoicing/templates/#{template_id}", query: query, body: body, headers: headers)
+        client.put("/v2/invoicing/templates/#{encode(template_id)}", query: query, body: body, headers: headers)
       end
 
       #
@@ -72,7 +72,7 @@ module PaypalAPI
       # @macro request
       #
       def delete(template_id, query: nil, body: nil, headers: nil)
-        client.delete("/v2/invoicing/templates/#{template_id}", query: query, body: body, headers: headers)
+        client.delete("/v2/invoicing/templates/#{encode(template_id)}", query: query, body: body, headers: headers)
       end
     end
 

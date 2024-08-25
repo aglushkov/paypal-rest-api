@@ -25,7 +25,7 @@ module PaypalAPI
       # @macro request
       #
       def appeal(dispute_id, query: nil, body: nil, headers: nil)
-        client.post("/v1/customer/disputes/#{dispute_id}/appeal", query: query, body: body, headers: headers)
+        client.post("/v1/customer/disputes/#{encode(dispute_id)}/appeal", query: query, body: body, headers: headers)
       end
 
       #
@@ -36,7 +36,7 @@ module PaypalAPI
       # @macro request
       #
       def make_offer(dispute_id, query: nil, body: nil, headers: nil)
-        client.post("/v1/customer/disputes/#{dispute_id}/make-offer", query: query, body: body, headers: headers)
+        client.post("/v1/customer/disputes/#{encode(dispute_id)}/make-offer", query: query, body: body, headers: headers)
       end
 
       #
@@ -47,7 +47,7 @@ module PaypalAPI
       # @macro request
       #
       def show(dispute_id, query: nil, body: nil, headers: nil)
-        client.get("/v1/customer/disputes/#{dispute_id}", query: query, body: body, headers: headers)
+        client.get("/v1/customer/disputes/#{encode(dispute_id)}", query: query, body: body, headers: headers)
       end
 
       #
@@ -58,7 +58,7 @@ module PaypalAPI
       # @macro request
       #
       def update(dispute_id, query: nil, body: nil, headers: nil)
-        client.patch("/v1/customer/disputes/#{dispute_id}", query: query, body: body, headers: headers)
+        client.patch("/v1/customer/disputes/#{encode(dispute_id)}", query: query, body: body, headers: headers)
       end
 
       #
@@ -69,7 +69,7 @@ module PaypalAPI
       # @macro request
       #
       def send_message(dispute_id, query: nil, body: nil, headers: nil)
-        client.post("/v1/customer/disputes/#{dispute_id}/send-message", query: query, body: body, headers: headers)
+        client.post("/v1/customer/disputes/#{encode(dispute_id)}/send-message", query: query, body: body, headers: headers)
       end
 
       #
@@ -80,7 +80,7 @@ module PaypalAPI
       # @macro request
       #
       def provide_supporting_info(dispute_id, query: nil, body: nil, headers: nil)
-        client.post("/v1/customer/disputes/#{dispute_id}/provide-supporting-info", query: query, body: body, headers: headers)
+        client.post("/v1/customer/disputes/#{encode(dispute_id)}/provide-supporting-info", query: query, body: body, headers: headers)
       end
 
       #
@@ -91,7 +91,7 @@ module PaypalAPI
       # @macro request
       #
       def update_status(dispute_id, query: nil, body: nil, headers: nil)
-        client.post("/v1/customer/disputes/#{dispute_id}/require-evidence", query: query, body: body, headers: headers)
+        client.post("/v1/customer/disputes/#{encode(dispute_id)}/require-evidence", query: query, body: body, headers: headers)
       end
 
       #
@@ -102,7 +102,7 @@ module PaypalAPI
       # @macro request
       #
       def deny_offer(dispute_id, query: nil, body: nil, headers: nil)
-        client.post("/v1/customer/disputes/#{dispute_id}/deny-offer", query: query, body: body, headers: headers)
+        client.post("/v1/customer/disputes/#{encode(dispute_id)}/deny-offer", query: query, body: body, headers: headers)
       end
 
       #
@@ -113,7 +113,7 @@ module PaypalAPI
       # @macro request
       #
       def provide_evidence(dispute_id, query: nil, body: nil, headers: nil)
-        client.post("/v1/customer/disputes/#{dispute_id}/provide-evidence", query: query, body: body, headers: headers)
+        client.post("/v1/customer/disputes/#{encode(dispute_id)}/provide-evidence", query: query, body: body, headers: headers)
       end
 
       #
@@ -124,7 +124,7 @@ module PaypalAPI
       # @macro request
       #
       def settle(dispute_id, query: nil, body: nil, headers: nil)
-        client.post("/v1/customer/disputes/#{dispute_id}/adjudicate", query: query, body: body, headers: headers)
+        client.post("/v1/customer/disputes/#{encode(dispute_id)}/adjudicate", query: query, body: body, headers: headers)
       end
 
       #
@@ -135,7 +135,7 @@ module PaypalAPI
       # @macro request
       #
       def acknowledge_return_item(dispute_id, query: nil, body: nil, headers: nil)
-        client.post("/v1/customer/disputes/#{dispute_id}/acknowledge-return-item", query: query, body: body, headers: headers)
+        client.post("/v1/customer/disputes/#{encode(dispute_id)}/acknowledge-return-item", query: query, body: body, headers: headers)
       end
 
       #
@@ -146,7 +146,7 @@ module PaypalAPI
       # @macro request
       #
       def accept_claim(dispute_id, query: nil, body: nil, headers: nil)
-        client.post("/v1/customer/disputes/#{dispute_id}/accept-claim", query: query, body: body, headers: headers)
+        client.post("/v1/customer/disputes/#{encode(dispute_id)}/accept-claim", query: query, body: body, headers: headers)
       end
 
       #
@@ -167,7 +167,7 @@ module PaypalAPI
       # @macro request
       #
       def escalate(dispute_id, query: nil, body: nil, headers: nil)
-        client.post("/v1/customer/disputes/#{dispute_id}/escalate", query: query, body: body, headers: headers)
+        client.post("/v1/customer/disputes/#{encode(dispute_id)}/escalate", query: query, body: body, headers: headers)
       end
 
       #
@@ -178,7 +178,7 @@ module PaypalAPI
       # @macro request
       #
       def accept_offer(dispute_id, query: nil, body: nil, headers: nil)
-        client.post("/v1/customer/disputes/#{dispute_id}/accept-offer", query: query, body: body, headers: headers)
+        client.post("/v1/customer/disputes/#{encode(dispute_id)}/accept-offer", query: query, body: body, headers: headers)
       end
     end
 

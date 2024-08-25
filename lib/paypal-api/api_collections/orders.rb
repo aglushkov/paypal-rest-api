@@ -37,7 +37,7 @@ module PaypalAPI
       # @macro request
       #
       def show(id, query: nil, body: nil, headers: nil)
-        client.get("/v2/checkout/orders/#{id}", query: query, body: body, headers: headers)
+        client.get("/v2/checkout/orders/#{encode(id)}", query: query, body: body, headers: headers)
       end
 
       #
@@ -49,7 +49,7 @@ module PaypalAPI
       # @macro request
       #
       def update(id, query: nil, body: nil, headers: nil)
-        client.patch("/v2/checkout/orders/#{id}", query: query, body: body, headers: headers)
+        client.patch("/v2/checkout/orders/#{encode(id)}", query: query, body: body, headers: headers)
       end
 
       #
@@ -61,7 +61,7 @@ module PaypalAPI
       # @macro request
       #
       def confirm(id, query: nil, body: nil, headers: nil)
-        client.post("/v2/checkout/orders/#{id}/confirm-payment-source", query: query, body: body, headers: headers)
+        client.post("/v2/checkout/orders/#{encode(id)}/confirm-payment-source", query: query, body: body, headers: headers)
       end
 
       #
@@ -73,7 +73,7 @@ module PaypalAPI
       # @macro request
       #
       def authorize(id, query: nil, body: nil, headers: nil)
-        client.post("/v2/checkout/orders/#{id}/authorize", query: query, body: body, headers: headers)
+        client.post("/v2/checkout/orders/#{encode(id)}/authorize", query: query, body: body, headers: headers)
       end
 
       #
@@ -85,7 +85,7 @@ module PaypalAPI
       # @macro request
       #
       def capture(id, query: nil, body: nil, headers: nil)
-        client.post("/v2/checkout/orders/#{id}/capture", query: query, body: body, headers: headers)
+        client.post("/v2/checkout/orders/#{encode(id)}/capture", query: query, body: body, headers: headers)
       end
 
       #
@@ -97,7 +97,7 @@ module PaypalAPI
       # @macro request
       #
       def track(id, query: nil, body: nil, headers: nil)
-        client.post("/v2/checkout/orders/#{id}/track", query: query, body: body, headers: headers)
+        client.post("/v2/checkout/orders/#{encode(id)}/track", query: query, body: body, headers: headers)
       end
 
       #
@@ -110,7 +110,7 @@ module PaypalAPI
       # @macro request
       #
       def update_tracker(id, tracker_id, query: nil, body: nil, headers: nil)
-        client.patch("/v2/checkout/orders/#{id}/trackers/#{tracker_id}", query: query, body: body, headers: headers)
+        client.patch("/v2/checkout/orders/#{encode(id)}/trackers/#{encode(tracker_id)}", query: query, body: body, headers: headers)
       end
     end
 

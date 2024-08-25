@@ -46,7 +46,7 @@ module PaypalAPI
       # @macro request
       #
       def show(webhook_id, query: nil, body: nil, headers: nil)
-        client.get("/v1/notifications/webhooks/#{webhook_id}", query: query, body: body, headers: headers)
+        client.get("/v1/notifications/webhooks/#{encode(webhook_id)}", query: query, body: body, headers: headers)
       end
 
       #
@@ -58,7 +58,7 @@ module PaypalAPI
       # @macro request
       #
       def update(webhook_id, query: nil, body: nil, headers: nil)
-        client.patch("/v1/notifications/webhooks/#{webhook_id}", query: query, body: body, headers: headers)
+        client.patch("/v1/notifications/webhooks/#{encode(webhook_id)}", query: query, body: body, headers: headers)
       end
 
       #
@@ -70,7 +70,7 @@ module PaypalAPI
       # @macro request
       #
       def delete(webhook_id, query: nil, body: nil, headers: nil)
-        client.delete("/v1/notifications/webhooks/#{webhook_id}", query: query, body: body, headers: headers)
+        client.delete("/v1/notifications/webhooks/#{encode(webhook_id)}", query: query, body: body, headers: headers)
       end
 
       #
@@ -82,7 +82,7 @@ module PaypalAPI
       # @macro request
       #
       def event_types(webhook_id, query: nil, body: nil, headers: nil)
-        client.get("/v1/notifications/webhooks/#{webhook_id}/event-types", query: query, body: body, headers: headers)
+        client.get("/v1/notifications/webhooks/#{encode(webhook_id)}/event-types", query: query, body: body, headers: headers)
       end
 
       #

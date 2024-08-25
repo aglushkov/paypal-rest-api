@@ -103,9 +103,25 @@ module PaypalAPI
     #   @macro api_collection
     #   @return [Orders]
     #
+    # @!method payout_items
+    #   @macro api_collection
+    #   @return [PayoutItems]
+    #
+    # @!method payouts
+    #   @macro api_collection
+    #   @return [Payouts]
+    #
     # @!method refunds
     #   @macro api_collection
     #   @return [Refunds]
+    #
+    # @!method referenced_payout_items
+    #   @macro api_collection
+    #   @return [ReferencedPayoutItems]
+    #
+    # @!method referenced_payouts
+    #   @macro api_collection
+    #   @return [ReferencedPayouts]
     #
     # @!method shipment_tracking
     #   @macro api_collection
@@ -148,7 +164,11 @@ module PaypalAPI
       invoice_templates
       invoices
       orders
+      payout_items
+      payouts
       refunds
+      referenced_payout_items
+      referenced_payouts
       shipment_tracking
       subscriptions
       subscription_plans
@@ -194,7 +214,11 @@ require_relative "paypal-api/api_collections/disputes"
 require_relative "paypal-api/api_collections/invoice_templates"
 require_relative "paypal-api/api_collections/invoices"
 require_relative "paypal-api/api_collections/orders"
+require_relative "paypal-api/api_collections/payout_items"
+require_relative "paypal-api/api_collections/payouts"
 require_relative "paypal-api/api_collections/refunds"
+require_relative "paypal-api/api_collections/referenced_payout_items"
+require_relative "paypal-api/api_collections/referenced_payouts"
 require_relative "paypal-api/api_collections/shipment_tracking"
 require_relative "paypal-api/api_collections/subscriptions"
 require_relative "paypal-api/api_collections/subscription_plans"

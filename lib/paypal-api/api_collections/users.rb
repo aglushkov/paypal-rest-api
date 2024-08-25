@@ -51,7 +51,7 @@ module PaypalAPI
       #
       def show(user_id, query: nil, body: nil, headers: nil)
         headers = add_scim_content_type(headers)
-        client.get("/v2/scim/Users/#{user_id}", query: query, body: body, headers: headers)
+        client.get("/v2/scim/Users/#{encode(user_id)}", query: query, body: body, headers: headers)
       end
 
       #
@@ -64,7 +64,7 @@ module PaypalAPI
       #
       def update(user_id, query: nil, body: nil, headers: nil)
         headers = add_scim_content_type(headers)
-        client.patch("/v2/scim/Users/#{user_id}", query: query, body: body, headers: headers)
+        client.patch("/v2/scim/Users/#{encode(user_id)}", query: query, body: body, headers: headers)
       end
 
       #
@@ -77,7 +77,7 @@ module PaypalAPI
       #
       def delete(user_id, query: nil, body: nil, headers: nil)
         headers = add_scim_content_type(headers)
-        client.delete("/v2/scim/Users/#{user_id}", query: query, body: body, headers: headers)
+        client.delete("/v2/scim/Users/#{encode(user_id)}", query: query, body: body, headers: headers)
       end
 
       private
