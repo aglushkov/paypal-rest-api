@@ -48,7 +48,7 @@ module PaypalAPI
       # @macro request
       #
       def show(product_id, query: nil, body: nil, headers: nil)
-        client.get("/v1/catalogs/products/#{product_id}", query: query, body: body, headers: headers)
+        client.get("/v1/catalogs/products/#{encode(product_id)}", query: query, body: body, headers: headers)
       end
 
       #
@@ -60,7 +60,7 @@ module PaypalAPI
       # @macro request
       #
       def update(product_id, query: nil, body: nil, headers: nil)
-        client.patch("/v1/catalogs/products/#{product_id}", query: query, body: body, headers: headers)
+        client.patch("/v1/catalogs/products/#{encode(product_id)}", query: query, body: body, headers: headers)
       end
     end
 

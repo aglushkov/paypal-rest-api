@@ -45,7 +45,7 @@ module PaypalAPI
       # @macro request
       #
       def show(event_id, query: nil, body: nil, headers: nil)
-        client.get("/v1/notifications/webhooks-events/#{event_id}", query: query, body: body, headers: headers)
+        client.get("/v1/notifications/webhooks-events/#{encode(event_id)}", query: query, body: body, headers: headers)
       end
 
       #
@@ -57,7 +57,7 @@ module PaypalAPI
       # @macro request
       #
       def resend(event_id, query: nil, body: nil, headers: nil)
-        client.post("/v1/notifications/webhooks-events/#{event_id}/resend", query: query, body: body, headers: headers)
+        client.post("/v1/notifications/webhooks-events/#{encode(event_id)}/resend", query: query, body: body, headers: headers)
       end
 
       #

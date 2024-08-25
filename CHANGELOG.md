@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- Add Payouts & ReferencedPayouts APIs
 - Add Invoices APIs
 - Add Users management APIs
 - Add UserInfo APIs

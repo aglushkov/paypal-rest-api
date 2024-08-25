@@ -37,7 +37,7 @@ module PaypalAPI
       # @macro request
       #
       def show(subscription_id, query: nil, body: nil, headers: nil)
-        client.get("/v1/billing/subscriptions/#{subscription_id}", query: query, body: body, headers: headers)
+        client.get("/v1/billing/subscriptions/#{encode(subscription_id)}", query: query, body: body, headers: headers)
       end
 
       #
@@ -49,7 +49,7 @@ module PaypalAPI
       # @macro request
       #
       def update(subscription_id, query: nil, body: nil, headers: nil)
-        client.patch("/v1/billing/subscriptions/#{subscription_id}", query: query, body: body, headers: headers)
+        client.patch("/v1/billing/subscriptions/#{encode(subscription_id)}", query: query, body: body, headers: headers)
       end
 
       #
@@ -61,7 +61,7 @@ module PaypalAPI
       # @macro request
       #
       def revise(subscription_id, query: nil, body: nil, headers: nil)
-        client.post("/v1/billing/subscriptions/#{subscription_id}/revise", query: query, body: body, headers: headers)
+        client.post("/v1/billing/subscriptions/#{encode(subscription_id)}/revise", query: query, body: body, headers: headers)
       end
 
       #
@@ -73,7 +73,7 @@ module PaypalAPI
       # @macro request
       #
       def suspend(subscription_id, query: nil, body: nil, headers: nil)
-        client.post("/v1/billing/subscriptions/#{subscription_id}/suspend", query: query, body: body, headers: headers)
+        client.post("/v1/billing/subscriptions/#{encode(subscription_id)}/suspend", query: query, body: body, headers: headers)
       end
 
       #
@@ -85,7 +85,7 @@ module PaypalAPI
       # @macro request
       #
       def cancel(subscription_id, query: nil, body: nil, headers: nil)
-        client.post("/v1/billing/subscriptions/#{subscription_id}/cancel", query: query, body: body, headers: headers)
+        client.post("/v1/billing/subscriptions/#{encode(subscription_id)}/cancel", query: query, body: body, headers: headers)
       end
 
       #
@@ -97,7 +97,7 @@ module PaypalAPI
       # @macro request
       #
       def activate(subscription_id, query: nil, body: nil, headers: nil)
-        client.post("/v1/billing/subscriptions/#{subscription_id}/activate", query: query, body: body, headers: headers)
+        client.post("/v1/billing/subscriptions/#{encode(subscription_id)}/activate", query: query, body: body, headers: headers)
       end
 
       #
@@ -109,7 +109,7 @@ module PaypalAPI
       # @macro request
       #
       def capture(subscription_id, query: nil, body: nil, headers: nil)
-        client.post("/v1/billing/subscriptions/#{subscription_id}/capture", query: query, body: body, headers: headers)
+        client.post("/v1/billing/subscriptions/#{encode(subscription_id)}/capture", query: query, body: body, headers: headers)
       end
 
       #
@@ -121,7 +121,7 @@ module PaypalAPI
       # @macro request
       #
       def transactions(subscription_id, query: nil, body: nil, headers: nil)
-        client.get("/v1/billing/subscriptions/#{subscription_id}/transactions", query: query, body: body, headers: headers)
+        client.get("/v1/billing/subscriptions/#{encode(subscription_id)}/transactions", query: query, body: body, headers: headers)
       end
     end
 

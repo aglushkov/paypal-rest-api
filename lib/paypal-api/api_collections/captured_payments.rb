@@ -26,7 +26,7 @@ module PaypalAPI
       # @macro request
       #
       def show(capture_id, query: nil, body: nil, headers: nil)
-        client.get("/v2/payments/captures/#{capture_id}", query: query, body: body, headers: headers)
+        client.get("/v2/payments/captures/#{encode(capture_id)}", query: query, body: body, headers: headers)
       end
 
       #
@@ -38,7 +38,7 @@ module PaypalAPI
       # @macro request
       #
       def refund(capture_id, query: nil, body: nil, headers: nil)
-        client.post("/v2/payments/captures/#{capture_id}/refund", query: query, body: body, headers: headers)
+        client.post("/v2/payments/captures/#{encode(capture_id)}/refund", query: query, body: body, headers: headers)
       end
     end
 

@@ -20,7 +20,7 @@ module PaypalAPI
       # @macro request
       #
       def show(refund_id, query: nil, body: nil, headers: nil)
-        client.get("/v2/payments/refunds/#{refund_id}", query: query, body: body, headers: headers)
+        client.get("/v2/payments/refunds/#{encode(refund_id)}", query: query, body: body, headers: headers)
       end
     end
 

@@ -47,7 +47,7 @@ module PaypalAPI
       # @macro request
       #
       def show(invoice_id, query: nil, body: nil, headers: nil)
-        client.get("/v2/invoicing/invoices/#{invoice_id}", query: query, body: body, headers: headers)
+        client.get("/v2/invoicing/invoices/#{encode(invoice_id)}", query: query, body: body, headers: headers)
       end
 
       #
@@ -58,7 +58,7 @@ module PaypalAPI
       # @macro request
       #
       def update(invoice_id, query: nil, body: nil, headers: nil)
-        client.put("/v2/invoicing/invoices/#{invoice_id}", query: query, body: body, headers: headers)
+        client.put("/v2/invoicing/invoices/#{encode(invoice_id)}", query: query, body: body, headers: headers)
       end
 
       #
@@ -69,7 +69,7 @@ module PaypalAPI
       # @macro request
       #
       def delete(invoice_id, query: nil, body: nil, headers: nil)
-        client.delete("/v2/invoicing/invoices/#{invoice_id}", query: query, body: body, headers: headers)
+        client.delete("/v2/invoicing/invoices/#{encode(invoice_id)}", query: query, body: body, headers: headers)
       end
 
       #
@@ -91,7 +91,7 @@ module PaypalAPI
       # @macro request
       #
       def remind(invoice_id, query: nil, body: nil, headers: nil)
-        client.post("/v2/invoicing/invoices/#{invoice_id}/remind", query: query, body: body, headers: headers)
+        client.post("/v2/invoicing/invoices/#{encode(invoice_id)}/remind", query: query, body: body, headers: headers)
       end
 
       #
@@ -104,7 +104,7 @@ module PaypalAPI
       #
       def delete_refund(invoice_id, transaction_id, query: nil, body: nil, headers: nil)
         client.delete(
-          "/v2/invoicing/invoices/#{invoice_id}/refunds/#{transaction_id}",
+          "/v2/invoicing/invoices/#{encode(invoice_id)}/refunds/#{encode(transaction_id)}",
           query: query, body: body, headers: headers
         )
       end
@@ -119,7 +119,7 @@ module PaypalAPI
       #
       def delete_payment(invoice_id, transaction_id, query: nil, body: nil, headers: nil)
         client.delete(
-          "/v2/invoicing/invoices/#{invoice_id}/payments/#{transaction_id}",
+          "/v2/invoicing/invoices/#{encode(invoice_id)}/payments/#{encode(transaction_id)}",
           query: query, body: body, headers: headers
         )
       end
@@ -132,7 +132,7 @@ module PaypalAPI
       # @macro request
       #
       def record_payment(invoice_id, query: nil, body: nil, headers: nil)
-        client.post("/v2/invoicing/invoices/#{invoice_id}/payments", query: query, body: body, headers: headers)
+        client.post("/v2/invoicing/invoices/#{encode(invoice_id)}/payments", query: query, body: body, headers: headers)
       end
 
       #
@@ -143,7 +143,7 @@ module PaypalAPI
       # @macro request
       #
       def record_refund(invoice_id, query: nil, body: nil, headers: nil)
-        client.post("/v2/invoicing/invoices/#{invoice_id}/refunds", query: query, body: body, headers: headers)
+        client.post("/v2/invoicing/invoices/#{encode(invoice_id)}/refunds", query: query, body: body, headers: headers)
       end
 
       #
@@ -154,7 +154,7 @@ module PaypalAPI
       # @macro request
       #
       def send_invoice(invoice_id, query: nil, body: nil, headers: nil)
-        client.post("/v2/invoicing/invoices/#{invoice_id}/send", query: query, body: body, headers: headers)
+        client.post("/v2/invoicing/invoices/#{encode(invoice_id)}/send", query: query, body: body, headers: headers)
       end
 
       #
@@ -165,7 +165,7 @@ module PaypalAPI
       # @macro request
       #
       def cancel(invoice_id, query: nil, body: nil, headers: nil)
-        client.post("/v2/invoicing/invoices/#{invoice_id}/cancel", query: query, body: body, headers: headers)
+        client.post("/v2/invoicing/invoices/#{encode(invoice_id)}/cancel", query: query, body: body, headers: headers)
       end
 
       #
@@ -176,7 +176,7 @@ module PaypalAPI
       # @macro request
       #
       def generate_qr_code(invoice_id, query: nil, body: nil, headers: nil)
-        client.post("/v2/invoicing/invoices/#{invoice_id}/generate-qr-code", query: query, body: body, headers: headers)
+        client.post("/v2/invoicing/invoices/#{encode(invoice_id)}/generate-qr-code", query: query, body: body, headers: headers)
       end
 
       #

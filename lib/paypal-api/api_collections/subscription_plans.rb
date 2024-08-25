@@ -48,7 +48,7 @@ module PaypalAPI
       # @macro request
       #
       def show(plan_id, query: nil, body: nil, headers: nil)
-        client.get("/v1/billing/plans/#{plan_id}", query: query, body: body, headers: headers)
+        client.get("/v1/billing/plans/#{encode(plan_id)}", query: query, body: body, headers: headers)
       end
 
       #
@@ -60,7 +60,7 @@ module PaypalAPI
       # @macro request
       #
       def update(plan_id, query: nil, body: nil, headers: nil)
-        client.patch("/v1/billing/plans/#{plan_id}", query: query, body: body, headers: headers)
+        client.patch("/v1/billing/plans/#{encode(plan_id)}", query: query, body: body, headers: headers)
       end
 
       #
@@ -72,7 +72,7 @@ module PaypalAPI
       # @macro request
       #
       def activate(plan_id, query: nil, body: nil, headers: nil)
-        client.post("/v1/billing/plans/#{plan_id}/activate", query: query, body: body, headers: headers)
+        client.post("/v1/billing/plans/#{encode(plan_id)}/activate", query: query, body: body, headers: headers)
       end
 
       #
@@ -84,7 +84,7 @@ module PaypalAPI
       # @macro request
       #
       def deactivate(plan_id, query: nil, body: nil, headers: nil)
-        client.post("/v1/billing/plans/#{plan_id}/deactivate", query: query, body: body, headers: headers)
+        client.post("/v1/billing/plans/#{encode(plan_id)}/deactivate", query: query, body: body, headers: headers)
       end
 
       #
@@ -96,7 +96,7 @@ module PaypalAPI
       # @macro request
       #
       def update_pricing(plan_id, query: nil, body: nil, headers: nil)
-        client.post("/v1/billing/plans/#{plan_id}/update-pricing-schemes", query: query, body: body, headers: headers)
+        client.post("/v1/billing/plans/#{encode(plan_id)}/update-pricing-schemes", query: query, body: body, headers: headers)
       end
     end
 

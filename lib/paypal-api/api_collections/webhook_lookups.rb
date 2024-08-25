@@ -46,7 +46,7 @@ module PaypalAPI
       # @macro request
       #
       def show(webhook_lookup_id, query: nil, body: nil, headers: nil)
-        client.get("/v1/notifications/webhooks-lookup/#{webhook_lookup_id}", query: query, body: body, headers: headers)
+        client.get("/v1/notifications/webhooks-lookup/#{encode(webhook_lookup_id)}", query: query, body: body, headers: headers)
       end
 
       #
@@ -58,7 +58,7 @@ module PaypalAPI
       # @macro request
       #
       def delete(webhook_lookup_id, query: nil, body: nil, headers: nil)
-        client.delete("/v1/notifications/webhooks-lookup/#{webhook_lookup_id}", query: query, body: body, headers: headers)
+        client.delete("/v1/notifications/webhooks-lookup/#{encode(webhook_lookup_id)}", query: query, body: body, headers: headers)
       end
     end
 

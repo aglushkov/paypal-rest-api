@@ -341,6 +341,20 @@ All API endpoints accept this parameters:
 - `PaypalAPI::InvoiceTemplates.update`
 - `PaypalAPI::InvoiceTemplates.delete`
 
+### Payouts
+
+- `PaypalAPI::Payouts.create`
+- `PaypalAPI::Payouts.show`
+- `PaypalAPI::PayoutItems.show`
+- `PaypalAPI::PayoutItems.cancel`
+
+### ReferencedPayouts
+
+- `PaypalAPI::ReferencedPayouts.create`
+- `PaypalAPI::ReferencedPayouts.show`
+- `PaypalAPI::ReferencedPayoutItems.create`
+- `PaypalAPI::ReferencedPayoutItems.show`
+
 ## Development
 
 ```bash
