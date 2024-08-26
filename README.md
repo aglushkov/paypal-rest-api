@@ -71,11 +71,11 @@ response = PaypalAPI.delete(path, query: query, body: body, headers: headers)
 
 ### Parsing response
 
-`response.body` is a main method that returns parsed JSON respoonse as a HASH.
+`response.body` is a main method that returns parsed JSON respoonse as a Hash.
 
 There are also many others helpful methods:
 
-```
+```ruby
 response.body # Parsed JSON. JSON is parsed lazyly, keys are symbolized.
 response[:foo] # Gets :foo attribute from parsed body
 response.fetch(:foo) # Fetches :foo attribute from parsed body
