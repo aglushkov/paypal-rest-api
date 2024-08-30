@@ -144,12 +144,12 @@ client = PaypalAPI::Client.new(
 Webhooks can be verified [offline](https://developer.paypal.com/api/rest/webhooks/rest/#link-selfverificationmethod)
 or [online](https://developer.paypal.com/api/rest/webhooks/rest/#link-postbackmethod).
 Method `PaypalAPI.verify_webhook(webhook_id:, headers:, raw_body:)`
-verifies webhook. It to verify webhook OFFLINE and it fallbacks
-to ONLINE if offline verification returns false to be sure you don't miss a
+verifies webhook. It verifies webhook OFFLINE and fallbacks
+to ONLINE if initial verification returns false to be sure you don't miss a
 valid webhook.
 
-When some required header is missing it will raise
-`PaypalAPI::WebhooksVerifier::MissingHeader` error.
+When some required header is missing the
+`PaypalAPI::WebhooksVerifier::MissingHeader` error will be raised.
 
 Example of Rails controller with webhook verification:
 
@@ -229,7 +229,7 @@ end
 
 PaypalAPI.client.add_callback(:after_network_error) do |request, context, error|
   SomeLogger.error(
-    'PaypalAPI network connection error'
+    'PaypalAPI network connection error',
     method: request.method,
     uri: request.uri.to_s,
     error: error.message,

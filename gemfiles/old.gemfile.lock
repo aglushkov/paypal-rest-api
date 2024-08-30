@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    paypal-rest-api (0.0.4)
+    paypal-rest-api (0.1.0)
 
 GEM
   remote: https://rubygems.org/

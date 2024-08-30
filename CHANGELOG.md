@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.1.0] - 2024-08-30
+
 - Add possibility to verify webhook OFFLINE
 
   ```ruby
