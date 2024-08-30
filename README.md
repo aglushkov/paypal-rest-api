@@ -202,7 +202,7 @@ PaypalAPI.client.add_callback(:before) do |request, context|
   context[:starts_at] = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 end
 
-PaypalAPI.client.add_callback(:after) do |request, context, response|
+PaypalAPI.client.add_callback(:after_success) do |request, context, response|
   ends_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
   duration = ends_at - context[:starts_at]
 
