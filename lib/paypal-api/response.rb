@@ -7,22 +7,29 @@ module PaypalAPI
   # PaypalAPI::Response object
   #
   class Response
+    # List of Net::HTTP responses that can be retried
+    RETRYABLE_RESPONSES = [
+      Net::HTTPServerError,    # 5xx
+      Net::HTTPConflict,       # 409
+      Net::HTTPTooManyRequests # 429
+    ].freeze
+
     # @return [Net::HTTP::Response] Original Net::HTTP::Response object
     attr_reader :http_response
 
-    # @return [Time] Time when request was sent
-    attr_reader :requested_at
+    # @return [Request] Request object
+    attr_reader :request
 
     #
     # Initializes Response object
     #
     # @param http_response [Net::HTTP::Response] original response
-    # @param requested_at [Time] Time when original response was requested
+    # @param request [Request] Request that generates this response
     #
     # @return [Response] Initialized Response object
     #
-    def initialize(http_response, requested_at:)
-      @requested_at = requested_at
+    def initialize(http_response, request:)
+      @request = request
       @http_response = http_response
       @http_status = nil
       @http_headers = nil
@@ -62,6 +69,36 @@ module PaypalAPI
     def fetch(key)
       data = body.is_a?(Hash) ? body : {}
       data.fetch(key.to_sym)
+    end
+
+    # Checks http status code is 2xx
+    #
+    # @return [Boolean] Returns true if response has success status code (2xx)
+    def success?
+      http_response.is_a?(Net::HTTPSuccess)
+    end
+
+    # Checks http status code is not 2xx
+    #
+    # @return [Boolean] Returns true if response has not success status code
+    def failed?
+      !success?
+    end
+
+    # Checks if response status code is retriable (5xx, 409, 429)
+    # @api private
+    #
+    # @return [Boolean] Returns true if status code is retriable (5xx, 409, 429)
+    def retryable?
+      failed? && RETRYABLE_RESPONSES.any? { |retryable_class| http_response.is_a?(retryable_class) }
+    end
+
+    # Checks if response status code is unauthorized (401)
+    # @api private
+    #
+    # @return [Boolean] Returns true if status code is retriable (5xx, 409, 429)
+    def unauthorized?
+      http_response.is_a?(Net::HTTPUnauthorized)
     end
 
     #

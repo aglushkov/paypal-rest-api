@@ -63,6 +63,18 @@ module PaypalAPI
     end
 
     #
+    # Verifies Webhook
+    #
+    # It requires one-time request to download and cache certificate.
+    # If local verification returns false it tries to verify webhook online.
+    #
+    # @see Client#verify_webhook
+    #
+    def verify_webhook(webhook_id:, headers:, raw_body:)
+      client.verify_webhook(webhook_id: webhook_id, headers: headers, raw_body: raw_body)
+    end
+
+    #
     # @!macro [new] api_collection
     #   $0 APIs collection
     #   @api public
@@ -206,6 +218,8 @@ require_relative "paypal-api/network_error_builder"
 require_relative "paypal-api/request"
 require_relative "paypal-api/request_executor"
 require_relative "paypal-api/response"
+require_relative "paypal-api/webhook_verifier"
+require_relative "paypal-api/webhook_verifier/certs_cache"
 require_relative "paypal-api/api_collections/authentication"
 require_relative "paypal-api/api_collections/authorized_payments"
 require_relative "paypal-api/api_collections/captured_payments"

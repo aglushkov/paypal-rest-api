@@ -7,7 +7,9 @@ RSpec.describe PaypalAPI::Client do
   let(:opts) { {client_id: "CLIENT_ID", client_secret: "CLIENT_SECRET"} }
 
   before do
-    allow(PaypalAPI::Config).to receive(:new).with(live: nil, http_opts: nil, retries: nil, **opts).and_return(config)
+    allow(PaypalAPI::Config).to receive(:new)
+      .with(live: nil, http_opts: nil, retries: nil, cache: nil, **opts)
+      .and_return(config)
   end
 
   it "constructs config with provided params" do
@@ -74,11 +76,12 @@ RSpec.describe PaypalAPI::Client do
         allow(response).to receive(:fetch).with(:access_token).and_return("ACCESS_TOKEN")
         allow(response).to receive(:fetch).with(:token_type).and_return("TOKEN_TYPE")
         allow(response).to receive(:fetch).with(:expires_in).and_return("EXPIRES_IN")
-        allow(response).to receive(:requested_at).with(no_args).and_return("REQUESTED_AT")
+        allow(Time).to receive(:now).and_return("REQUESTED_AT")
       end
 
       it "generates new access token" do
         expect(client.access_token).to equal new_access_token
+        expect(Time).to have_received(:now)
         expect(PaypalAPI::AccessToken).to have_received(:new).with(
           access_token: "ACCESS_TOKEN",
           token_type: "TOKEN_TYPE",
@@ -101,7 +104,7 @@ RSpec.describe PaypalAPI::Client do
         allow(response).to receive(:fetch).with(:access_token).and_return("ACCESS_TOKEN")
         allow(response).to receive(:fetch).with(:token_type).and_return("TOKEN_TYPE")
         allow(response).to receive(:fetch).with(:expires_in).and_return("EXPIRES_IN")
-        allow(response).to receive(:requested_at).with(no_args).and_return("REQUESTED_AT")
+        allow(Time).to receive(:now).and_return("REQUESTED_AT")
       end
 
       it "generates new access token" do
@@ -129,7 +132,7 @@ RSpec.describe PaypalAPI::Client do
       allow(response).to receive(:fetch).with(:access_token).and_return("ACCESS_TOKEN")
       allow(response).to receive(:fetch).with(:token_type).and_return("TOKEN_TYPE")
       allow(response).to receive(:fetch).with(:expires_in).and_return("EXPIRES_IN")
-      allow(response).to receive(:requested_at).with(no_args).and_return("REQUESTED_AT")
+      allow(Time).to receive(:now).and_return("REQUESTED_AT")
     end
 
     it "generates new access token" do
@@ -144,35 +147,78 @@ RSpec.describe PaypalAPI::Client do
     end
   end
 
+  describe "#add_callback" do
+    it "stores added callbacks" do
+      callback1 = proc {}
+      callback2 = proc {}
+      callback3 = proc {}
+
+      client.add_callback(:before, &callback1)
+      client.add_callback(:before, &callback2)
+
+      client.add_callback(:after_success, &callback2)
+      client.add_callback(:after_success, &callback3)
+
+      client.add_callback(:after_fail, &callback2)
+      client.add_callback(:after_fail, &callback3)
+
+      client.add_callback(:after_network_error, &callback2)
+      client.add_callback(:after_network_error, &callback3)
+
+      expect(client.callbacks[:before]).to eq [callback1, callback2]
+      expect(client.callbacks[:after_success]).to eq [callback2, callback3]
+      expect(client.callbacks[:after_fail]).to eq [callback2, callback3]
+      expect(client.callbacks[:after_network_error]).to eq [callback2, callback3]
+    end
+  end
+
+  describe "#verify_webhook" do
+    let(:verifier) { instance_double(PaypalAPI::WebhookVerifier, call: "RESULT") }
+    let(:webhook_id) { "webhook_id" }
+    let(:headers) { {} }
+    let(:raw_body) { "raw_body" }
+
+    before { allow(PaypalAPI::WebhookVerifier).to receive(:new).with(client).and_return(verifier) }
+
+    it "calls webhook verifier" do
+      expect(client.verify_webhook(webhook_id: webhook_id, headers: headers, raw_body: raw_body)).to eq "RESULT"
+      expect(verifier).to have_received(:call).with(webhook_id: webhook_id, headers: headers, raw_body: raw_body)
+    end
+  end
+
   describe "http methods" do
+    let(:request_executor) { instance_double(PaypalAPI::RequestExecutor, call: "RESPONSE") }
+
     before do
       allow(PaypalAPI::Request).to receive(:new).and_return("REQUEST")
-      allow(PaypalAPI::RequestExecutor).to receive(:call).and_return("RESPONSE")
+      allow(PaypalAPI::RequestExecutor).to receive(:new).and_return(request_executor)
     end
 
     describe "#post" do
       let(:http_method) { Net::HTTP::Post }
 
-      it "constructs an executes request" do
+      it "constructs and executes request" do
         expect(client.post("path", body: "body", headers: "headers")).to eq "RESPONSE"
 
         expect(PaypalAPI::Request).to have_received(:new)
           .with(client, http_method, "path", query: nil, body: "body", headers: "headers")
 
-        expect(PaypalAPI::RequestExecutor).to have_received(:call).with("REQUEST")
+        expect(PaypalAPI::RequestExecutor).to have_received(:new).with(client, "REQUEST")
+        expect(request_executor).to have_received(:call)
       end
     end
 
     describe "#get" do
       let(:http_method) { Net::HTTP::Get }
 
-      it "constructs an executes request" do
+      it "constructs and executes request" do
         expect(client.get("path", query: "query", headers: "headers")).to eq "RESPONSE"
 
         expect(PaypalAPI::Request).to have_received(:new)
           .with(client, http_method, "path", query: "query", body: nil, headers: "headers")
 
-        expect(PaypalAPI::RequestExecutor).to have_received(:call).with("REQUEST")
+        expect(PaypalAPI::RequestExecutor).to have_received(:new).with(client, "REQUEST")
+        expect(request_executor).to have_received(:call)
       end
     end
 
@@ -185,7 +231,8 @@ RSpec.describe PaypalAPI::Client do
         expect(PaypalAPI::Request).to have_received(:new)
           .with(client, http_method, "path", query: nil, body: nil, headers: "headers")
 
-        expect(PaypalAPI::RequestExecutor).to have_received(:call).with("REQUEST")
+        expect(PaypalAPI::RequestExecutor).to have_received(:new).with(client, "REQUEST")
+        expect(request_executor).to have_received(:call)
       end
     end
 
@@ -198,7 +245,8 @@ RSpec.describe PaypalAPI::Client do
         expect(PaypalAPI::Request).to have_received(:new)
           .with(client, http_method, "path", query: nil, body: "body", headers: "headers")
 
-        expect(PaypalAPI::RequestExecutor).to have_received(:call).with("REQUEST")
+        expect(PaypalAPI::RequestExecutor).to have_received(:new).with(client, "REQUEST")
+        expect(request_executor).to have_received(:call)
       end
     end
 
@@ -211,7 +259,8 @@ RSpec.describe PaypalAPI::Client do
         expect(PaypalAPI::Request).to have_received(:new)
           .with(client, http_method, "path", query: nil, body: "body", headers: "headers")
 
-        expect(PaypalAPI::RequestExecutor).to have_received(:call).with("REQUEST")
+        expect(PaypalAPI::RequestExecutor).to have_received(:new).with(client, "REQUEST")
+        expect(request_executor).to have_received(:call)
       end
     end
   end

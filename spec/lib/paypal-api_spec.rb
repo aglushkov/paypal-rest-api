@@ -12,6 +12,20 @@ RSpec.describe PaypalAPI do
     end
   end
 
+  describe "#verify_webhook" do
+    let(:client) { instance_double(PaypalAPI::Client, verify_webhook: "RESULT") }
+    let(:webhook_id) { "webhook_id" }
+    let(:headers) { {} }
+    let(:raw_body) { "raw_body" }
+
+    before { allow(described_class).to receive(:client).and_return(client) }
+
+    it "calls client" do
+      expect(described_class.verify_webhook(webhook_id: webhook_id, headers: headers, raw_body: raw_body)).to eq "RESULT"
+      expect(client).to have_received(:verify_webhook).with(webhook_id: webhook_id, headers: headers, raw_body: raw_body)
+    end
+  end
+
   [:get, :post, :put, :patch, :delete].each do |http_method|
     describe "##{http_method}" do
       let(:path) { "path" }

@@ -5,7 +5,7 @@ module PaypalAPI
   # PaypalAPI Client
   #
   class Client
-    attr_reader :config
+    attr_reader :config, :callbacks
 
     # Initializes Client
     # @api public
@@ -18,16 +18,47 @@ module PaypalAPI
     #
     # @return [Client] Initialized client
     #
-    def initialize(client_id:, client_secret:, live: nil, http_opts: nil, retries: nil)
+    def initialize(client_id:, client_secret:, live: nil, http_opts: nil, retries: nil, cache: nil)
       @config = PaypalAPI::Config.new(
         client_id: client_id,
         client_secret: client_secret,
         live: live,
         http_opts: http_opts,
-        retries: retries
+        retries: retries,
+        cache: cache
       )
 
+      @callbacks = {
+        before: [],
+        after_success: [],
+        after_fail: [],
+        after_network_error: []
+      }.freeze
+
       @access_token = nil
+    end
+
+    # Registers callback
+    #
+    # @param callback_name [Symbol] Callback name.
+    #   Allowed values: :before, :after_success, :after_faile, :after_network_error
+    #
+    # @param block [Proc] Block that must be call
+    #   For `:before` callback proc should accept 2 params -
+    #    request [Request], context [Hash]
+    #
+    #   For `:after_success` callback proc should accept 3 params -
+    #     request [Request], context [Hash], response [Response]
+    #
+    #   For `:after_fail` callback proc should accept 3 params -
+    #     request [Request], context [Hash], error [StandardError]
+    #
+    #   For `:after_network_error` callback proc should accept 3 params -
+    #     request [Request], context [Hash], response [Response]
+    #
+    # @return [void]
+    def add_callback(callback_name, &block)
+      callbacks.fetch(callback_name) << block
     end
 
     #
@@ -45,14 +76,46 @@ module PaypalAPI
     # @return [AccessToken] new AccessToken object
     #
     def refresh_access_token
+      requested_at = Time.now
       response = authentication.generate_access_token
 
       @access_token = AccessToken.new(
-        requested_at: response.requested_at,
+        requested_at: requested_at,
         expires_in: response.fetch(:expires_in),
         access_token: response.fetch(:access_token),
         token_type: response.fetch(:token_type)
       )
+    end
+
+    #
+    # Verifies Webhook
+    # It requires one-time request to download and cache certificate.
+    # If local verification returns false it tries to verify webhook online.
+    #
+    # @api public
+    # @example
+    #
+    #  class Webhooks::PaypalController < ApplicationController
+    #    def create
+    #      webhook_id = ENV['PAYPAL_WEBHOOK_ID'] # PayPal registered webhook ID for current URL
+    #      headers = request.headers # must be a Hash
+    #      body = request.raw_post # must be a raw String body
+    #
+    #      webhook_is_valid = PaypalAPI.verify_webhook(webhook_id: webhook_id, headers: headers, body: body)
+    #      webhook_is_valid ? handle_webhook_event(body) : log_error(webhook_id, headers, body)
+    #
+    #      head :no_content
+    #    end
+    #  end
+    #
+    # @param webhook_id [String] webhook_id provided by PayPal when webhook was registered
+    # @param headers [Hash,#[]] webhook request headers
+    # @param raw_body [String] webhook request raw body string
+    #
+    # @return [Boolean] webhook event is valid
+    #
+    def verify_webhook(webhook_id:, headers:, raw_body:)
+      WebhookVerifier.new(self).call(webhook_id: webhook_id, headers: headers, raw_body: raw_body)
     end
 
     # @!macro [new] request
@@ -217,7 +280,7 @@ module PaypalAPI
 
     def execute_request(http_method, path, query: nil, body: nil, headers: nil)
       request = Request.new(self, http_method, path, query: query, body: body, headers: headers)
-      RequestExecutor.call(request)
+      RequestExecutor.new(self, request).call
     end
   end
 end

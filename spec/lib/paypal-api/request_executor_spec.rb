@@ -1,24 +1,26 @@
 # frozen_string_literal: true
 
 RSpec.describe PaypalAPI::RequestExecutor do
-  subject(:execute) { described_class.call(request) }
+  subject(:execute) { described_class.new(client, request).call }
 
   let(:request) do
     instance_double(
       PaypalAPI::Request,
       client: client,
       http_request: http_request,
-      requested_at: Time.now,
-      "requested_at=": Time.now
+      uri: URI("https://example.com"),
+      path: path
     )
   end
 
-  let(:client) { instance_double(PaypalAPI::Client, config: config) }
-  let(:http_request) { Net::HTTP::Get.new(URI("https://example.com")) }
+  let(:client) { instance_double(PaypalAPI::Client, config: config, callbacks: empty_callbacks) }
+  let(:http_request) { Net::HTTP::Get.new(uri) }
+  let(:path) { "/foo/bar" }
+  let(:uri) { URI.join("https://example.com", path) }
 
   let(:retries_enabled) { false }
   let(:retries_count) { 3 }
-  let(:retries_sleep) { [0] }
+  let(:retries_sleep) { [0, 0.0001] }
   let(:config) do
     instance_double(
       PaypalAPI::Config,
@@ -27,8 +29,17 @@ RSpec.describe PaypalAPI::RequestExecutor do
     )
   end
 
+  let(:empty_callbacks) do
+    {
+      before: [],
+      after_success: [],
+      after_fail: [],
+      after_network_error: []
+    }
+  end
+
   context "with success request" do
-    before { stub_request(:get, "https://example.com/").to_return(status: 200) }
+    before { stub_request(:get, uri).to_return(status: 200) }
 
     it "returns response" do
       expect(execute).to be_a PaypalAPI::Response
@@ -62,11 +73,11 @@ RSpec.describe PaypalAPI::RequestExecutor do
       503 => PaypalAPI::Errors::ServiceUnavailable
     }.each do |code, error_class|
       context "with #{code} error" do
-        before { stub_request(:get, "https://example.com/").to_return(status: code) }
+        before { stub_request(:get, uri).to_return(status: code) }
 
         it "retries request" do
           expect { execute }.to raise_error error_class
-          expect(a_request(:get, "https://example.com/")).to have_been_made.times(retries_count + 1)
+          expect(a_request(:get, uri)).to have_been_made.times(retries_count + 1)
         end
       end
     end
@@ -85,11 +96,11 @@ RSpec.describe PaypalAPI::RequestExecutor do
       422 => PaypalAPI::Errors::UnprocessableEntity
     }.each do |code, error_class|
       context "with #{code} error" do
-        before { stub_request(:get, "https://example.com/").to_return(status: code) }
+        before { stub_request(:get, uri).to_return(status: code) }
 
         it "raises error without retries" do
           expect { execute }.to raise_error error_class
-          expect(a_request(:get, "https://example.com/")).to have_been_made.times(1)
+          expect(a_request(:get, uri)).to have_been_made.times(1)
         end
       end
     end
@@ -100,7 +111,7 @@ RSpec.describe PaypalAPI::RequestExecutor do
     let(:access_token) { instance_double(PaypalAPI::AccessToken, authorization_string: "abc") }
 
     before do
-      stub_request(:get, "https://example.com/").to_return(status: 401)
+      stub_request(:get, uri).to_return(status: 401)
       allow(client).to receive(:refresh_access_token).and_return(access_token)
     end
 
@@ -108,17 +119,17 @@ RSpec.describe PaypalAPI::RequestExecutor do
       expect { execute }.to raise_error PaypalAPI::Errors::Unauthorized
 
       # first request
-      expect(a_request(:get, "https://example.com/")).to have_been_made.times(retries_count + 1)
+      expect(a_request(:get, uri)).to have_been_made.times(retries_count + 1)
 
       # retry requests with new authorization
-      expect(a_request(:get, "https://example.com/").with(headers: {"authorization" => "abc"}))
+      expect(a_request(:get, uri).with(headers: {"authorization" => "abc"}))
         .to have_been_made.times(retries_count)
     end
   end
 
   context "with 401 error on authorization call" do
     let(:retries_enabled) { true }
-    let(:http_request) { Net::HTTP::Get.new(URI.join("https://example.com", PaypalAPI::Authentication::PATH)) }
+    let(:path) { PaypalAPI::Authentication::PATH }
 
     before do
       stub_request(:get, /#{PaypalAPI::Authentication::PATH}/o).to_return(status: 401)
