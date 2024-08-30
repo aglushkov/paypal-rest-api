@@ -8,7 +8,7 @@ bundle add paypal-rest-api
 
 ## Features
 
-- Supported Ruby 2.6 - current Head
+- Supported Ruby Versions - *(2.6 .. 3.3), head, jruby-9.4, truffleruby-24*
 - No dependencies;
 - Automatic authorization & reauthorization;
 - Auto-retries (configured);
