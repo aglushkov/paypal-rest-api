@@ -30,7 +30,7 @@ RSpec.describe PaypalAPI::FailedRequestErrorBuilder do
   it "converts response to error" do
     data.each do |response_class, error_class|
       http_response = build_http_response(response_class)
-      response = PaypalAPI::Response.new(http_response, requested_at: nil)
+      response = PaypalAPI::Response.new(http_response, request: request)
 
       expect(described_class.call(response: response, request: request)).to equal failed_request_error
       expect(PaypalAPI::Errors::FailedRequest).to have_received(:new).with("CODE MESSAGE", request: request, response: response)
@@ -40,7 +40,7 @@ RSpec.describe PaypalAPI::FailedRequestErrorBuilder do
   it "converts unknown http response to error" do
     unknown_http_response_class = Net::HTTPRequestTimeOut # 408
     http_response = build_http_response(unknown_http_response_class)
-    response = PaypalAPI::Response.new(http_response, requested_at: nil)
+    response = PaypalAPI::Response.new(http_response, request: request)
 
     expect(described_class.call(response: response, request: request)).to equal failed_request_error
     expect(PaypalAPI::Errors::FailedRequest).to have_received(:new).with("CODE MESSAGE", request: request, response: response)

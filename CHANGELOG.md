@@ -2,6 +2,63 @@
 
 ## [Unreleased]
 
+- Add possibility to verify webhook OFFLINE
+
+  ```ruby
+  PaypalAPI.verify_webhook(webhook_id:, headers:, raw_body:)
+  ```
+
+- Add callbacks `:before`, `:after_success`, `:after_fail`, `:after_network_error`.
+  `context` variable is modifiable as you need and is the same for same request
+  between callbacks. Initially context has only :retry_number and :retry_count data.
+  On `:after_fail` and `:after_network_error` errors context additionally has `:will_retry`
+  boolean field
+
+  ```ruby
+  PaypalAPI.client.add_callback(:before) do |request, context|
+    context[:request_id] = SecureRandom.hex(3)
+    context[:starts_at] = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+  end
+
+  PaypalAPI.client.add_callback(:after) do |request, context, response|
+    ends_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    duration = ends_at - context[:starts_at]
+
+    SomeLogger.debug(
+      'PaypalAPI success request',
+      method: request.method,
+      uri: request.uri.to_s,
+      duration: duration
+    )
+  end
+
+  PaypalAPI.client.add_callback(:after_fail) do |request, context, response|
+    SomeLogger.error(
+      'PaypalAPI request failed',
+      method: request.method,
+      uri: request.uri.to_s,
+      response_status: response.http_status,
+      response_body: response.http_body,
+      will_retry: context[:will_retry],
+      retry_number: context[:retry_number],
+      retry_count: context[:retry_count]
+    )
+  end
+
+  PaypalAPI.client.add_callback(:after_network_error) do |request, context, error|
+    SomeLogger.error(
+      'PaypalAPI network connection error'
+      method: request.method,
+      uri: request.uri.to_s,
+      error: error.message,
+      paypal_request_id: request.headers['paypal-request-id'],
+      will_retry: context[:will_retry],
+      retry_number: context[:retry_number],
+      retry_count: context[:retry_count]
+    )
+  end
+  ```
+
 ## [0.0.4] - 2024-08-25
 
 - Add Payouts & ReferencedPayouts APIs

@@ -8,11 +8,14 @@ bundle add paypal-rest-api
 
 ## Features
 
+- Supported Ruby 2.6 - current Head
 - No dependencies;
 - Automatic authorization & reauthorization;
 - Auto-retries (configured);
 - Automatically added Paypal-Request-Id header for idempotent requests if not
   provided;
+- Webhooks Offline verification (needs to download certificate once)
+- Custom callbacks before/after request
 
 ## Usage
 
@@ -83,7 +86,7 @@ response.http_response # original Net::HTTP::Response
 response.http_body # original response string
 response.http_status # Integer http status
 response.http_headers # Hash with response headers (keys are strings)
-response.requested_at # Time when request was sent
+response.request # Request that generates this response
 ```
 
 ## Configuration options
@@ -134,6 +137,108 @@ client = PaypalAPI::Client.new(
   http_opts: {read_timeout: 30, write_timeout: 30, open_timeout: 30}
   # ...
 )
+```
+
+## Webhoooks verification
+
+Webhooks can be verified [offline](https://developer.paypal.com/api/rest/webhooks/rest/#link-selfverificationmethod)
+or [online](https://developer.paypal.com/api/rest/webhooks/rest/#link-postbackmethod).
+Method `PaypalAPI.verify_webhook(webhook_id:, headers:, raw_body:)`
+verifies webhook. It to verify webhook OFFLINE and it fallbacks
+to ONLINE if offline verification returns false to be sure you don't miss a
+valid webhook.
+
+When some required header is missing it will raise
+`PaypalAPI::WebhooksVerifier::MissingHeader` error.
+
+Example of Rails controller with webhook verification:
+
+```ruby
+class Webhooks::PaypalController < ApplicationController
+  def create
+    # PayPal registered webhook ID for current URL
+    webhook_id = ENV['PAYPAL_WEBHOOK_ID']
+    headers = request.headers # must be a Hash
+    raw_body = request.raw_post # must be a raw String body
+
+    webhook_is_valid = PaypalAPI.verify_webhook(
+      webhook_id: webhook_id,
+      headers: headers,
+      raw_body: raw_body
+    )
+
+    if webhook_is_valid
+      handle_valid_webhook_event(body)
+    else
+      handle_invalid_webhook_event(webhook_id, headers, body)
+    end
+
+    head :no_content
+  end
+end
+```
+
+## Callbacks
+
+Callbacks list:
+
+- `:before` - Runs before request
+- `:after_success` - Runs after getting successful response
+- `:after_fail` - Runs after getting failed response (non-2xx) status code
+- `:after_network_error` - Runs after getting network error
+
+Callbacks are registered on `client` object.
+
+Each callback receive `request` and `context` variables.
+`context` can be modified manually to save state between callbacks.
+
+`:after_success` and `:after_fail` callbacks have additional `response` argument
+
+`:after_network_error` callback has additional `error` argument
+
+```ruby
+PaypalAPI.client.add_callback(:before) do |request, context|
+  context[:request_id] = SecureRandom.hex(3)
+  context[:starts_at] = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+end
+
+PaypalAPI.client.add_callback(:after) do |request, context, response|
+  ends_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+  duration = ends_at - context[:starts_at]
+
+  SomeLogger.debug(
+    'PaypalAPI success request',
+    method: request.method,
+    uri: request.uri.to_s,
+    duration: duration
+  )
+end
+
+PaypalAPI.client.add_callback(:after_fail) do |request, context, response|
+  SomeLogger.error(
+    'PaypalAPI request failed',
+    method: request.method,
+    uri: request.uri.to_s,
+    response_status: response.http_status,
+    response_body: response.http_body,
+    will_retry: context[:will_retry],
+    retry_number: context[:retry_number],
+    retry_count: context[:retry_count]
+  )
+end
+
+PaypalAPI.client.add_callback(:after_network_error) do |request, context, error|
+  SomeLogger.error(
+    'PaypalAPI network connection error'
+    method: request.method,
+    uri: request.uri.to_s,
+    error: error.message,
+    paypal_request_id: request.headers['paypal-request-id'],
+    will_retry: context[:will_retry],
+    retry_number: context[:retry_number],
+    retry_count: context[:retry_count]
+  )
+end
 ```
 
 ## Errors

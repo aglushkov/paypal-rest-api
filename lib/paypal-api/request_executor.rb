@@ -5,91 +5,106 @@ module PaypalAPI
   # Executes PaypalAPI::Request and returns PaypalAPI::Response or raises PaypalAPI::Error
   #
   class RequestExecutor
-    # List of Net::HTTP responses that must be retried
-    RETRYABLE_RESPONSES = [
-      Net::HTTPServerError,    # 5xx
-      Net::HTTPConflict,       # 409
-      Net::HTTPTooManyRequests # 429
-    ].freeze
+    attr_reader :client, :request, :http_opts, :context, :retries, :callbacks, :callbacks_context
 
-    class << self
-      #
-      # Executes prepared Request, handles retries and preparation of errors
-      #
-      # @param [Request] request
-      #
-      # @return [Response] Response
-      #
-      def call(request)
-        http_response = execute(request)
-        response = Response.new(http_response, requested_at: request.requested_at)
-        raise FailedRequestErrorBuilder.call(request: request, response: response) unless http_response.is_a?(Net::HTTPSuccess)
+    def initialize(client, request)
+      @client = client
+      @request = request
+      @http_opts = {use_ssl: request.uri.is_a?(URI::HTTPS), **client.config.http_opts}
+      @retries = client.config.retries
+      @callbacks = client.callbacks
+      @callbacks_context = {retries_count: retries[:count]}
+    end
 
+    #
+    # Executes prepared Request, handles retries and preparation of errors
+    #
+    # @return [Response] Response
+    #
+    def call
+      response = execute_request
+      raise FailedRequestErrorBuilder.call(request: request, response: response) if response.failed?
+
+      response
+    end
+
+    private
+
+    def execute_request(retry_number: 0)
+      callbacks_context[:retry_number] = retry_number
+
+      run_callbacks(:before)
+      response = execute_net_http_request
+    rescue *NetworkErrorBuilder::ERRORS => error
+      will_retry = !retries_limit_reached?(retry_number)
+      callbacks_context[:will_retry] = will_retry
+      run_callbacks(:after_network_error, error)
+      raise NetworkErrorBuilder.call(request: request, error: error) unless will_retry
+
+      retry_request(retry_number)
+    else
+      if response.success?
+        callbacks_context.delete(:will_retry)
+        run_callbacks(:after_success, response)
         response
-      end
-
-      private
-
-      def execute(request, retry_number: 0)
-        http_response = execute_http_request(request)
-      rescue *NetworkErrorBuilder::ERRORS => error
-        retry_on_network_error(request, error, retry_number)
       else
-        retryable?(request, http_response, retry_number) ? retry_request(request, retry_number) : http_response
+        will_retry = retryable?(response, retry_number)
+        callbacks_context[:will_retry] = will_retry
+        run_callbacks(:after_fail, response)
+        will_retry ? retry_request(retry_number) : response
       end
+    end
 
-      def execute_http_request(request)
-        http_request = request.http_request
-        http_opts = request.client.config.http_opts
-        uri = http_request.uri
-        request.requested_at = Time.now
+    def execute_net_http_request
+      uri = request.uri
 
-        Net::HTTP.start(uri.hostname, uri.port, use_ssl: true, **http_opts) do |http|
+      http_response =
+        Net::HTTP.start(uri.hostname, uri.port, **http_opts) do |http|
           http.max_retries = 0 # we have custom retries logic
-          http.request(http_request)
+          http.request(request.http_request)
         end
-      end
 
-      def retry_on_network_error(request, error, retry_number)
-        raise NetworkErrorBuilder.call(request: request, error: error) if retries_limit_reached?(request, retry_number)
+      Response.new(http_response, request: request)
+    end
 
-        retry_request(request, retry_number)
-      end
+    def retry_request(current_retry_number)
+      sleep_time = retry_sleep_seconds(current_retry_number)
+      sleep(sleep_time) if sleep_time.positive?
+      execute_request(retry_number: current_retry_number + 1)
+    end
 
-      def retry_request(request, current_retry_number)
-        sleep(retry_sleep_seconds(request, current_retry_number))
-        execute(request, retry_number: current_retry_number + 1)
-      end
+    def retries_limit_reached?(retry_number)
+      retry_number >= retries[:count]
+    end
 
-      def retries_limit_reached?(request, retry_number)
-        retry_number >= request.client.config.retries[:count]
-      end
+    def retry_sleep_seconds(current_retry_number)
+      seconds_per_retry = retries[:sleep]
+      seconds_per_retry[current_retry_number] || seconds_per_retry.last || 1
+    end
 
-      def retry_sleep_seconds(request, current_retry_number)
-        seconds_per_retry = request.client.config.retries[:sleep]
-        seconds_per_retry[current_retry_number] || seconds_per_retry.last || 1
-      end
+    def retryable?(response, retry_number)
+      response.failed? &&
+        !retries_limit_reached?(retry_number) &&
+        retryable_request?(response)
+    end
 
-      def retryable?(request, http_response, retry_number)
-        !http_response.is_a?(Net::HTTPSuccess) &&
-          !retries_limit_reached?(request, retry_number) &&
-          retryable_request?(request, http_response)
-      end
+    def retryable_request?(response)
+      return true if response.retryable?
 
-      def retryable_request?(request, http_response)
-        return true if RETRYABLE_RESPONSES.any? { |retryable_class| http_response.is_a?(retryable_class) }
+      retry_unauthorized?(response)
+    end
 
-        retry_unauthorized?(request, http_response)
-      end
+    def retry_unauthorized?(response)
+      return false unless response.unauthorized? # 401
+      return false if request.path == Authentication::PATH # it's already an Authentication request
 
-      def retry_unauthorized?(request, http_response)
-        return false unless http_response.is_a?(Net::HTTPUnauthorized) # 401
-        return false if http_response.uri.path == Authentication::PATH # it's already an Authentication request
+      # set new access-token
+      request.http_request["authorization"] = client.refresh_access_token.authorization_string
+      true
+    end
 
-        # set new access-token
-        request.http_request["authorization"] = request.client.refresh_access_token.authorization_string
-        true
-      end
+    def run_callbacks(callback_name, resp = nil)
+      callbacks[callback_name].each { |callback| callback.call(request, context, resp) }
     end
   end
 end

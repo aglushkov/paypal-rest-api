@@ -18,7 +18,7 @@ module PaypalAPI
       retries: {enabled: true, count: 3, sleep: [0.25, 0.75, 1.5].freeze}.freeze
     }.freeze
 
-    attr_reader :client_id, :client_secret, :live, :http_opts, :retries
+    attr_reader :client_id, :client_secret, :live, :http_opts, :retries, :certs_cache
 
     # Initializes Config
     #
@@ -27,15 +27,19 @@ module PaypalAPI
     # @param live [Boolean] PayPal live/sandbox mode
     # @param http_opts [Hash] Net::Http opts for all requests
     # @param retries [Hash] Retries configuration
+    # @param cache [#read, nil] Application cache to store certificates to validate webhook events locally.
+    #   Must respond to #read(key) and #write(key, expires_in: Integer)
     #
     # @return [Client] Initialized config object
     #
-    def initialize(client_id:, client_secret:, live: nil, http_opts: nil, retries: nil)
+    def initialize(client_id:, client_secret:, live: nil, http_opts: nil, retries: nil, cache: nil)
       @client_id = client_id
       @client_secret = client_secret
       @live = with_default(:live, live)
       @http_opts = with_default(:http_opts, http_opts)
       @retries = with_default(:retries, retries)
+      @certs_cache = WebhookVerifier::CertsCache.new(cache)
+
       freeze
     end
 

@@ -19,8 +19,8 @@ module PaypalAPI
     # @return [Net::HTTPRequest] Generated Net::HTTPRequest
     attr_reader :http_request
 
-    # @return [Time, nil] Time when request was sent
-    attr_accessor :requested_at
+    # @return [Hash, nil, Object] Custom context that can be set/changed in callbacks
+    attr_accessor :context
 
     # rubocop:disable Metrics/ParameterLists
 
@@ -40,48 +40,80 @@ module PaypalAPI
     def initialize(client, request_type, path, body: nil, query: nil, headers: nil)
       @client = client
       @http_request = build_http_request(request_type, path, body: body, query: query, headers: headers)
-      @requested_at = nil
+      @context = nil
     end
     # rubocop:enable Metrics/ParameterLists
+
+    # @return [String] HTTP request method name
+    def method
+      http_request.method
+    end
+
+    # @return [String] HTTP request method name
+    def path
+      http_request.path
+    end
+
+    # @return [URI] HTTP request URI
+    def uri
+      http_request.uri
+    end
+
+    # @return [String] HTTP request body
+    def body
+      http_request.body
+    end
+
+    # @return [Hash] HTTP request headers
+    def headers
+      http_request.each_header.to_h
+    end
 
     private
 
     def build_http_request(request_type, path, body:, query:, headers:)
-      uri = request_uri(path, query)
-      http_request = request_type.new(uri)
+      uri = build_http_uri(path, query)
+      http_request = request_type.new(uri, "accept-encoding" => nil)
 
-      add_headers(http_request, headers || {})
-      add_body(http_request, body)
+      build_http_headers(http_request, body, headers || {})
+      build_http_body(http_request, body)
 
       http_request
     end
 
-    def add_headers(http_request, headers)
-      headers.each { |key, value| http_request[key] = value }
+    def build_http_headers(http_request, body, headers)
+      headers = normalize_headers(headers)
 
-      http_request["content-type"] ||= "application/json"
-      http_request["authorization"] ||= client.access_token.authorization_string
-      http_request["paypal-request-id"] ||= SecureRandom.uuid if idempotent?(http_request)
+      unless headers.key?("authorization")
+        http_request["authorization"] = client.access_token.authorization_string
+      end
+
+      unless headers.key?("content-type")
+        http_request["content-type"] = "application/json" if body
+      end
+
+      unless headers.key?("paypal-request-id")
+        http_request["paypal-request-id"] = SecureRandom.uuid unless http_request.is_a?(Net::HTTP::Get)
+      end
+
+      headers.each { |key, value| http_request[key] = value }
     end
 
-    def add_body(http_request, body)
+    def build_http_body(http_request, body)
       return unless body
 
-      json?(http_request) ? http_request.body = JSON.dump(body) : http_request.set_form_data(body)
+      is_json = http_request["content-type"].include?("json")
+      is_json ? http_request.body = JSON.dump(body) : http_request.set_form_data(body)
     end
 
-    def request_uri(path, query)
+    def build_http_uri(path, query)
       uri = URI.join(client.config.url, path)
       uri.query = URI.encode_www_form(query) if query && !query.empty?
       uri
     end
 
-    def idempotent?(http_request)
-      http_request.method != Net::HTTP::Get::METHOD
-    end
-
-    def json?(http_request)
-      http_request["content-type"].include?("json")
+    def normalize_headers(headers)
+      headers.empty? ? headers : headers.transform_keys { |key| key.to_s.downcase }
     end
   end
 end

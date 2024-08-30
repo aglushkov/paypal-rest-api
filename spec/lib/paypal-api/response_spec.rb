@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe PaypalAPI::Response do
-  subject(:response) { described_class.new(http_response, requested_at: requested_at) }
+  subject(:response) { described_class.new(http_response, request: request) }
 
   let(:http_response) do
     instance_double(
@@ -14,13 +14,13 @@ RSpec.describe PaypalAPI::Response do
 
   let(:body) { '{"foo":"bar"}' }
   let(:each_header) { {a: 1, b: 2}.each }
-  let(:requested_at) { Time.now }
+  let(:request) { "REQUEST" }
 
   before { allow(http_response).to receive(:[]).with("content-type").and_return("application/json") }
 
   context "with json response" do
     it "returns correct data" do
-      expect(response.requested_at).to equal requested_at
+      expect(response.request).to equal request
       expect(response.http_headers).to eq(a: 1, b: 2)
       expect(response.http_response).to equal http_response
       expect(response.http_status).to equal 200
@@ -43,7 +43,7 @@ RSpec.describe PaypalAPI::Response do
     before { allow(http_response).to receive(:[]).with("content-type").and_return("text/html") }
 
     it "returns correct data" do
-      expect(response.requested_at).to equal requested_at
+      expect(response.request).to equal request
       expect(response.http_headers).to eq(a: 1, b: 2)
       expect(response.http_response).to equal http_response
       expect(response.http_status).to equal 200

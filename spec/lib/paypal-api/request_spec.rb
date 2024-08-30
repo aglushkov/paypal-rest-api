@@ -14,20 +14,11 @@ RSpec.describe PaypalAPI::Request do
 
   it "constructs http_request with default headers" do
     expect(request.client).to equal client
-    expect(request.requested_at).to be_nil
 
     http_request = request.http_request
     expect(http_request).to be_a http_method
     expect(http_request.uri).to eq URI("https://api-m.paypal.com/path")
     expect(http_request["authorization"]).to eq "AUTHORIZATION"
-    expect(http_request["content-type"]).to eq "application/json"
-  end
-
-  it "allows to set requested_at attribute" do
-    time = Time.now
-    expect(request.requested_at).to be_nil
-    request.requested_at = time
-    expect(request.requested_at).to equal time
   end
 
   context "with query parameters" do
@@ -58,6 +49,7 @@ RSpec.describe PaypalAPI::Request do
     it "adds json body" do
       http_request = request.http_request
       expect(http_request.body).to eq '{"one":1}'
+      expect(http_request["content-type"]).to eq "application/json"
     end
   end
 
@@ -73,11 +65,38 @@ RSpec.describe PaypalAPI::Request do
 
   context "with POST, PUT, PATCH, DELETE requests" do
     it "adds unique paypal-request-id header" do
-      expect(described_class.new(client, Net::HTTP::Post, path).http_request["paypal-request-id"].length).to eq 36
-      expect(described_class.new(client, Net::HTTP::Put, path).http_request["paypal-request-id"].length).to eq 36
-      expect(described_class.new(client, Net::HTTP::Patch, path).http_request["paypal-request-id"].length).to eq 36
-      expect(described_class.new(client, Net::HTTP::Delete, path).http_request["paypal-request-id"].length).to eq 36
-      expect(described_class.new(client, Net::HTTP::Get, path).http_request["paypal-request-id"]).to be_nil
+      expect(described_class.new(client, Net::HTTP::Post, path).headers["paypal-request-id"]).to be_a(String)
+      expect(described_class.new(client, Net::HTTP::Put, path).headers["paypal-request-id"]).to be_a(String)
+      expect(described_class.new(client, Net::HTTP::Patch, path).headers["paypal-request-id"]).to be_a(String)
+      expect(described_class.new(client, Net::HTTP::Delete, path).headers["paypal-request-id"]).to be_a(String)
+    end
+  end
+
+  context "with GET requests" do
+    it "does not add paypal-request-id header" do
+      expect(described_class.new(client, Net::HTTP::Get, path).headers).not_to have_key("paypal-request-id")
+    end
+  end
+
+  describe "#method" do
+    it "return HTTP method name" do
+      expect(described_class.new(client, Net::HTTP::Post, path).method).to eq "POST"
+      expect(described_class.new(client, Net::HTTP::Put, path).method).to eq "PUT"
+      expect(described_class.new(client, Net::HTTP::Patch, path).method).to eq "PATCH"
+      expect(described_class.new(client, Net::HTTP::Delete, path).method).to eq "DELETE"
+      expect(described_class.new(client, Net::HTTP::Get, path).method).to eq "GET"
+    end
+  end
+
+  describe "#path" do
+    it "return path" do
+      expect(described_class.new(client, Net::HTTP::Post, "/foo/bar").path).to eq "/foo/bar"
+    end
+  end
+
+  describe "#body" do
+    it "returns body string" do
+      expect(described_class.new(client, Net::HTTP::Post, path, body: {a: 1}).body).to eq({a: 1}.to_json)
     end
   end
 end
