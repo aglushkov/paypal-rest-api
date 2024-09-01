@@ -316,15 +316,15 @@ All API endpoints accept this parameters:
 
 ### Payments
 
-- `PaypalAPI::AuthorizedPayment.show`
-- `PaypalAPI::AuthorizedPayment.capture`
-- `PaypalAPI::AuthorizedPayment.reauthorize`
-- `PaypalAPI::AuthorizedPayment.void`
+- `PaypalAPI::AuthorizedPayments.show`
+- `PaypalAPI::AuthorizedPayments.capture`
+- `PaypalAPI::AuthorizedPayments.reauthorize`
+- `PaypalAPI::AuthorizedPayments.void`
 
 <!-- -->
 
-- `PaypalAPI::CapturedPayment.show`
-- `PaypalAPI::CapturedPayment.refund`
+- `PaypalAPI::CapturedPayments.show`
+- `PaypalAPI::CapturedPayments.refund`
 
 <!-- -->
 
