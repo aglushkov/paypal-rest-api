@@ -5,7 +5,7 @@ module PaypalAPI
   # Executes PaypalAPI::Request and returns PaypalAPI::Response or raises PaypalAPI::Error
   #
   class RequestExecutor
-    attr_reader :client, :request, :http_opts, :context, :retries, :callbacks, :callbacks_context
+    attr_reader :client, :request, :http_opts, :retries, :callbacks, :callbacks_context
 
     def initialize(client, request)
       @client = client
@@ -13,7 +13,7 @@ module PaypalAPI
       @http_opts = {use_ssl: request.uri.is_a?(URI::HTTPS), **client.config.http_opts}
       @retries = client.config.retries
       @callbacks = client.callbacks
-      @callbacks_context = {retries_count: retries[:count]}
+      @callbacks_context = {retries_enabled: retries[:enabled], retries_count: retries[:count]}
     end
 
     #
@@ -35,8 +35,10 @@ module PaypalAPI
 
       run_callbacks(:before)
       response = execute_net_http_request
-    rescue *NetworkErrorBuilder::ERRORS => error
-      will_retry = !retries_limit_reached?(retry_number)
+    rescue => error
+      raise error if NetworkErrorBuilder::ERRORS.none? { |network_error_class| error.is_a?(network_error_class) }
+
+      will_retry = retries[:enabled] && !retries_limit_reached?(retry_number)
       callbacks_context[:will_retry] = will_retry
       run_callbacks(:after_network_error, error)
       raise NetworkErrorBuilder.call(request: request, error: error) unless will_retry
@@ -48,7 +50,7 @@ module PaypalAPI
         run_callbacks(:after_success, response)
         response
       else
-        will_retry = retryable?(response, retry_number)
+        will_retry = retries[:enabled] && retryable?(response, retry_number)
         callbacks_context[:will_retry] = will_retry
         run_callbacks(:after_fail, response)
         will_retry ? retry_request(retry_number) : response
@@ -104,7 +106,7 @@ module PaypalAPI
     end
 
     def run_callbacks(callback_name, resp = nil)
-      callbacks[callback_name].each { |callback| callback.call(request, context, resp) }
+      callbacks[callback_name].each { |callback| callback.call(request, callbacks_context, resp) }
     end
   end
 end
