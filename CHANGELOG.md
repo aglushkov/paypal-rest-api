@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.1.1] - 2024-09-01
+
 - fix callbacks context was nil
 - fix `retries[:enabled]` flag was no working when was `false`
 
