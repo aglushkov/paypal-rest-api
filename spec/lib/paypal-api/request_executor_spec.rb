@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe PaypalAPI::RequestExecutor do
-  subject(:execute) { described_class.new(client, request).call }
+  subject(:execute) { executer.call }
 
   let(:request) do
     instance_double(
@@ -13,7 +13,8 @@ RSpec.describe PaypalAPI::RequestExecutor do
     )
   end
 
-  let(:client) { instance_double(PaypalAPI::Client, config: config, callbacks: empty_callbacks) }
+  let(:executer) { described_class.new(client, request) }
+  let(:client) { instance_double(PaypalAPI::Client, config: config, callbacks: callbacks) }
   let(:http_request) { Net::HTTP::Get.new(uri) }
   let(:path) { "/foo/bar" }
   let(:uri) { URI.join("https://example.com", path) }
@@ -29,7 +30,7 @@ RSpec.describe PaypalAPI::RequestExecutor do
     )
   end
 
-  let(:empty_callbacks) do
+  let(:callbacks) do
     {
       before: [],
       after_success: [],
@@ -59,6 +60,21 @@ RSpec.describe PaypalAPI::RequestExecutor do
           expect { execute }.to raise_error PaypalAPI::Errors::NetworkError
           expect(Net::HTTP).to have_received(:start).exactly(retries_count + 1).times
         end
+      end
+    end
+  end
+
+  context "with unknown error happening during request" do
+    let(:retries_enabled) { true }
+    let(:error) { StandardError.new }
+
+    context "with unknown error" do
+      before do
+        allow(Net::HTTP).to receive(:start).and_raise(error)
+      end
+
+      it "raises this error" do
+        expect { execute }.to raise_error error
       end
     end
   end
@@ -138,6 +154,58 @@ RSpec.describe PaypalAPI::RequestExecutor do
     it "returns error without retries" do
       expect { execute }.to raise_error PaypalAPI::Errors::Unauthorized
       expect(a_request(:get, /#{PaypalAPI::Authentication::PATH}/o)).to have_been_made.times(1)
+    end
+  end
+
+  context "with configured callbacks" do
+    let(:client) do
+      client = PaypalAPI::Client.new(client_id: "x", client_secret: "x", retries: {enabled: false})
+      client.add_callback(:before) { |req, ctx| double.call(:before, req, ctx) }
+      client.add_callback(:after_success) { |req, ctx, resp| double.call(:after_success, req, ctx, resp) }
+      client.add_callback(:after_fail) { |req, ctx, resp| double.call(:after_fail, req, ctx, resp) }
+      client.add_callback(:after_network_error) { |req, ctx, err| double.call(:after_network_error, req, ctx, err) }
+      PaypalAPI.client = client
+    end
+
+    let(:double) { proc {} }
+
+    before { allow(double).to receive(:call) }
+
+    after { PaypalAPI.client = nil }
+
+    it "sends correct params to success callbacks" do
+      stub_request(:get, uri).to_return(status: 200)
+      execute
+
+      expect(double).to have_received(:call)
+        .with(:before, request, executer.callbacks_context).ordered
+
+      expect(double).to have_received(:call)
+        .with(:after_success, request, executer.callbacks_context, instance_of(PaypalAPI::Response)).ordered
+    end
+
+    it "sends correct params to fail request callback" do
+      stub_request(:get, uri).to_return(status: 422)
+      expect { execute }.to raise_error PaypalAPI::Errors::FailedRequest
+
+      expect(double).to have_received(:call)
+        .with(:before, request, executer.callbacks_context).ordered
+
+      expect(double).to have_received(:call)
+        .with(:after_fail, request, executer.callbacks_context, instance_of(PaypalAPI::Response)).ordered
+    end
+
+    it "sends correct params to callbacks when network error happens" do
+      error = PaypalAPI::NetworkErrorBuilder::ERRORS.sample.allocate
+      allow(Net::HTTP).to receive(:start).and_raise(error)
+
+      expect { execute }.to raise_error PaypalAPI::Errors::NetworkError
+
+      expect(double).to have_received(:call)
+        .with(:before, request, executer.callbacks_context).ordered
+
+      expect(double).to have_received(:call)
+        .with(:after_network_error, request, executer.callbacks_context, error).ordered
     end
   end
 end

@@ -192,9 +192,17 @@ Callbacks are registered on `client` object.
 Each callback receive `request` and `context` variables.
 `context` can be modified manually to save state between callbacks.
 
-`:after_success` and `:after_fail` callbacks have additional `response` argument
+Arguments:
 
-`:after_network_error` callback has additional `error` argument
+- `:before` - (request, context)
+- `:after_success` - (request, context, response)
+- `:after_fail` - (request, context, response)
+- `:after_network_error` - (request, context, error)
+
+`Context` argument contains `retries_enabled` and `retries_count` and
+`retry_number` keys by default.
+
+Examples:
 
 ```ruby
 PaypalAPI.client.add_callback(:before) do |request, context|
