@@ -1,6 +1,9 @@
 # CHANGELOG
 
-## [Unreleased]
+## [0.2.1] - 2024-09-02
+
+- Add missing `PaypalAPI.api_url`, `PaypalAPI.web_url`, `PaypalAPI.live?`,
+  `PaypalAPI.sandbox?` methods
 
 ## [0.2.0] - 2024-09-02
 
