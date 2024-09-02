@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [0.3.0] - 2024-09-02
+
+- Fix UnsupportedMediType errors for requests without body by adding
+  content-type "application/json" for all requests
+
 ## [0.2.1] - 2024-09-02
 
 - Add missing `PaypalAPI.api_url`, `PaypalAPI.web_url`, `PaypalAPI.live?`,

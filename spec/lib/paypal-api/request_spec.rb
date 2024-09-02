@@ -20,6 +20,7 @@ RSpec.describe PaypalAPI::Request do
     expect(http_request).to be_a http_method
     expect(http_request.uri).to eq URI("https://api-m.paypal.com/path")
     expect(http_request["authorization"]).to eq "AUTHORIZATION"
+    expect(http_request["content-type"]).to eq "application/json"
   end
 
   context "with query parameters" do
