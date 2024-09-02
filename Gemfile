@@ -23,6 +23,8 @@ gem "timecop", "~> 0.9"
 
 gem "mdl", "~> 0.13.0", require: false
 
+gem "debug", "~> 1.9", ">= 1.9.2"
+
 # For yard docs
 gem "yard", require: false
 gem "rackup", "~> 2.1", require: false

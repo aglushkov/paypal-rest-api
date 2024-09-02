@@ -74,7 +74,6 @@ module PaypalAPI
     def build_http_request(request_type, path, body:, query:, headers:)
       uri = build_http_uri(path, query)
       http_request = request_type.new(uri, "accept-encoding" => nil)
-
       build_http_headers(http_request, body, headers || {})
       build_http_body(http_request, body)
 
@@ -88,8 +87,18 @@ module PaypalAPI
         http_request["authorization"] = client.access_token.authorization_string
       end
 
+      #
+      # We should set json content type header to not get 415 UnsupportedMediaType
+      # error in various APIs
+      #
+      # PayPal requires "application/json" content type even for GET requests
+      # and for POST requests without body.
+      #
+      # Net::HTTP sets default content-type "application/x-www-form-urlencoded"
+      # if not provided
+      #
       unless headers.key?("content-type")
-        http_request["content-type"] = "application/json" if body
+        http_request["content-type"] = "application/json"
       end
 
       unless headers.key?("paypal-request-id")
