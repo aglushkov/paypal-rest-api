@@ -18,6 +18,30 @@ module PaypalAPI
     # @return [Client] PaypalAPI client
     attr_writer :client
 
+    # Checks if PayPal LIVE environment enabled
+    # @return [Boolean] Checks if PayPal LIVE environment enabled
+    def live?
+      client.live?
+    end
+
+    # Checks if PayPal SANDBOX environment enabled
+    # @return [Boolean] Checks if PayPal SANDBOX environment enabled
+    def sandbox?
+      client.sandbox?
+    end
+
+    # Base API URL
+    # @return [String] Base API URL
+    def api_url
+      client.api_url
+    end
+
+    # Base WEB URL
+    # @return [String] Base WEB URL
+    def web_url
+      client.web_url
+    end
+
     # @!macro [new] request
     #
     #   @api public

@@ -24,10 +24,10 @@ RSpec.describe PaypalAPI do
     before { allow(described_class).to receive(:client).and_return(client) }
 
     it "delegates to client" do
-      expect(client.live?).to eq "LIVE"
-      expect(client.sandbox?).to eq "SANDBOX"
-      expect(client.api_url).to eq "API_URL"
-      expect(client.web_url).to eq "WEB_URL"
+      expect(described_class.live?).to eq "LIVE"
+      expect(described_class.sandbox?).to eq "SANDBOX"
+      expect(described_class.api_url).to eq "API_URL"
+      expect(described_class.web_url).to eq "WEB_URL"
     end
   end
 
