@@ -5,7 +5,18 @@ module PaypalAPI
   # PaypalAPI Client
   #
   class Client
-    attr_reader :config, :callbacks
+    # Paypal environment
+    attr_reader :env
+
+    # Gem Configuration
+    #
+    # @return [Config] Gem Configuration
+    attr_reader :config
+
+    # Registered callbacks
+    #
+    # @return [Hash] Registered callbacks
+    attr_reader :callbacks
 
     # Initializes Client
     # @api public
@@ -18,15 +29,9 @@ module PaypalAPI
     #
     # @return [Client] Initialized client
     #
-    def initialize(client_id:, client_secret:, live: nil, http_opts: nil, retries: nil, cache: nil)
-      @config = PaypalAPI::Config.new(
-        client_id: client_id,
-        client_secret: client_secret,
-        live: live,
-        http_opts: http_opts,
-        retries: retries,
-        cache: cache
-      )
+    def initialize(client_id:, client_secret:, live: false, http_opts: nil, retries: nil, cache: nil)
+      @env = PaypalAPI::Environment.new(client_id: client_id, client_secret: client_secret, live: live)
+      @config = PaypalAPI::Config.new(http_opts: http_opts, retries: retries, cache: cache)
 
       @callbacks = {
         before: [],
@@ -38,10 +43,34 @@ module PaypalAPI
       @access_token = nil
     end
 
+    # Checks if PayPal LIVE environment enabled
+    # @return [Boolean] Checks if PayPal LIVE environment enabled
+    def live?
+      env.live?
+    end
+
+    # Checks if PayPal SANDBOX environment enabled
+    # @return [Boolean] Checks if PayPal SANDBOX environment enabled
+    def sandbox?
+      env.sandbox?
+    end
+
+    # Base API URL
+    # @return [String] Base API URL
+    def api_url
+      env.api_url
+    end
+
+    # Base WEB URL
+    # @return [String] Base WEB URL
+    def web_url
+      env.web_url
+    end
+
     # Registers callback
     #
     # @param callback_name [Symbol] Callback name.
-    #   Allowed values: :before, :after_success, :after_faile, :after_network_error
+    #   Allowed values: :before, :after_success, :after_fail, :after_network_error
     #
     # @param block [Proc] Block that must be call
     #   For `:before` callback proc should accept 2 params -
@@ -89,6 +118,7 @@ module PaypalAPI
 
     #
     # Verifies Webhook
+    #
     # It requires one-time request to download and cache certificate.
     # If local verification returns false it tries to verify webhook online.
     #
@@ -98,7 +128,7 @@ module PaypalAPI
     #  class Webhooks::PaypalController < ApplicationController
     #    def create
     #      webhook_id = ENV['PAYPAL_WEBHOOK_ID'] # PayPal registered webhook ID for current URL
-    #      headers = request.headers # must be a Hash
+    #      headers = request.headers # must respond to #[] to get headers
     #      body = request.raw_post # must be a raw String body
     #
     #      webhook_is_valid = PaypalAPI.verify_webhook(webhook_id: webhook_id, headers: headers, body: body)

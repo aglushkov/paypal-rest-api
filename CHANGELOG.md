@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [0.2.0] - 2024-09-02
+
+- Extract environment config to Environment class from Config class
+- Add `client.api_url` and `PaypalAPI.api_url` public methods
+- Add `client.web_url` and `PaypalAPI.web_url` public methods
+- Add `client.live?` and `PaypalAPI.live?` public methods
+- Add `client.sandbox?` and `PaypalAPI.sandbox?` public methods
+
 ## [0.1.1] - 2024-09-01
 
 - fix callbacks context was nil

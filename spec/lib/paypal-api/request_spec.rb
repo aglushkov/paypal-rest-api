@@ -3,13 +3,14 @@
 RSpec.describe PaypalAPI::Request do
   subject(:request) { described_class.new(client, http_method, path, query: query, body: body, headers: headers) }
 
-  let(:client) { instance_double(PaypalAPI::Client, config: config, access_token: access_token) }
+  let(:client) { instance_double(PaypalAPI::Client, env: env, config: config, access_token: access_token) }
   let(:path) { "path" }
   let(:http_method) { Net::HTTP::Get }
   let(:query) { nil }
   let(:body) { nil }
   let(:headers) { nil }
-  let(:config) { instance_double(PaypalAPI::Config, url: "https://api-m.paypal.com/foo") }
+  let(:env) { instance_double(PaypalAPI::Environment, api_url: "https://api-m.paypal.com/foo") }
+  let(:config) { instance_double(PaypalAPI::Config) }
   let(:access_token) { instance_double(PaypalAPI::AccessToken, authorization_string: "AUTHORIZATION") }
 
   it "constructs http_request with default headers" do
