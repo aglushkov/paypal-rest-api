@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.3.1] - 2024-09-02
+
+- Fix broken gem build with required `debug` library
+
 ## [0.3.0] - 2024-09-02
 
 - Fix UnsupportedMediType errors for requests without body by adding
