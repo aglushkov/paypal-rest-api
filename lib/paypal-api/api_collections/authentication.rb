@@ -43,7 +43,7 @@ module PaypalAPI
 
         default_headers = {
           "content-type" => "application/x-www-form-urlencoded",
-          "authorization" => "Basic #{["#{client.config.client_id}:#{client.config.client_secret}"].pack("m0")}"
+          "authorization" => "Basic #{["#{client.env.client_id}:#{client.env.client_secret}"].pack("m0")}"
         }
 
         client.post(PATH, query: query, body: body, headers: merge_headers!(default_headers, headers))

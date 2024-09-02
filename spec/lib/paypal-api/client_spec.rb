@@ -3,18 +3,63 @@
 RSpec.describe PaypalAPI::Client do
   subject(:client) { described_class.new(**opts) }
 
-  let(:config) { instance_double(PaypalAPI::Config) }
   let(:opts) { {client_id: "CLIENT_ID", client_secret: "CLIENT_SECRET"} }
 
-  before do
-    allow(PaypalAPI::Config).to receive(:new)
-      .with(live: nil, http_opts: nil, retries: nil, cache: nil, **opts)
-      .and_return(config)
+  describe "#new" do
+    let(:config) { instance_double(PaypalAPI::Config) }
+    let(:env) { instance_double(PaypalAPI::Environment) }
+
+    let(:opts) do
+      {
+        client_id: "CLIENT_ID",
+        client_secret: "CLIENT_SECRET",
+        live: "LIVE",
+        retries: "RETRIES",
+        http_opts: "HTTP_OPTS",
+        cache: "CACHE"
+      }
+    end
+
+    before do
+      allow(PaypalAPI::Config).to receive(:new)
+        .with(retries: "RETRIES", http_opts: "HTTP_OPTS", cache: "CACHE")
+        .and_return(config)
+
+      allow(PaypalAPI::Environment).to receive(:new)
+        .with(client_id: "CLIENT_ID", client_secret: "CLIENT_SECRET", live: "LIVE")
+        .and_return(env)
+    end
+
+    it "constructs env, config and callbacks with provided params" do
+      expect(client).to be_a described_class
+      expect(client.config).to equal config
+      expect(client.callbacks).to eq(
+        before: [],
+        after_success: [],
+        after_fail: [],
+        after_network_error: []
+      )
+    end
   end
 
-  it "constructs config with provided params" do
-    expect(client).to be_a described_class
-    expect(client.config).to equal config
+  describe "#live?, #sandbox?, #api_url, #web_url" do
+    let(:client) { described_class.new(**opts) }
+    let(:env) do
+      instance_double(
+        PaypalAPI::Environment,
+        live?: "LIVE", sandbox?: "SANDBOX",
+        api_url: "API_URL", web_url: "WEB_URL"
+      )
+    end
+
+    before { allow(client).to receive(:env).and_return(env) }
+
+    it "delegates to env" do
+      expect(client.live?).to eq "LIVE"
+      expect(client.sandbox?).to eq "SANDBOX"
+      expect(client.api_url).to eq "API_URL"
+      expect(client.web_url).to eq "WEB_URL"
+    end
   end
 
   describe "resources" do

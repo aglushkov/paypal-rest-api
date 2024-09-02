@@ -12,6 +12,25 @@ RSpec.describe PaypalAPI do
     end
   end
 
+  describe "#live?, #sandbox?, #api_url, #web_url" do
+    let(:client) do
+      instance_double(
+        PaypalAPI::Client,
+        live?: "LIVE", sandbox?: "SANDBOX",
+        api_url: "API_URL", web_url: "WEB_URL"
+      )
+    end
+
+    before { allow(described_class).to receive(:client).and_return(client) }
+
+    it "delegates to client" do
+      expect(client.live?).to eq "LIVE"
+      expect(client.sandbox?).to eq "SANDBOX"
+      expect(client.api_url).to eq "API_URL"
+      expect(client.web_url).to eq "WEB_URL"
+    end
+  end
+
   describe "#verify_webhook" do
     let(:client) { instance_double(PaypalAPI::Client, verify_webhook: "RESULT") }
     let(:webhook_id) { "webhook_id" }

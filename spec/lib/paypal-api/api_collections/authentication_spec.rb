@@ -4,8 +4,8 @@ RSpec.describe PaypalAPI::Authentication do
   describe "#generate_access_token" do
     let(:path) { "/v1/oauth2/token" }
     let(:resource) { described_class.new(client) }
-    let(:config) { instance_double(PaypalAPI::Config, client_id: "123", client_secret: "456") }
-    let(:client) { instance_double(PaypalAPI::Client, post: "RESPONSE", config: config) }
+    let(:env) { instance_double(PaypalAPI::Environment, client_id: "123", client_secret: "456") }
+    let(:client) { instance_double(PaypalAPI::Client, post: "RESPONSE", env: env) }
 
     it "calls client with correct args" do
       expect(resource.generate_access_token).to eq "RESPONSE"
@@ -40,8 +40,8 @@ RSpec.describe PaypalAPI::Authentication do
   describe ".generate_access_token" do
     let(:path) { "/v1/oauth2/token" }
     let(:resource) { described_class }
-    let(:config) { instance_double(PaypalAPI::Config, client_id: "123", client_secret: "456") }
-    let(:client) { instance_double(PaypalAPI::Client, post: "RESPONSE", config: config) }
+    let(:env) { instance_double(PaypalAPI::Environment, client_id: "123", client_secret: "456") }
+    let(:client) { instance_double(PaypalAPI::Client, post: "RESPONSE", env: env) }
 
     before { PaypalAPI.client = client }
     after { PaypalAPI.client = nil }

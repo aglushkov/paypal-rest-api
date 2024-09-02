@@ -35,7 +35,11 @@ PaypalAPI.client = PaypalAPI::Client.new(
 )
 
 # in your business logic
-response = PaypalAPI::Orders.show(order_id)
+PaypalAPI.live? # => false
+PaypalAPI.api_url # => "https://api-m.sandbox.paypal.com"
+PaypalAPI.web_url # => "https://sandbox.paypal.com"
+
+response = between redeploys::Orders.show(order_id)
 response = PaypalAPI::Orders.create(body: body)
 ```
 
@@ -48,6 +52,10 @@ client = PaypalAPI::Client.new(
   client_secret: ENV['PAYPAL_CLIENT_SECRET'],
   live: false
 )
+
+client.live? # => false
+client.api_url # => "https://api-m.sandbox.paypal.com"
+client.web_url # => "https://sandbox.paypal.com"
 
 response = client.orders.show(order_id)
 response = client.orders.create(body: body)
@@ -91,7 +99,12 @@ response.request # Request that generates this response
 
 ## Configuration options
 
-PaypalAPI client accepts this additional options: `:live`, `:retries`, `:http_opts`
+PaypalAPI client accepts this additional options:
+
+- `:live`
+- `:retries`,
+- `:http_opts`
+- `:cache`
 
 ### Option `:live`
 
@@ -108,8 +121,8 @@ client = PaypalAPI::Client.new(
 ### Option `:retries`
 
 This is a Hash with retries configuration.
-By default retries are enabled, 3 retries with 0.25, 0.75, 1.5 seconds delay.
-Default config: `{enabled: true, count: 3, sleep: [0.25, 0.75, 1.5]}`.
+By default retries are enabled, 4 retries with 0, 0.25, 0.75, 1.5 seconds delay.
+Default config: `{enabled: true, count: 4, sleep: [0, 0.25, 0.75, 1.5]}`.
 New options are merged with defaults.
 Please keep `sleep` array same size as `count`.
 
@@ -135,6 +148,22 @@ By default it is an empty hash.
 ```ruby
 client = PaypalAPI::Client.new(
   http_opts: {read_timeout: 30, write_timeout: 30, open_timeout: 30}
+  # ...
+)
+```
+
+### Option `:cache`
+
+This option can be added to save certificates to between redeploys to validate
+webhooks offline. By default this gem has only in-memory caching.
+Cache object must response to standard caching `#fetch(key, &block)` method.
+
+By default it is `nil`, so downloaded certificates will be downloaded again after
+redeploys.
+
+```ruby
+client = PaypalAPI::Client.new(
+  cache: Rails.cache
   # ...
 )
 ```

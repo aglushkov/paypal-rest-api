@@ -210,6 +210,7 @@ end
 
 require_relative "paypal-api/access_token"
 require_relative "paypal-api/api_collection"
+require_relative "paypal-api/environment"
 require_relative "paypal-api/client"
 require_relative "paypal-api/config"
 require_relative "paypal-api/error"

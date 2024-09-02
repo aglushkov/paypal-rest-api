@@ -107,7 +107,7 @@ module PaypalAPI
     end
 
     def build_http_uri(path, query)
-      uri = URI.join(client.config.url, path)
+      uri = URI.join(client.env.api_url, path)
       uri.query = URI.encode_www_form(query) if query && !query.empty?
       uri
     end

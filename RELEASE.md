@@ -26,12 +26,6 @@ pip3 install codespell \
 git co -b "v$(cat "VERSION")"
 ```
 
-1. Make local gem release
-
-```
-gem build paypal-rest-api.gemspec
-```
-
 1. Repeat
 
 ```
@@ -40,6 +34,14 @@ bundle update \
   && bundle exec rspec \
   && bundle exec rubocop -A \
   && codespell --skip="./sig,./doc,./coverage"
+```
+
+1. Revert BUNDLED_WITH to 2.4.22 in old.gemfile.lock
+
+1. Make local gem release
+
+```
+gem build paypal-rest-api.gemspec
 ```
 
 1. Add CHANGELOG, README notices, test them:
