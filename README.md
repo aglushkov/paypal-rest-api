@@ -130,7 +130,7 @@ Retries happen on any network error, on 409, 429, 5xx response status code.
 
 ```ruby
 client = PaypalAPI::Client.new(
-  retries: {count: 2, sleep: [0, 0]}
+  retries: {enabled: !Rails.env.test?, count: 5, sleep: [0, 0.25, 0.75, 1.5, 2]}
   # ...
 )
 ```
