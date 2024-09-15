@@ -8,7 +8,7 @@ module PaypalAPI
   #
   class Payouts < APICollection
     #
-    # Common class and instance methods
+    # Common methods for PaypalAPI::Payouts class and client.payouts instance
     #
     module APIs
       # @!macro [new] request

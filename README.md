@@ -1,3 +1,8 @@
+[![Gem Version](https://badge.fury.io/rb/paypal-rest-api.svg)](https://badge.fury.io/rb/paypal-rest-api)
+[![GitHub Actions](https://github.com/aglushkov/paypal-rest-api/actions/workflows/main.yml/badge.svg?event=push)](https://github.com/aglushkov/paypal-rest-api/actions/workflows/main.yml)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/11efd530f1df171dac2b/test_coverage)](https://codeclimate.com/github/aglushkov/paypal-rest-api/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/11efd530f1df171dac2b/maintainability)](https://codeclimate.com/github/aglushkov/paypal-rest-api/maintainability)
+
 # PaypalAPI
 
 ## Installation

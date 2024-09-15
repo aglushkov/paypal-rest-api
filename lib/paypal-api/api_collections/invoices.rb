@@ -8,7 +8,7 @@ module PaypalAPI
   #
   class Invoices < APICollection
     #
-    # Common class and instance methods
+    # Common methods for PaypalAPI::Invoices class and client.invoices instance
     #
     module APIs
       # @!macro [new] request

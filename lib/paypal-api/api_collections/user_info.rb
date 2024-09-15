@@ -8,7 +8,7 @@ module PaypalAPI
   #
   class UserInfo < APICollection
     #
-    # Common class and instance methods
+    # Common methods for PaypalAPI::UserInfo class and client.user_info instance
     #
     module APIs
       # @!macro [new] request

@@ -8,7 +8,7 @@ module PaypalAPI
   #
   class Subscriptions < APICollection
     #
-    # Common class and instance methods
+    # Common methods for PaypalAPI::Subscriptions class and client.subscriptions instance
     #
     module APIs
       # @!macro [new] request

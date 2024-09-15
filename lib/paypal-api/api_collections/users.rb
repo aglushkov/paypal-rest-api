@@ -4,11 +4,11 @@ module PaypalAPI
   #
   # Managing users APIs
   #
-  # https://developer.paypal.com/docs/api/identity/v2/
+  # @see https://developer.paypal.com/docs/api/identity/v2/
   #
   class Users < APICollection
     #
-    # Common class and instance methods
+    # Common methods for PaypalAPI::Users class and client.users instance
     #
     module APIs
       # @!macro [new] request

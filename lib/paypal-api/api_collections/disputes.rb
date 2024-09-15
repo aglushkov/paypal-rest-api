@@ -8,7 +8,7 @@ module PaypalAPI
   #
   class Disputes < APICollection
     #
-    # Common class and instance methods
+    # Common methods for PaypalAPI::Disputes class and client.disputes instance
     #
     module APIs
       # @!macro [new] request

@@ -8,7 +8,7 @@ module PaypalAPI
   #
   class CatalogProducts < APICollection
     #
-    # Common class and instance methods
+    # Common methods for PaypalAPI::CatalogProducts class and client.catalog_products instance
     #
     module APIs
       # @!macro [new] request

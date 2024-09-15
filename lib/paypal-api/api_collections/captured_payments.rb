@@ -8,7 +8,7 @@ module PaypalAPI
   #
   class CapturedPayments < APICollection
     #
-    # Common class and instance methods
+    # Common methods for PaypalAPI::CapturedPayments class and client.captured_payments instance
     #
     module APIs
       # @!macro [new] request
