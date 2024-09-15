@@ -35,6 +35,7 @@ jobs:
 
     env:
       BUNDLE_GEMFILE: ${{ matrix.gemfile }}
+      CC_TEST_REPORTER_ID: 195b4c2b433a5c635a8e2d84f4b79c95a363d37a9b8706d7a4faa6d4da1ad5e8
 
     steps:
     - uses: actions/checkout@v4
