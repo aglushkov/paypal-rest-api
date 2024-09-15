@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [Unreleased]
+
+- Add PaymentToken APIs (and SetupTokens APIs)
+- Add json details to FailedRequest error message
+
 ## [0.3.1] - 2024-09-02
 
 - Fix broken gem build with required `debug` library

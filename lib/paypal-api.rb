@@ -200,11 +200,13 @@ module PaypalAPI
       invoice_templates
       invoices
       orders
+      payment_tokens
       payout_items
       payouts
       refunds
       referenced_payout_items
       referenced_payouts
+      setup_tokens
       shipment_tracking
       subscriptions
       subscription_plans
@@ -253,11 +255,13 @@ require_relative "paypal-api/api_collections/disputes"
 require_relative "paypal-api/api_collections/invoice_templates"
 require_relative "paypal-api/api_collections/invoices"
 require_relative "paypal-api/api_collections/orders"
+require_relative "paypal-api/api_collections/payment_tokens"
 require_relative "paypal-api/api_collections/payout_items"
 require_relative "paypal-api/api_collections/payouts"
 require_relative "paypal-api/api_collections/refunds"
 require_relative "paypal-api/api_collections/referenced_payout_items"
 require_relative "paypal-api/api_collections/referenced_payouts"
+require_relative "paypal-api/api_collections/setup_tokens"
 require_relative "paypal-api/api_collections/shipment_tracking"
 require_relative "paypal-api/api_collections/subscriptions"
 require_relative "paypal-api/api_collections/subscription_plans"
