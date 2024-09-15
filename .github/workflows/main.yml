@@ -63,3 +63,8 @@ jobs:
 
     - name: Run Tests
       run: bundle exec rspec
+
+    # https://github.com/paambaati/codeclimate-action
+    - name: Publish code coverage to code-climate
+      uses: paambaati/codeclimate-action@v9.0.0
+      if: (github.event_name == 'push') && startsWith(matrix.ruby, '3.3')
