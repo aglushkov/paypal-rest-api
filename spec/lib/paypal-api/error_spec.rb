@@ -18,10 +18,10 @@ RSpec.describe PaypalAPI::Error do
       )
     end
 
-    let(:http_body) { 123 }
+    let(:http_body) { body.to_json }
     let(:http_response) { Net::HTTPForbidden.allocate }
 
-    context "when body is a Hash with full error details" do
+    context "when body is a Hash with error details" do
       let(:body) do
         {
           name: "NAME",
@@ -32,9 +32,13 @@ RSpec.describe PaypalAPI::Error do
       end
 
       it "sets correct attributes" do
-        error = described_class.new("error", response: response, request: request)
+        error = described_class.new("ERROR MESSAGE", response: response, request: request)
 
-        expect(error.message).to eq "error"
+        expect(error.message).to eq <<~ERROR.strip
+          ERROR MESSAGE
+            #{http_body}
+        ERROR
+
         expect(error.request).to equal request
         expect(error.response).to equal response
 
@@ -47,6 +51,7 @@ RSpec.describe PaypalAPI::Error do
     end
 
     context "when body is a Hash with only error and error_description fields" do
+      let(:http_body) { body.to_json }
       let(:body) do
         {
           error: "ERROR",
@@ -55,9 +60,13 @@ RSpec.describe PaypalAPI::Error do
       end
 
       it "sets correct attributes" do
-        error = described_class.new("error", response: response, request: request)
+        error = described_class.new("ERROR MESSAGE", response: response, request: request)
 
-        expect(error.message).to eq "error"
+        expect(error.message).to eq <<~ERROR.strip
+          ERROR MESSAGE
+            #{http_body}
+        ERROR
+
         expect(error.request).to equal request
         expect(error.response).to equal response
 
@@ -73,9 +82,9 @@ RSpec.describe PaypalAPI::Error do
       let(:body) { nil }
 
       it "sets correct attributes" do
-        error = described_class.new("error", response: response, request: request)
+        error = described_class.new("ERROR MESSAGE", response: response, request: request)
 
-        expect(error.message).to eq "error"
+        expect(error.message).to eq "ERROR MESSAGE"
         expect(error.request).to equal request
         expect(error.response).to equal response
 
@@ -91,9 +100,9 @@ RSpec.describe PaypalAPI::Error do
   describe PaypalAPI::Errors::NetworkError do
     it "has message and detailed message" do
       original_error = StandardError.new("message")
-      error = described_class.new("error", request: request, error: original_error)
+      error = described_class.new("ERROR MESSAGE", request: request, error: original_error)
 
-      expect(error.message).to eq "error"
+      expect(error.message).to eq "ERROR MESSAGE"
       expect(error.request).to equal request
       expect(error.response).to equal nil
 

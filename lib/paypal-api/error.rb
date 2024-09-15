@@ -37,7 +37,6 @@ module PaypalAPI
     #
     class FailedRequest < Error
       def initialize(message = nil, request:, response:)
-        super(message)
         @request = request
         @response = response
 
@@ -48,6 +47,9 @@ module PaypalAPI
         @error_debug_id = data[:debug_id]
         @error_details = data[:details]
         @paypal_request_id = request.http_request["paypal-request-id"]
+
+        message += "\n  #{response.http_body}" unless data.empty?
+        super(message)
       end
     end
 
