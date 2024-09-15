@@ -8,7 +8,7 @@ module PaypalAPI
   #
   class Refunds < APICollection
     #
-    # Common class and instance methods
+    # Common methods for PaypalAPI::Refunds class and client.refunds instance
     #
     module APIs
       #

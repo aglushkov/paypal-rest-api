@@ -83,27 +83,9 @@ module PaypalAPI
     def build_http_headers(http_request, body, headers)
       headers = normalize_headers(headers)
 
-      unless headers.key?("authorization")
-        http_request["authorization"] = client.access_token.authorization_string
-      end
-
-      #
-      # We should set json content type header to not get 415 UnsupportedMediaType
-      # error in various APIs
-      #
-      # PayPal requires "application/json" content type even for GET requests
-      # and for POST requests without body.
-      #
-      # Net::HTTP sets default content-type "application/x-www-form-urlencoded"
-      # if not provided
-      #
-      unless headers.key?("content-type")
-        http_request["content-type"] = "application/json"
-      end
-
-      unless headers.key?("paypal-request-id")
-        http_request["paypal-request-id"] = SecureRandom.uuid unless http_request.is_a?(Net::HTTP::Get)
-      end
+      add_authorization_header(http_request, headers)
+      add_content_type_header(http_request, headers)
+      add_paypal_request_id_header(http_request, headers)
 
       headers.each { |key, value| http_request[key] = value }
     end
@@ -123,6 +105,34 @@ module PaypalAPI
 
     def normalize_headers(headers)
       headers.empty? ? headers : headers.transform_keys { |key| key.to_s.downcase }
+    end
+
+    def add_authorization_header(http_request, headers)
+      unless headers.key?("authorization")
+        http_request["authorization"] = client.access_token.authorization_string
+      end
+    end
+
+    #
+    # We should set json content type header to not get 415 UnsupportedMediaType
+    # error in various APIs
+    #
+    # PayPal requires "application/json" content type even for GET requests
+    # and for POST requests without body.
+    #
+    # Net::HTTP sets default content-type "application/x-www-form-urlencoded"
+    # if not provided
+    #
+    def add_content_type_header(http_request, headers)
+      unless headers.key?("content-type")
+        http_request["content-type"] = "application/json"
+      end
+    end
+
+    def add_paypal_request_id_header(http_request, headers)
+      unless headers.key?("paypal-request-id")
+        http_request["paypal-request-id"] = SecureRandom.uuid unless http_request.is_a?(Net::HTTP::Get)
+      end
     end
   end
 end

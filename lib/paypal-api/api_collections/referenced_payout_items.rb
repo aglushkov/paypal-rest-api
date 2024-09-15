@@ -4,11 +4,11 @@ module PaypalAPI
   #
   # Enables partner merchants and developers to process individual referenced payouts to recipients.
   #
-  # @seehttps://developer.paypal.com/docs/api/referenced-payouts/v1/
+  # @see https://developer.paypal.com/docs/api/referenced-payouts/v1/
   #
   class ReferencedPayoutItems < APICollection
     #
-    # Common class and instance methods
+    # Common methods for PaypalAPI::ReferencedPayoutItems class and client.referenced_payout_items instance
     #
     module APIs
       # @!macro [new] request

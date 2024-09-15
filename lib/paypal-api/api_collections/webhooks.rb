@@ -6,7 +6,7 @@ module PaypalAPI
   #
   class Webhooks < APICollection
     #
-    # Common class and instance methods
+    # Common methods for PaypalAPI::Webhooks class and client.webhooks instance
     #
     module APIs
       # @!macro [new] request

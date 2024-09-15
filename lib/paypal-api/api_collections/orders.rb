@@ -8,7 +8,7 @@ module PaypalAPI
   #
   class Orders < APICollection
     #
-    # Common class and instance methods
+    # Common methods for PaypalAPI::Orders class and client.orders instance
     #
     module APIs
       # @!macro [new] request

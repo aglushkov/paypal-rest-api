@@ -8,7 +8,7 @@ module PaypalAPI
   #
   class SetupTokens < APICollection
     #
-    # Common class and instance methods
+    # Common methods for PaypalAPI::SetupTokens class and client.setup_tokens instance
     #
     module APIs
       # @!macro [new] request

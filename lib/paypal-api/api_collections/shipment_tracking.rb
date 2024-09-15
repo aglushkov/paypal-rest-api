@@ -8,7 +8,7 @@ module PaypalAPI
   #
   class ShipmentTracking < APICollection
     #
-    # Common class and instance methods
+    # Common methods for PaypalAPI::ShipmentTracking class and client.shipment_tracking instance
     #
     module APIs
       # @!macro [new] request

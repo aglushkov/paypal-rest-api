@@ -8,7 +8,7 @@ module PaypalAPI
   #
   class AuthorizedPayments < APICollection
     #
-    # Common class and instance methods
+    # Common methods for PayplaAPI::AuthorizedPayments class and client.authorized_payments instance
     #
     module APIs
       # @!macro [new] request

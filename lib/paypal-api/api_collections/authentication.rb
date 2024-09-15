@@ -13,7 +13,7 @@ module PaypalAPI
     PATH = "/v1/oauth2/token"
 
     #
-    # Common class and instance methods
+    # Common methods for PayplaAPI::Authentication class and client.authentication instance
     #
     module APIs
       #
