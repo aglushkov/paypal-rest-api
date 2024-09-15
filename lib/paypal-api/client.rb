@@ -241,6 +241,11 @@ module PaypalAPI
       Orders.new(self)
     end
 
+    # @return [PaymentTokens] PaymentTokens APIs collection
+    def payment_tokens
+      PaymentTokens.new(self)
+    end
+
     # @return [PayoutItems] PayoutItems APIs collection
     def payout_items
       PayoutItems.new(self)
@@ -251,7 +256,7 @@ module PaypalAPI
       Payouts.new(self)
     end
 
-    # @return [Redunds] Refunds APIs collection
+    # @return [Refunds] Refunds APIs collection
     def refunds
       Refunds.new(self)
     end
@@ -264,6 +269,11 @@ module PaypalAPI
     # @return [ReferencedPayouts] ReferencedPayouts APIs collection
     def referenced_payouts
       ReferencedPayouts.new(self)
+    end
+
+    # @return [SetupTokens] SetupTokens APIs collection
+    def setup_tokens
+      SetupTokens.new(self)
     end
 
     # @return [ShipmentTracking] Shipment Tracking APIs collection

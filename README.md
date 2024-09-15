@@ -351,6 +351,18 @@ All API endpoints accept this parameters:
 - `PaypalAPI::Orders.track`
 - `PaypalAPI::Orders.update_tracker`
 
+### Payment Tokens
+
+- `PaypalAPI::PaymentTokens.create`
+- `PaypalAPI::PaymentTokens.list`
+- `PaypalAPI::PaymentTokens.show`
+- `PaypalAPI::PaymentTokens.delete`
+
+<!-- -->
+
+- `PaypalAPI::SetupTokens.create`
+- `PaypalAPI::SetupTokens.show`
+
 ### Payments
 
 - `PaypalAPI::AuthorizedPayments.show`
