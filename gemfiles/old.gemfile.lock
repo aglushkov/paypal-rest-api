@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    paypal-rest-api (0.3.1)
+    paypal-rest-api (0.4.0)
 
 GEM
   remote: https://rubygems.org/
@@ -16,23 +16,20 @@ GEM
     diff-lcs (1.5.1)
     hashdiff (1.1.1)
     public_suffix (5.1.1)
-    rexml (3.3.6)
-      strscan
+    rexml (3.3.7)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
       rspec-mocks (~> 3.13.0)
-    rspec-core (3.13.0)
+    rspec-core (3.13.1)
       rspec-support (~> 3.13.0)
-    rspec-expectations (3.13.2)
+    rspec-expectations (3.13.3)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-mocks (3.13.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-support (3.13.1)
-    strscan (3.1.0)
-    strscan (3.1.0-java)
     timecop (0.9.10)
     webmock (3.23.1)
       addressable (>= 2.8.0)
