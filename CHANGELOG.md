@@ -2,8 +2,11 @@
 
 ## [Unreleased]
 
+## [0.4.0] - 2024-09-16
+
 - Add PaymentToken APIs (and SetupTokens APIs)
 - Add json details to FailedRequest error message
+- Add CodeClimate badges to README
 
 ## [0.3.1] - 2024-09-02
 
