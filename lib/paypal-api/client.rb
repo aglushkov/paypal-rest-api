@@ -246,6 +246,11 @@ module PaypalAPI
       PartnerReferrals.new(self)
     end
 
+    # @return [PaymentExperienceWebProfiles] PaymentExperienceWebProfiles APIs collection
+    def payment_experience_web_profiles
+      PaymentExperienceWebProfiles.new(self)
+    end
+
     # @return [PaymentTokens] PaymentTokens APIs collection
     def payment_tokens
       PaymentTokens.new(self)

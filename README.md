@@ -519,6 +519,15 @@ All API endpoints accept this parameters:
 - `PaypalAPI::PartnerReferrals.create`
 - `PaypalAPI::PartnerReferrals.show`
 
+### PaymentExperienceWebProfiles
+
+- `PaypalAPI::PaymentExperienceWebProfiles.create`
+- `PaypalAPI::PaymentExperienceWebProfiles.list`
+- `PaypalAPI::PaymentExperienceWebProfiles.show`
+- `PaypalAPI::PaymentExperienceWebProfiles.replace`
+- `PaypalAPI::PaymentExperienceWebProfiles.update`
+- `PaypalAPI::PaymentExperienceWebProfiles.delete`
+
 ## Development
 
 ```bash
