@@ -514,6 +514,11 @@ All API endpoints accept this parameters:
 - `PaypalAPI::ReferencedPayoutItems.create`
 - `PaypalAPI::ReferencedPayoutItems.show`
 
+### PartnerReferrals
+
+- `PaypalAPI::PartnerReferrals.create`
+- `PaypalAPI::PartnerReferrals.show`
+
 ## Development
 
 ```bash

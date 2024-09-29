@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Add PartnerReferrals APIs collection
+
 ## [0.4.0] - 2024-09-16
 
 - Add PaymentToken APIs (and SetupTokens APIs)

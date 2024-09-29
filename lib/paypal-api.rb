@@ -200,6 +200,7 @@ module PaypalAPI
       invoice_templates
       invoices
       orders
+      partner_referrals
       payment_tokens
       payout_items
       payouts
@@ -255,6 +256,7 @@ require_relative "paypal-api/api_collections/disputes"
 require_relative "paypal-api/api_collections/invoice_templates"
 require_relative "paypal-api/api_collections/invoices"
 require_relative "paypal-api/api_collections/orders"
+require_relative "paypal-api/api_collections/partner_referrals"
 require_relative "paypal-api/api_collections/payment_tokens"
 require_relative "paypal-api/api_collections/payout_items"
 require_relative "paypal-api/api_collections/payouts"
