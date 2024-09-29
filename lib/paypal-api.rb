@@ -139,6 +139,14 @@ module PaypalAPI
     #   @macro api_collection
     #   @return [Orders]
     #
+    # @!method partner_referrals
+    #   @macro api_collection
+    #   @return [PartnerReferrals]
+    #
+    # @!method payment_experience_web_profiles
+    #   @macro api_collection
+    #   @return [PaymentExperienceWebProfile]
+    #
     # @!method payout_items
     #   @macro api_collection
     #   @return [PayoutItems]
@@ -170,6 +178,10 @@ module PaypalAPI
     # @!method subscription_plans
     #   @macro api_collection
     #   @return [SubscriptionPlans]
+    #
+    # @!method transaction_search
+    #   @macro api_collection
+    #   @return [TransactionSearch]
     #
     # @!method user_info
     #   @macro api_collection
@@ -212,6 +224,7 @@ module PaypalAPI
       shipment_tracking
       subscriptions
       subscription_plans
+      transaction_search
       user_info
       users
       webhooks
@@ -269,6 +282,7 @@ require_relative "paypal-api/api_collections/setup_tokens"
 require_relative "paypal-api/api_collections/shipment_tracking"
 require_relative "paypal-api/api_collections/subscriptions"
 require_relative "paypal-api/api_collections/subscription_plans"
+require_relative "paypal-api/api_collections/transaction_search"
 require_relative "paypal-api/api_collections/user_info"
 require_relative "paypal-api/api_collections/users"
 require_relative "paypal-api/api_collections/webhooks"

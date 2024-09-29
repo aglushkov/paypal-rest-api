@@ -301,6 +301,11 @@ module PaypalAPI
       SubscriptionPlans.new(self)
     end
 
+    # @return [TransactionSearch] TransactionSearch APIs collection
+    def transaction_search
+      TransactionSearch.new(self)
+    end
+
     # @return [UserInfo] User Info APIs collection
     def user_info
       UserInfo.new(self)
