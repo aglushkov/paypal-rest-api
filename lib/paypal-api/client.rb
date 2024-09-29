@@ -241,6 +241,11 @@ module PaypalAPI
       Orders.new(self)
     end
 
+    # @return [PartnerReferrals] PartnerReferrals APIs collection
+    def partner_referrals
+      PartnerReferrals.new(self)
+    end
+
     # @return [PaymentTokens] PaymentTokens APIs collection
     def payment_tokens
       PaymentTokens.new(self)
