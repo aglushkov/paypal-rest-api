@@ -32,6 +32,16 @@ RSpec.describe PaypalAPI::Request do
     end
   end
 
+  context "with query parameters conflicting with path query parameters" do
+    let(:path) { "path?one=old1&three=3" }
+    let(:query) { {one: 1, two: 2} }
+
+    it "merges query parameters" do
+      http_request = request.http_request
+      expect(http_request.uri).to eq URI("https://api-m.paypal.com/path?one=1&three=3&two=2")
+    end
+  end
+
   context "with custom headers" do
     let(:headers) do
       {:one => 1, "Authorization" => "AUTH", "Content-Type" => "multipart/form-data", "PayPal-Request-Id" => 123}

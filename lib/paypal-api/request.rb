@@ -99,7 +99,8 @@ module PaypalAPI
 
     def build_http_uri(path, query)
       uri = URI.join(client.env.api_url, path)
-      uri.query = URI.encode_www_form(query) if query && !query.empty?
+      add_query_params(uri, query)
+
       uri
     end
 
@@ -111,6 +112,20 @@ module PaypalAPI
       unless headers.key?("authorization")
         http_request["authorization"] = client.access_token.authorization_string
       end
+    end
+
+    def add_query_params(uri, query)
+      return if !query || query.empty?
+
+      # We should merge query params with uri query params to not temove them
+      uri_query_string = uri.query
+
+      if uri_query_string && !uri_query_string.empty?
+        old_query = URI.decode_www_form(uri_query_string).to_h
+        query = old_query.transform_keys!(&:to_sym).merge!(query.transform_keys(&:to_sym))
+      end
+
+      uri.query = URI.encode_www_form(query)
     end
 
     #
