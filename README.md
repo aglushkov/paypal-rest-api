@@ -44,7 +44,7 @@ PaypalAPI.live? # => false
 PaypalAPI.api_url # => "https://api-m.sandbox.paypal.com"
 PaypalAPI.web_url # => "https://sandbox.paypal.com"
 
-response = between redeploys::Orders.show(order_id)
+response = PaypalAPI::Orders.show(order_id)
 response = PaypalAPI::Orders.create(body: body)
 ```
 
