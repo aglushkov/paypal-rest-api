@@ -528,6 +528,11 @@ All API endpoints accept this parameters:
 - `PaypalAPI::PaymentExperienceWebProfiles.update`
 - `PaypalAPI::PaymentExperienceWebProfiles.delete`
 
+### TransactionSearch
+
+- `PaypalAPI::TransactionSearch.list_transactions`
+- `PaypalAPI::TransactionSearch.list_all_balances`
+
 ## Development
 
 ```bash

@@ -81,6 +81,7 @@ RSpec.describe PaypalAPI do
     shipment_tracking: PaypalAPI::ShipmentTracking,
     subscriptions: PaypalAPI::Subscriptions,
     subscription_plans: PaypalAPI::SubscriptionPlans,
+    transaction_search: PaypalAPI::TransactionSearch,
     user_info: PaypalAPI::UserInfo,
     users: PaypalAPI::Users,
     webhooks: PaypalAPI::Webhooks,
