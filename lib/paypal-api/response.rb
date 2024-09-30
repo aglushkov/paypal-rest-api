@@ -149,12 +149,8 @@ module PaypalAPI
         return enum_for(:each_page) unless block
 
         page = self
-
-        loop do
-          yield(page)
-          page = page.follow_up_link("next")
-          break unless page
-        end
+        yield(page)
+        yield(page) while (page = page.follow_up_link("next"))
       end
 
       #
