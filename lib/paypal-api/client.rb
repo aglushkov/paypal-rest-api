@@ -43,28 +43,33 @@ module PaypalAPI
       @access_token = nil
     end
 
-    # Checks if PayPal LIVE environment enabled
-    # @return [Boolean] Checks if PayPal LIVE environment enabled
-    def live?
-      env.live?
-    end
+    #
+    # Environment specific methods
+    #
+    module EnvironmentMethods
+      # Checks if PayPal LIVE environment enabled
+      # @return [Boolean] Checks if PayPal LIVE environment enabled
+      def live?
+        env.live?
+      end
 
-    # Checks if PayPal SANDBOX environment enabled
-    # @return [Boolean] Checks if PayPal SANDBOX environment enabled
-    def sandbox?
-      env.sandbox?
-    end
+      # Checks if PayPal SANDBOX environment enabled
+      # @return [Boolean] Checks if PayPal SANDBOX environment enabled
+      def sandbox?
+        env.sandbox?
+      end
 
-    # Base API URL
-    # @return [String] Base API URL
-    def api_url
-      env.api_url
-    end
+      # Base API URL
+      # @return [String] Base API URL
+      def api_url
+        env.api_url
+      end
 
-    # Base WEB URL
-    # @return [String] Base WEB URL
-    def web_url
-      env.web_url
+      # Base WEB URL
+      # @return [String] Base WEB URL
+      def web_url
+        env.web_url
+      end
     end
 
     # Registers callback
@@ -91,29 +96,35 @@ module PaypalAPI
     end
 
     #
-    # Checks cached access token is expired and returns it or generates new one
+    # Methods to take Access-Token
+    # @api private
     #
-    # @return [AccessToken] AccessToken object
-    #
-    def access_token
-      (@access_token.nil? || @access_token.expired?) ? refresh_access_token : @access_token
-    end
+    module AccessTokenMethods
+      #
+      # Checks cached access token is expired and returns it or generates new one
+      #
+      # @return [AccessToken] AccessToken object
+      #
+      def access_token
+        (@access_token.nil? || @access_token.expired?) ? refresh_access_token : @access_token
+      end
 
-    #
-    # Generates and caches new AccessToken
-    #
-    # @return [AccessToken] new AccessToken object
-    #
-    def refresh_access_token
-      requested_at = Time.now
-      response = authentication.generate_access_token
+      #
+      # Generates and caches new AccessToken
+      #
+      # @return [AccessToken] new AccessToken object
+      #
+      def refresh_access_token
+        requested_at = Time.now
+        response = authentication.generate_access_token
 
-      @access_token = AccessToken.new(
-        requested_at: requested_at,
-        expires_in: response.fetch(:expires_in),
-        access_token: response.fetch(:access_token),
-        token_type: response.fetch(:token_type)
-      )
+        @access_token = AccessToken.new(
+          requested_at: requested_at,
+          expires_in: response.fetch(:expires_in),
+          access_token: response.fetch(:access_token),
+          token_type: response.fetch(:token_type)
+        )
+      end
     end
 
     #
@@ -148,188 +159,203 @@ module PaypalAPI
       WebhookVerifier.new(self).call(webhook_id: webhook_id, headers: headers, raw_body: raw_body)
     end
 
-    # @!macro [new] request
-    # @param path [String] Request path
-    # @param query [Hash, nil] Request query parameters
-    # @param body [Hash, nil] Request body parameters
-    # @param headers [Hash, nil] Request headers
     #
-    # @return [Response] Response object
+    # HTTP methods
+    #
+    module HTTPMethods
+      # @!macro [new] request
+      # @param path [String] Request path
+      # @param query [Hash, nil] Request query parameters
+      # @param body [Hash, nil] Request body parameters
+      # @param headers [Hash, nil] Request headers
+      #
+      # @return [Response] Response object
+
+      #
+      # Executes POST http request
+      #
+      # @macro request
+      #
+      def post(path, query: nil, body: nil, headers: nil)
+        execute_request(Net::HTTP::Post, path, query: query, body: body, headers: headers)
+      end
+
+      #
+      # Executes GET http request
+      #
+      # @macro request
+      #
+      def get(path, query: nil, body: nil, headers: nil)
+        execute_request(Net::HTTP::Get, path, query: query, body: body, headers: headers)
+      end
+
+      #
+      # Executes PATCH http request
+      #
+      # @macro request
+      #
+      def patch(path, query: nil, body: nil, headers: nil)
+        execute_request(Net::HTTP::Patch, path, query: query, body: body, headers: headers)
+      end
+
+      #
+      # Executes PUT http request
+      #
+      # @macro request
+      #
+      def put(path, query: nil, body: nil, headers: nil)
+        execute_request(Net::HTTP::Put, path, query: query, body: body, headers: headers)
+      end
+
+      #
+      # Executes DELETE http request
+      #
+      # @macro request
+      #
+      def delete(path, query: nil, body: nil, headers: nil)
+        execute_request(Net::HTTP::Delete, path, query: query, body: body, headers: headers)
+      end
+    end
 
     #
-    # Executes POST http request
+    # Methods to access API collections
     #
-    # @macro request
-    #
-    def post(path, query: nil, body: nil, headers: nil)
-      execute_request(Net::HTTP::Post, path, query: query, body: body, headers: headers)
+    module APIMethods
+      # @return [AuthorizedPayments] AuthorizedPayments APIs collection
+      def authorized_payments
+        AuthorizedPayments.new(self)
+      end
+
+      # @return [CapturedPayments] CapturedPayments APIs collection
+      def captured_payments
+        CapturedPayments.new(self)
+      end
+
+      # @return [Authentication] Authentication APIs collection
+      def authentication
+        Authentication.new(self)
+      end
+
+      # @return [CatalogProducts] Catalog Products APIs collection
+      def catalog_products
+        CatalogProducts.new(self)
+      end
+
+      # @return [Disputes] Disputes APIs collection
+      def disputes
+        Disputes.new(self)
+      end
+
+      # @return [InvoiceTemplates] InvoiceTemplates APIs collection
+      def invoice_templates
+        InvoiceTemplates.new(self)
+      end
+
+      # @return [Invoices] Invoices APIs collection
+      def invoices
+        Invoices.new(self)
+      end
+
+      # @return [Orders] Orders APIs collection
+      def orders
+        Orders.new(self)
+      end
+
+      # @return [PartnerReferrals] PartnerReferrals APIs collection
+      def partner_referrals
+        PartnerReferrals.new(self)
+      end
+
+      # @return [PaymentExperienceWebProfiles] PaymentExperienceWebProfiles APIs collection
+      def payment_experience_web_profiles
+        PaymentExperienceWebProfiles.new(self)
+      end
+
+      # @return [PaymentTokens] PaymentTokens APIs collection
+      def payment_tokens
+        PaymentTokens.new(self)
+      end
+
+      # @return [PayoutItems] PayoutItems APIs collection
+      def payout_items
+        PayoutItems.new(self)
+      end
+
+      # @return [Payouts] Payouts APIs collection
+      def payouts
+        Payouts.new(self)
+      end
+
+      # @return [Refunds] Refunds APIs collection
+      def refunds
+        Refunds.new(self)
+      end
+
+      # @return [ReferencedPayoutItems] ReferencedPayoutItems APIs collection
+      def referenced_payout_items
+        ReferencedPayoutItems.new(self)
+      end
+
+      # @return [ReferencedPayouts] ReferencedPayouts APIs collection
+      def referenced_payouts
+        ReferencedPayouts.new(self)
+      end
+
+      # @return [SetupTokens] SetupTokens APIs collection
+      def setup_tokens
+        SetupTokens.new(self)
+      end
+
+      # @return [ShipmentTracking] Shipment Tracking APIs collection
+      def shipment_tracking
+        ShipmentTracking.new(self)
+      end
+
+      # @return [Subscriptions] Subscriptions APIs collection
+      def subscriptions
+        Subscriptions.new(self)
+      end
+
+      # @return [SubscriptionPlans] Subscription Plans APIs collection
+      def subscription_plans
+        SubscriptionPlans.new(self)
+      end
+
+      # @return [TransactionSearch] TransactionSearch APIs collection
+      def transaction_search
+        TransactionSearch.new(self)
+      end
+
+      # @return [UserInfo] User Info APIs collection
+      def user_info
+        UserInfo.new(self)
+      end
+
+      # @return [Users] Users Management APIs collection
+      def users
+        Users.new(self)
+      end
+
+      # @return [Webhooks] Webhooks APIs collection
+      def webhooks
+        Webhooks.new(self)
+      end
+
+      # @return [WebhookEvents] Webhook Events APIs collection
+      def webhook_lookups
+        WebhookLookups.new(self)
+      end
+
+      # @return [WebhookEvents] Webhook Lookups APIs collection
+      def webhook_events
+        WebhookEvents.new(self)
+      end
     end
 
-    #
-    # Executes GET http request
-    #
-    # @macro request
-    #
-    def get(path, query: nil, body: nil, headers: nil)
-      execute_request(Net::HTTP::Get, path, query: query, body: body, headers: headers)
-    end
-
-    #
-    # Executes PATCH http request
-    #
-    # @macro request
-    #
-    def patch(path, query: nil, body: nil, headers: nil)
-      execute_request(Net::HTTP::Patch, path, query: query, body: body, headers: headers)
-    end
-
-    #
-    # Executes PUT http request
-    #
-    # @macro request
-    #
-    def put(path, query: nil, body: nil, headers: nil)
-      execute_request(Net::HTTP::Put, path, query: query, body: body, headers: headers)
-    end
-
-    #
-    # Executes DELETE http request
-    #
-    # @macro request
-    #
-    def delete(path, query: nil, body: nil, headers: nil)
-      execute_request(Net::HTTP::Delete, path, query: query, body: body, headers: headers)
-    end
-
-    # @return [AuthorizedPayments] AuthorizedPayments APIs collection
-    def authorized_payments
-      AuthorizedPayments.new(self)
-    end
-
-    # @return [CapturedPayments] CapturedPayments APIs collection
-    def captured_payments
-      CapturedPayments.new(self)
-    end
-
-    # @return [Authentication] Authentication APIs collection
-    def authentication
-      Authentication.new(self)
-    end
-
-    # @return [CatalogProducts] Catalog Products APIs collection
-    def catalog_products
-      CatalogProducts.new(self)
-    end
-
-    # @return [Disputes] Disputes APIs collection
-    def disputes
-      Disputes.new(self)
-    end
-
-    # @return [InvoiceTemplates] InvoiceTemplates APIs collection
-    def invoice_templates
-      InvoiceTemplates.new(self)
-    end
-
-    # @return [Invoices] Invoices APIs collection
-    def invoices
-      Invoices.new(self)
-    end
-
-    # @return [Orders] Orders APIs collection
-    def orders
-      Orders.new(self)
-    end
-
-    # @return [PartnerReferrals] PartnerReferrals APIs collection
-    def partner_referrals
-      PartnerReferrals.new(self)
-    end
-
-    # @return [PaymentExperienceWebProfiles] PaymentExperienceWebProfiles APIs collection
-    def payment_experience_web_profiles
-      PaymentExperienceWebProfiles.new(self)
-    end
-
-    # @return [PaymentTokens] PaymentTokens APIs collection
-    def payment_tokens
-      PaymentTokens.new(self)
-    end
-
-    # @return [PayoutItems] PayoutItems APIs collection
-    def payout_items
-      PayoutItems.new(self)
-    end
-
-    # @return [Payouts] Payouts APIs collection
-    def payouts
-      Payouts.new(self)
-    end
-
-    # @return [Refunds] Refunds APIs collection
-    def refunds
-      Refunds.new(self)
-    end
-
-    # @return [ReferencedPayoutItems] ReferencedPayoutItems APIs collection
-    def referenced_payout_items
-      ReferencedPayoutItems.new(self)
-    end
-
-    # @return [ReferencedPayouts] ReferencedPayouts APIs collection
-    def referenced_payouts
-      ReferencedPayouts.new(self)
-    end
-
-    # @return [SetupTokens] SetupTokens APIs collection
-    def setup_tokens
-      SetupTokens.new(self)
-    end
-
-    # @return [ShipmentTracking] Shipment Tracking APIs collection
-    def shipment_tracking
-      ShipmentTracking.new(self)
-    end
-
-    # @return [Subscriptions] Subscriptions APIs collection
-    def subscriptions
-      Subscriptions.new(self)
-    end
-
-    # @return [SubscriptionPlans] Subscription Plans APIs collection
-    def subscription_plans
-      SubscriptionPlans.new(self)
-    end
-
-    # @return [TransactionSearch] TransactionSearch APIs collection
-    def transaction_search
-      TransactionSearch.new(self)
-    end
-
-    # @return [UserInfo] User Info APIs collection
-    def user_info
-      UserInfo.new(self)
-    end
-
-    # @return [Users] Users Management APIs collection
-    def users
-      Users.new(self)
-    end
-
-    # @return [Webhooks] Webhooks APIs collection
-    def webhooks
-      Webhooks.new(self)
-    end
-
-    # @return [WebhookEvents] Webhook Events APIs collection
-    def webhook_lookups
-      WebhookLookups.new(self)
-    end
-
-    # @return [WebhookEvents] Webhook Lookups APIs collection
-    def webhook_events
-      WebhookEvents.new(self)
-    end
+    include APIMethods
+    include HTTPMethods
+    include EnvironmentMethods
+    include AccessTokenMethods
 
     private
 
