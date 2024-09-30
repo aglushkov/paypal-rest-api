@@ -30,31 +30,40 @@ module PaypalAPI
 
     private
 
-    def execute_request(retry_number: 0)
+    def start_execution(retry_number)
       callbacks_context[:retry_number] = retry_number
-
       run_callbacks(:before)
-      response = execute_net_http_request
-    rescue => error
-      raise error if NetworkErrorBuilder::ERRORS.none? { |network_error_class| error.is_a?(network_error_class) }
+      execute_net_http_request
+    end
 
+    def handle_network_error(error, retry_number)
       will_retry = retries[:enabled] && !retries_limit_reached?(retry_number)
       callbacks_context[:will_retry] = will_retry
       run_callbacks(:after_network_error, error)
       raise NetworkErrorBuilder.call(request: request, error: error) unless will_retry
 
       retry_request(retry_number)
+    end
+
+    def handle_success_response(response)
+      callbacks_context.delete(:will_retry)
+      run_callbacks(:after_success, response)
+      response
+    end
+
+    def handle_failed_response(response, retry_number)
+      will_retry = retries[:enabled] && retryable?(response, retry_number)
+      callbacks_context[:will_retry] = will_retry
+      run_callbacks(:after_fail, response)
+      will_retry ? retry_request(retry_number) : response
+    end
+
+    def execute_request(retry_number: 0)
+      response = start_execution(retry_number)
+    rescue => error
+      unknown_network_error?(error) ? handle_unknown_error(error) : handle_network_error(error, retry_number)
     else
-      if response.success?
-        callbacks_context.delete(:will_retry)
-        run_callbacks(:after_success, response)
-        response
-      else
-        will_retry = retries[:enabled] && retryable?(response, retry_number)
-        callbacks_context[:will_retry] = will_retry
-        run_callbacks(:after_fail, response)
-        will_retry ? retry_request(retry_number) : response
-      end
+      response.success? ? handle_success_response(response) : handle_failed_response(response, retry_number)
     end
 
     def execute_net_http_request
@@ -103,6 +112,14 @@ module PaypalAPI
       # set new access-token
       request.http_request["authorization"] = client.refresh_access_token.authorization_string
       true
+    end
+
+    def unknown_network_error?(error)
+      NetworkErrorBuilder::ERRORS.none? { |network_error_class| error.is_a?(network_error_class) }
+    end
+
+    def handle_unknown_error(error)
+      raise error
     end
 
     def run_callbacks(callback_name, resp = nil)

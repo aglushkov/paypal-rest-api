@@ -100,10 +100,8 @@ module PaypalAPI
 
     #
     # @!macro [new] api_collection
-    #   $0 APIs collection
+    #   $3 APIs collection
     #   @api public
-    #   @example
-    #     PaypalAPI.$0
     #
 
     #
@@ -252,6 +250,10 @@ end
 require_relative "paypal-api/access_token"
 require_relative "paypal-api/api_collection"
 require_relative "paypal-api/environment"
+require_relative "paypal-api/client/access_token_methods"
+require_relative "paypal-api/client/api_methods"
+require_relative "paypal-api/client/environment_methods"
+require_relative "paypal-api/client/http_methods"
 require_relative "paypal-api/client"
 require_relative "paypal-api/config"
 require_relative "paypal-api/error"
