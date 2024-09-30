@@ -108,6 +108,29 @@ module PaypalAPI
       "#<#{self.class.name} (#{http_response.code})>"
     end
 
+    #
+    # Follow up HATEOAS link
+    #
+    # @see https://developer.paypal.com/api/rest/responses/#link-hateoaslinks
+    #
+    # @param rel [String] Target link "rel" attribute
+    # @param query [Hash] Request additional query parameters
+    # @param body [Hash] Request body parameters
+    # @param headers [Hash] Request headers
+    #
+    # @return [Response, nil] Follow-up link response, if link with provided "rel" exists
+    #
+    def follow_up_link(rel, query: nil, body: nil, headers: nil)
+      links = self[:links]
+      return unless links
+
+      link = links.find { |curr_link| curr_link[:rel] == rel.to_s }
+      return unless link
+
+      http_method = link[:method]&.downcase || :get
+      request.client.public_send(http_method, link[:href], query: query, body: body, headers: headers)
+    end
+
     private
 
     def json_response?
