@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    paypal-rest-api (0.4.0)
+    paypal-rest-api (0.5.0)
 
 GEM
   remote: https://rubygems.org/
@@ -25,7 +25,7 @@ GEM
     hashdiff (1.1.1)
     io-console (0.7.2)
     io-console (0.7.2-java)
-    irb (1.14.0)
+    irb (1.14.1)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     jar-dependencies (0.4.1)
@@ -70,7 +70,7 @@ GEM
     regexp_parser (2.9.2)
     reline (0.5.10)
       io-console (~> 0.5)
-    rexml (3.3.7)
+    rexml (3.3.8)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
@@ -131,7 +131,7 @@ GEM
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    webrick (1.8.1)
+    webrick (1.8.2)
     yard (0.9.37)
 
 PLATFORMS
@@ -156,4 +156,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.5.18
+   2.5.20
