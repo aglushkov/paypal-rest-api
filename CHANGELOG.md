@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.5.0] - 2024-09-30
+
 - Add PartnerReferrals APIs collection
 - Add PaymentExperienceWebProfiles APIs collection
 - Add TransactionSearch APIs collection
