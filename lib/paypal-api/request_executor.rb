@@ -30,6 +30,14 @@ module PaypalAPI
 
     private
 
+    def execute_request(retry_number: 0)
+      response = start_execution(retry_number)
+    rescue => error
+      unknown_network_error?(error) ? handle_unknown_error(error) : handle_network_error(error, retry_number)
+    else
+      response.success? ? handle_success_response(response) : handle_failed_response(response, retry_number)
+    end
+
     def start_execution(retry_number)
       callbacks_context[:retry_number] = retry_number
       run_callbacks(:before)
@@ -56,14 +64,6 @@ module PaypalAPI
       callbacks_context[:will_retry] = will_retry
       run_callbacks(:after_fail, response)
       will_retry ? retry_request(retry_number) : response
-    end
-
-    def execute_request(retry_number: 0)
-      response = start_execution(retry_number)
-    rescue => error
-      unknown_network_error?(error) ? handle_unknown_error(error) : handle_network_error(error, retry_number)
-    else
-      response.success? ? handle_success_response(response) : handle_failed_response(response, retry_number)
     end
 
     def execute_net_http_request

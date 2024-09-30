@@ -43,7 +43,7 @@ PaypalAPI::Orders.authorize(order_id)
 PaypalAPI::AuthorizedPayments.capture(authorization_id)
 
 # After payment was captured, we can refund it
-PaypalAPI::CapturedPayments.refund(capture_id, body: payload, headers: headers).body
+PaypalAPI::CapturedPayments.refund(capture_id, body: payload, headers: headers)
 
 # Use this APIs to register/actualize PayPal Webhooks
 PaypalAPI::Webhooks.list
@@ -145,7 +145,7 @@ PaypalAPI.web_url # => "https://sandbox.paypal.com"
 PaypalAPI client accepts this additional options:
 
 - `:live`
-- `:retries`,
+- `:retries`
 - `:http_opts`
 - `:cache`
 
@@ -197,9 +197,9 @@ client = PaypalAPI::Client.new(
 
 ### Option `:cache`
 
-This option can be added to save certificates to between redeploys to validate
-webhooks offline. By default this gem has only in-memory caching.
-Cache object must response to standard caching `#fetch(key, &block)` method.
+This option can be added to save webhook-validating certificates between
+redeploys to validate webhooks offline. By default this gem has only in-memory
+caching. The `cache` object must respond to standard for caching `#fetch` method.
 
 By default it is `nil`, so downloaded certificates will be downloaded again after
 redeploys.
@@ -245,7 +245,7 @@ valid webhook.
 When some required header is missing the
 `PaypalAPI::WebhooksVerifier::MissingHeader` error will be raised.
 
-Example of Rails controller with webhook verification:
+Example of a Rails controller with a webhook verification:
 
 ```ruby
 class Webhooks::PaypalController < ApplicationController
@@ -274,14 +274,12 @@ end
 
 ## Callbacks
 
-Callbacks list:
+Paypal::API client allows to subscribe to this callbacks:
 
 - `:before` - Runs before request
 - `:after_success` - Runs after getting successful response
 - `:after_fail` - Runs after getting failed response (non-2xx) status code
 - `:after_network_error` - Runs after getting network error
-
-Callbacks are registered on `client` object.
 
 Each callback receive `request` and `context` variables.
 `context` can be modified manually to save state between callbacks.

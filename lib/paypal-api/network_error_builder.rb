@@ -7,14 +7,13 @@ module PaypalAPI
   class NetworkErrorBuilder
     # List of possible Network errors
     ERRORS = [
-      EOFError,
+      IOError,
       Errno::ECONNABORTED,
       Errno::ECONNREFUSED,
       Errno::ECONNRESET,
       Errno::EHOSTUNREACH,
       Errno::EPIPE,
       Errno::ETIMEDOUT,
-      IOError,
       OpenSSL::SSL::SSLError,
       SocketError,
       Timeout::Error # Net::OpenTimeout, Net::ReadTimeout
