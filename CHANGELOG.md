@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.5.1] - 2024-09-30
+
+- Fix links in gem specification
+
 ## [0.5.0] - 2024-09-30
 
 - Add PartnerReferrals APIs collection
