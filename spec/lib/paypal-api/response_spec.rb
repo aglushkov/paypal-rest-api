@@ -15,7 +15,8 @@ RSpec.describe PaypalAPI::Response do
   let(:response_body) { '{"foo":"bar"}' }
   let(:each_header) { {a: 1, b: 2}.each }
   let(:request) { instance_double(PaypalAPI::Request, client: client) }
-  let(:client) { instance_double(PaypalAPI::Client, get: :get_response, post: :post_response) }
+
+  let(:client) { PaypalAPI::Client.allocate }
 
   before { allow(http_response).to receive(:[]).with("content-type").and_return("application/json") }
 
@@ -67,6 +68,13 @@ RSpec.describe PaypalAPI::Response do
     let(:query) { "QUERY" }
     let(:body) { "BODY" }
     let(:headers) { "HEADERS" }
+
+    before do
+      allow(client).to receive_messages(
+        get: :get_response,
+        post: :post_response
+      )
+    end
 
     context "with GET link" do
       let(:links) { [{rel: "get_rel", href: "https://api-m.paypal.com/get", method: "GET"}] }
@@ -141,6 +149,60 @@ RSpec.describe PaypalAPI::Response do
 
       it "returns nil" do
         expect(response.follow_up_link("get_rel")).to be_nil
+      end
+    end
+  end
+
+  describe "pagination" do
+    let(:links1) { [{rel: "next", href: "/page2"}] }
+    let(:links2) { [{rel: "next", href: "/page3"}] }
+    let(:links3) { [] }
+
+    let(:response_body) { JSON.dump(items: [1, 2, 3], links: links1) }
+
+    let(:response_body2) { JSON.dump(items: [4, 5, 6], links: links2) }
+    let(:http_response2) { instance_double(Net::HTTPResponse, body: response_body2) }
+    let(:response2) { described_class.new(http_response2, request: request) }
+
+    let(:response_body3) { JSON.dump(items: [7, 8, 9], links: links3) }
+    let(:http_response3) { instance_double(Net::HTTPResponse, body: response_body3) }
+    let(:response3) { described_class.new(http_response3, request: request) }
+
+    before do
+      allow(client).to receive(:get).with("/page2", query: nil, body: nil, headers: nil).and_return(response2)
+      allow(client).to receive(:get).with("/page3", query: nil, body: nil, headers: nil).and_return(response3)
+
+      allow(http_response2).to receive(:[]).with("content-type").and_return("application/json")
+      allow(http_response3).to receive(:[]).with("content-type").and_return("application/json")
+    end
+
+    describe "#each_page" do
+      it "iterates through each page while there are any link having `next` rel" do
+        items = []
+        response.each_page { |page| items << page[:items] }
+        expect(items).to eq [
+          [1, 2, 3],
+          [4, 5, 6],
+          [7, 8, 9]
+        ]
+      end
+
+      it "constructs enumerator when calling without a block" do
+        pages = response.each_page.map(&:itself)
+        expect(pages).to eq [response, response2, response3]
+      end
+    end
+
+    describe "#each_page_item" do
+      it "iterates through each page item" do
+        items = []
+        response.each_page_item(:items) { |item| items << item }
+        expect(items).to eq [1, 2, 3, 4, 5, 6, 7, 8, 9]
+      end
+
+      it "constructs enumerator when calling without a block" do
+        items = response.each_page_item(:items).map(&:itself)
+        expect(items).to eq [1, 2, 3, 4, 5, 6, 7, 8, 9]
       end
     end
   end

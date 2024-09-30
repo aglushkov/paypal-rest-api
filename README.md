@@ -15,12 +15,13 @@ bundle add paypal-rest-api
 
 - Supported Ruby Versions - *(2.6 .. 3.3), head, jruby-9.4, truffleruby-24*
 - No dependencies;
-- Automatic authorization & reauthorization;
+- Automatic authorization & re-authorization;
 - Auto-retries (configured);
 - Automatically added Paypal-Request-Id header for idempotent requests if not
   provided;
 - Webhooks Offline verification (needs to download certificate once)
 - Custom callbacks before/after request
+- Automatic pagination methods
 
 ## Usage
 
@@ -85,22 +86,42 @@ response = PaypalAPI.put(path, query: query, body: body, headers: headers)
 response = PaypalAPI.delete(path, query: query, body: body, headers: headers)
 ```
 
-### Parsing response
+### Response
 
-`response.body` is a main method that returns parsed JSON respoonse as a Hash.
+`Response` object is returned after each `API` request.
 
-There are also many others helpful methods:
+#### Original HTTP response data
 
-```ruby
-response.body # Parsed JSON. JSON is parsed lazyly, keys are symbolized.
-response[:foo] # Gets :foo attribute from parsed body
-response.fetch(:foo) # Fetches :foo attribute from parsed body
-response.http_response # original Net::HTTP::Response
-response.http_body # original response string
-response.http_status # Integer http status
-response.http_headers # Hash with response headers (keys are strings)
-response.request # Request that generates this response
-```
+- `response.http_status` - response HTTP status as Integer
+- `response.http_body` - response body as String
+- `response.http_headers` - response headers as Hash with String keys
+- `response.http_response` - original Net::HTTP::Response object
+- `response.request` - Request object that was used to get this response
+
+#### Parsed JSON body methods
+
+- `response.body` - parsed JSON body, keys are Symbols
+- `response[:field]` - gets `:field` attribute from parsed body,
+  returns nil if response have no such key
+- `response.fetch(:field)` - gets `:field` attribute from parsed body,
+  raises KeyError if response has no such key
+
+#### Error check methods
+
+- `response.success?` - checks HTTP status code is 2xx
+- `response.failed?` - checks HTTP status code is not 2xx
+
+#### Using HATEOAS links
+
+- `response.follow_up_link('approve', query: nil, body: nil, headers: nil)` -
+  Finds HATEOAS link is response with `rel=approve` and requests it. Returns
+  `nil` if no such link were found.
+
+#### Pagination (see [Automatic Pagination][automatic_pagination] for examples)
+
+- `response.each_page { |response| ... }` - iterates over each page in response
+- `response.each_page_item(items_field) { |item| ... }` - iterates over each
+  page item
 
 ## Configuration options
 
@@ -171,6 +192,28 @@ client = PaypalAPI::Client.new(
   cache: Rails.cache
   # ...
 )
+```
+
+## Automatic pagination
+
+PayPal provides HATEOAS links in responses. This links can contain items with
+`rel=next` attribute. We request next pages using this links.
+
+We have two specific methods:
+
+- `Response#each_page` - iterates over each page `Response` object
+- `Response#each_page_item(items_field_name)` - iterates over items on each page
+
+Example:
+
+```ruby
+  PaypalAPI::WebhookEvents.list(page_size: 25).each_page do |response|
+    # ...
+  end
+
+  PaypalAPI::WebhookEvents.list(page_size: 25).each_page_item(:events) do |hash|
+    # ...
+  end
 ```
 
 ## Webhoooks verification
@@ -548,3 +591,5 @@ Bug reports and pull requests are welcome on GitHub at <https://github.com/aglus
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+
+[automatic_pagination]: #automatic-pagination

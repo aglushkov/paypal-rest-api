@@ -131,6 +131,53 @@ module PaypalAPI
       request.client.public_send(http_method, link[:href], query: query, body: body, headers: headers)
     end
 
+    #
+    # Pagination methods
+    #
+    module PaginationHelpers
+      #
+      # Iterates through all response pages by requesting HATEOAS "next" links,
+      # making additional fetches to the API as necessary.
+      #
+      # @see #follow_up_link
+      #
+      # @yield [Response] Next page response
+      #
+      # @return [void]
+      #
+      def each_page(&block)
+        return enum_for(:each_page) unless block
+
+        page = self
+
+        loop do
+          yield(page)
+          page = page.follow_up_link("next")
+          break unless page
+        end
+      end
+
+      #
+      # Iterates through all items in response +items_field_name+ field,
+      # making additional pages requests as necessary.
+      #
+      # @see #each_page
+      #
+      # @param items_field_name [Symbol] Name of field containing items
+      #
+      # @yield [Hash] Item
+      #
+      # @return [void]
+      #
+      def each_page_item(items_field_name, &block)
+        return enum_for(:each_page_item, items_field_name) unless block
+
+        each_page do |page|
+          page.fetch(items_field_name).each(&block)
+        end
+      end
+    end
+
     private
 
     def json_response?
@@ -143,5 +190,7 @@ module PaypalAPI
     rescue JSON::ParserError, TypeError
       json
     end
+
+    include PaginationHelpers
   end
 end

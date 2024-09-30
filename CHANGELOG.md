@@ -5,6 +5,19 @@
 - Add PartnerReferrals APIs collection
 - Add PaymentExperienceWebProfiles APIs collection
 - Add TransactionSearch APIs collection
+- Add Response#follow_up_link method to use HATEOAS link
+- Add Response#each_page method to iterate over pages
+- Add Response#each_page_item(items_field_name) method to iterate over page items
+
+```ruby
+  PaypalAPI::WebhookEvents.list(page_size: 25).each_page do |response|
+    # ...
+  end
+
+  PaypalAPI::WebhookEvents.list(page_size: 25).each_page_item(:events) do |hash|
+    # ...
+  end
+```
 
 ## [0.4.0] - 2024-09-16
 
