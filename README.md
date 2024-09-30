@@ -25,13 +25,6 @@ bundle add paypal-rest-api
 
 ## Usage
 
-There are two options:
-
-- Setting global client
-- Setting local client (for possibility to use multiple PayPal environments)
-
-### Setting global client
-
 ```ruby
 # in config/initializers/paypal_rest_api.rb
 PaypalAPI.client = PaypalAPI::Client.new(
@@ -40,50 +33,74 @@ PaypalAPI.client = PaypalAPI::Client.new(
   live: false
 )
 
-# in your business logic
-PaypalAPI.live? # => false
-PaypalAPI.api_url # => "https://api-m.sandbox.paypal.com"
-PaypalAPI.web_url # => "https://sandbox.paypal.com"
+# Use this API to create order
+PaypalAPI::Orders.create(body: body, headers: {prefer: 'return=representation'})
 
-response = PaypalAPI::Orders.show(order_id)
-response = PaypalAPI::Orders.create(body: body)
+# After customer approves order, we can tell PayPal to authorize it
+PaypalAPI::Orders.authorize(order_id)
+
+# After PayPal authorizes order, we can capture it
+PaypalAPI::AuthorizedPayments.capture(authorization_id)
+
+# After payment was captured, we can refund it
+PaypalAPI::CapturedPayments.refund(capture_id, body: payload, headers: headers).body
+
+# Use this APIs to register/actualize PayPal Webhooks
+PaypalAPI::Webhooks.list
+PaypalAPI::Webhooks.create(body: body)
+PaypalAPI::Webhooks.update(webhook_id, body: body)
+PaypalAPI::Webhooks.delete(webhook_id)
 ```
 
-### Setting local client
+### Per-request Configuration
 
 ```ruby
-# in your business logic
+# Anywhere in your business logic
 client = PaypalAPI::Client.new(
   client_id: ENV['PAYPAL_CLIENT_ID'],
   client_secret: ENV['PAYPAL_CLIENT_SECRET'],
   live: false
 )
 
-client.live? # => false
-client.api_url # => "https://api-m.sandbox.paypal.com"
-client.web_url # => "https://sandbox.paypal.com"
+# Show order
+client.orders.show(order_id)
 
-response = client.orders.show(order_id)
-response = client.orders.create(body: body)
+# Create order
+client.orders.create(body: body)
 ```
 
-### Client REST methods
+### Custom requests
 
-Client can call HTTP methods directly:
+If you want to request some undocumented APIs (or some forgotten API):
 
 ```ruby
-response = client.post(path, query: query, body: body, headers: headers)
-response = client.get(path, query: query, body: body, headers: headers)
-response = client.patch(path, query: query, body: body, headers: headers)
-response = client.put(path, query: query, body: body, headers: headers)
-response = client.delete(path, query: query, body: body, headers: headers)
-
-# Or, after setting global client:
 response = PaypalAPI.post(path, query: query, body: body, headers: headers)
 response = PaypalAPI.get(path, query: query, body: body, headers: headers)
 response = PaypalAPI.patch(path, query: query, body: body, headers: headers)
 response = PaypalAPI.put(path, query: query, body: body, headers: headers)
 response = PaypalAPI.delete(path, query: query, body: body, headers: headers)
+
+# Or, using per-request client:
+response = client.post(path, query: query, body: body, headers: headers)
+response = client.get(path, query: query, body: body, headers: headers)
+response = client.patch(path, query: query, body: body, headers: headers)
+response = client.put(path, query: query, body: body, headers: headers)
+response = client.delete(path, query: query, body: body, headers: headers)
+```
+
+### Environment helpers
+
+```ruby
+PaypalAPI.client = PaypalAPI::Client.new(
+  live: false,
+  client_id: ENV['PAYPAL_CLIENT_ID'],
+  client_secret: ENV['PAYPAL_CLIENT_SECRET']
+)
+
+PaypalAPI.live? # => false
+PaypalAPI.sandbox? # => true
+PaypalAPI.api_url # => "https://api-m.sandbox.paypal.com"
+PaypalAPI.web_url # => "https://sandbox.paypal.com"
 ```
 
 ### Response
@@ -381,188 +398,101 @@ end
 
 ## APIs
 
-All API endpoints accept this parameters:
+All API endpoints accept `query:`, `body:` and `headers:` **optional** **keyword**
+**Hash** parameters. So this parameters can be omitted in next docs.
 
-- `resource_id` - Resource ID (Unless `create`/`list` endpoint)
 - `query` - Hash with request query params
 - `body` - Hash with request body params
 - `headers` - Hash with request headers
 
-### Orders
+### Add tracking / Shipment Tracking [docs](https://developer.paypal.com/docs/api/tracking/v1/)
 
-- `PaypalAPI::Orders.create`
-- `PaypalAPI::Orders.show`
-- `PaypalAPI::Orders.update`
-- `PaypalAPI::Orders.confirm`
-- `PaypalAPI::Orders.authorize`
-- `PaypalAPI::Orders.capture`
-- `PaypalAPI::Orders.track`
-- `PaypalAPI::Orders.update_tracker`
+- `PaypalAPI::ShipmentTracking.add(body: body)`
+- `PaypalAPI::ShipmentTracking.update(id, body: body)`
+- `PaypalAPI::ShipmentTracking.show(id)`
 
-### Payment Tokens
+### Catalog Products [docs](https://developer.paypal.com/docs/api/catalog-products/v1/)
 
-- `PaypalAPI::PaymentTokens.create`
-- `PaypalAPI::PaymentTokens.list`
-- `PaypalAPI::PaymentTokens.show`
-- `PaypalAPI::PaymentTokens.delete`
-
-<!-- -->
-
-- `PaypalAPI::SetupTokens.create`
-- `PaypalAPI::SetupTokens.show`
-
-### Payments
-
-- `PaypalAPI::AuthorizedPayments.show`
-- `PaypalAPI::AuthorizedPayments.capture`
-- `PaypalAPI::AuthorizedPayments.reauthorize`
-- `PaypalAPI::AuthorizedPayments.void`
-
-<!-- -->
-
-- `PaypalAPI::CapturedPayments.show`
-- `PaypalAPI::CapturedPayments.refund`
-
-<!-- -->
-
-- `PaypalAPI::Refunds.show`
-
-### Webhooks
-
-- `PaypalAPI::Webhooks.create`
-- `PaypalAPI::Webhooks.list`
-- `PaypalAPI::Webhooks.show`
-- `PaypalAPI::Webhooks.update`
-- `PaypalAPI::Webhooks.delete`
-- `PaypalAPI::Webhooks.event_types`
-- `PaypalAPI::Webhooks.verify`
-
-<!-- -->
-
-- `PaypalAPI::WebhookEvents.available`
-- `PaypalAPI::WebhookEvents.list`
-- `PaypalAPI::WebhookEvents.show`
-- `PaypalAPI::WebhookEvents.resend`
-- `PaypalAPI::WebhookEvents.simulate`
-
-<!-- -->
-
-- `PaypalAPI::WebhookLookups.create`
-- `PaypalAPI::WebhookLookups.list`
-- `PaypalAPI::WebhookLookups.show`
-- `PaypalAPI::WebhookLookups.delete`
-
-### Subscriptions
-
-- `PaypalAPI::Subscriptions.create`
-- `PaypalAPI::Subscriptions.show`
-- `PaypalAPI::Subscriptions.update`
-- `PaypalAPI::Subscriptions.revise`
-- `PaypalAPI::Subscriptions.suspend`
-- `PaypalAPI::Subscriptions.cancel`
-- `PaypalAPI::Subscriptions.activate`
-- `PaypalAPI::Subscriptions.capture`
-- `PaypalAPI::Subscriptions.transactions`
-
-<!-- -->
-
-- `PaypalAPI::SubscriptionPlans.create`
-- `PaypalAPI::SubscriptionPlans.list`
-- `PaypalAPI::SubscriptionPlans.show`
-- `PaypalAPI::SubscriptionPlans.update`
-- `PaypalAPI::SubscriptionPlans.activate`
-- `PaypalAPI::SubscriptionPlans.deactivate`
-- `PaypalAPI::SubscriptionPlans.update_pricing`
-
-### Shipment Tracking
-
-- `PaypalAPI::ShipmentTracking.add`
-- `PaypalAPI::ShipmentTracking.update`
-- `PaypalAPI::ShipmentTracking.show`
-
-### Catalog Products
-
-- `PaypalAPI::CatalogProducts.create`
+- `PaypalAPI::CatalogProducts.create(body: body)`
 - `PaypalAPI::CatalogProducts.list`
-- `PaypalAPI::CatalogProducts.show`
-- `PaypalAPI::CatalogProducts.update`
+- `PaypalAPI::CatalogProducts.show(product_id)`
+- `PaypalAPI::CatalogProducts.update(product_id, body: body)`
 
-### Disputes
+### Disputes [docs](https://developer.paypal.com/docs/api/customer-disputes/v1/)
 
-- `PaypalAPI::Disputes.appeal`
-- `PaypalAPI::Disputes.make_offer`
-- `PaypalAPI::Disputes.show`
-- `PaypalAPI::Disputes.update`
-- `PaypalAPI::Disputes.send_message`
-- `PaypalAPI::Disputes.provide_supporting_info`
-- `PaypalAPI::Disputes.update_status`
-- `PaypalAPI::Disputes.deny_offer`
-- `PaypalAPI::Disputes.provide_evidence`
-- `PaypalAPI::Disputes.settle`
-- `PaypalAPI::Disputes.acknowledge_return_item`
-- `PaypalAPI::Disputes.accept_claim`
+- `PaypalAPI::Disputes.settle(id)`
+- `PaypalAPI::Disputes.update_status(id)`
+- `PaypalAPI::Disputes.escalate(id)`
+- `PaypalAPI::Disputes.accept_offer(id)`
 - `PaypalAPI::Disputes.list`
-- `PaypalAPI::Disputes.escalate`
-- `PaypalAPI::Disputes.accept_offer`
+- `PaypalAPI::Disputes.provide_supporting_info(id)`
+- `PaypalAPI::Disputes.show(id)`
+- `PaypalAPI::Disputes.update(id)`
+- `PaypalAPI::Disputes.deny_offer(id)`
+- `PaypalAPI::Disputes.make_offer(id)`
+- `PaypalAPI::Disputes.appeal(id)`
+- `PaypalAPI::Disputes.provide_evidence(id)`
+- `PaypalAPI::Disputes.acknowledge_return_item`
+- `PaypalAPI::Disputes.send_message(id)`
+- `PaypalAPI::Disputes.accept_claim`(id)
 
-### UserInfo
+### Identity [docs](https://developer.paypal.com/docs/api/identity/v1/)
+
+#### User Info
 
 - `PaypalAPI::UserInfo.show`
 
-### Users
+#### User Management
 
 - `PaypalAPI::Users.create`
 - `PaypalAPI::Users.list`
-- `PaypalAPI::Users.show`
-- `PaypalAPI::Users.update`
-- `PaypalAPI::Users.delete`
+- `PaypalAPI::Users.update(id)`
+- `PaypalAPI::Users.show(id)`
+- `PaypalAPI::Users.delete(id)`
 
-### Invoices
+### Invoicing (Invoices & Invoice Templates) [docs](https://developer.paypal.com/docs/api/invoicing/v2/)
 
 - `PaypalAPI::Invoices.create`
 - `PaypalAPI::Invoices.list`
-- `PaypalAPI::Invoices.show`
-- `PaypalAPI::Invoices.update`
-- `PaypalAPI::Invoices.delete`
-- `PaypalAPI::Invoices.search`
-- `PaypalAPI::Invoices.remind`
-- `PaypalAPI::Invoices.delete_refund`
-- `PaypalAPI::Invoices.delete_payment`
-- `PaypalAPI::Invoices.record_refund`
-- `PaypalAPI::Invoices.record_payment`
-- `PaypalAPI::Invoices.send_invoice`
-- `PaypalAPI::Invoices.cancel`
-- `PaypalAPI::Invoices.generate_qr_code`
+- `PaypalAPI::Invoices.send_invoice(invoice_id)`
+- `PaypalAPI::Invoices.remind(invoice_id)`
+- `PaypalAPI::Invoices.cancel(invoice_id)`
+- `PaypalAPI::Invoices.record_payment(invoice_id)`
+- `PaypalAPI::Invoices.delete_payment(invoice_id)`
+- `PaypalAPI::Invoices.record_refund(invoice_id)`
+- `PaypalAPI::Invoices.delete_refund(invoice_id)`
+- `PaypalAPI::Invoices.generate_qr_code(invoice_id)`
 - `PaypalAPI::Invoices.generate_invoice_number`
+- `PaypalAPI::Invoices.show(invoice_id)`
+- `PaypalAPI::Invoices.update(invoice_id)`
+- `PaypalAPI::Invoices.delete(invoice_id)`
+- `PaypalAPI::Invoices.search`
 
-### InvoiceTemplates
+<!-- -->
 
 - `PaypalAPI::InvoiceTemplates.create`
 - `PaypalAPI::InvoiceTemplates.list`
-- `PaypalAPI::InvoiceTemplates.show`
-- `PaypalAPI::InvoiceTemplates.update`
-- `PaypalAPI::InvoiceTemplates.delete`
+- `PaypalAPI::InvoiceTemplates.show(template_id)`
+- `PaypalAPI::InvoiceTemplates.update(template_id)`
+- `PaypalAPI::InvoiceTemplates.delete(template_id)`
 
-### Payouts
+### Orders [docs](https://developer.paypal.com/docs/api/orders/v2/)
 
-- `PaypalAPI::Payouts.create`
-- `PaypalAPI::Payouts.show`
-- `PaypalAPI::PayoutItems.show`
-- `PaypalAPI::PayoutItems.cancel`
+- `PaypalAPI::Orders.create`
+- `PaypalAPI::Orders.show(order_id)`
+- `PaypalAPI::Orders.update(order_id)`
+- `PaypalAPI::Orders.confirm(order_id)`
+- `PaypalAPI::Orders.authorize(order_id)`
+- `PaypalAPI::Orders.capture(order_id)`
+- `PaypalAPI::Orders.track(order_id)`
+- `PaypalAPI::Orders.update_tracker(order_id, tracker_id)`
 
-### ReferencedPayouts
-
-- `PaypalAPI::ReferencedPayouts.create`
-- `PaypalAPI::ReferencedPayouts.show`
-- `PaypalAPI::ReferencedPayoutItems.create`
-- `PaypalAPI::ReferencedPayoutItems.show`
-
-### PartnerReferrals
+### PartnerReferrals [docs](https://developer.paypal.com/docs/api/partner-referrals/v2/)
 
 - `PaypalAPI::PartnerReferrals.create`
-- `PaypalAPI::PartnerReferrals.show`
+- `PaypalAPI::PartnerReferrals.show(partner_referral_id)`
 
-### PaymentExperienceWebProfiles
+### Payment Experience Web Profiles [docs](https://developer.paypal.com/docs/api/payment-experience/v1/)
 
 - `PaypalAPI::PaymentExperienceWebProfiles.create`
 - `PaypalAPI::PaymentExperienceWebProfiles.list`
@@ -571,10 +501,105 @@ All API endpoints accept this parameters:
 - `PaypalAPI::PaymentExperienceWebProfiles.update`
 - `PaypalAPI::PaymentExperienceWebProfiles.delete`
 
-### TransactionSearch
+### Payment Method Tokens / Setup Tokens [docs](https://developer.paypal.com/docs/api/payment-tokens/v3/)
+
+- `PaypalAPI::PaymentTokens.create`
+- `PaypalAPI::PaymentTokens.list`
+- `PaypalAPI::PaymentTokens.show(id)`
+- `PaypalAPI::PaymentTokens.delete(id)`
+
+<!-- -->
+
+- `PaypalAPI::SetupTokens.create`
+- `PaypalAPI::SetupTokens.show(setup_token_id)`
+
+### Payments (Authorized Payments, Captured Payments, Refunds) [docs](https://developer.paypal.com/docs/api/payments/v2/)
+
+- `PaypalAPI::AuthorizedPayments.show(authorization_id)`
+- `PaypalAPI::AuthorizedPayments.capture(authorization_id)`
+- `PaypalAPI::AuthorizedPayments.reauthorize(authorization_id)`
+- `PaypalAPI::AuthorizedPayments.void(authorization_id)`
+
+<!-- -->
+
+- `PaypalAPI::CapturedPayments.show(capture_id)`
+- `PaypalAPI::CapturedPayments.refund(capture_id)`
+
+<!-- -->
+
+- `PaypalAPI::Refunds.show(refund_id)`
+
+### Payouts / Payout Items [docs](https://developer.paypal.com/docs/api/payments.payouts-batch/v1/)
+
+- `PaypalAPI::Payouts.create`
+- `PaypalAPI::Payouts.show(payout_id)`
+
+<!-- -->
+
+- `PaypalAPI::PayoutItems.show(payout_item_id)`
+- `PaypalAPI::PayoutItems.cancel(payout_item_id)`
+
+### Referenced Payouts / Referenced Payout Items [docs](https://developer.paypal.com/docs/api/referenced-payouts/v1/)
+
+- `PaypalAPI::ReferencedPayouts.create`
+- `PaypalAPI::ReferencedPayouts.show(payouts_batch_id)`
+
+<!-- -->
+
+- `PaypalAPI::ReferencedPayoutItems.create`
+- `PaypalAPI::ReferencedPayoutItems.show(payouts_item_id)`
+
+### Subscriptions / Subscription Plans [docs](https://developer.paypal.com/docs/api/subscriptions/v1/)
+
+- `PaypalAPI::Subscriptions.create`
+- `PaypalAPI::Subscriptions.show(id)`
+- `PaypalAPI::Subscriptions.update(id)`
+- `PaypalAPI::Subscriptions.revise(id)`
+- `PaypalAPI::Subscriptions.suspend(id)`
+- `PaypalAPI::Subscriptions.cancel(id)`
+- `PaypalAPI::Subscriptions.activate(id)`
+- `PaypalAPI::Subscriptions.capture(id)`
+- `PaypalAPI::Subscriptions.transactions(id)`
+
+<!-- -->
+
+- `PaypalAPI::SubscriptionPlans.create`
+- `PaypalAPI::SubscriptionPlans.list`
+- `PaypalAPI::SubscriptionPlans.show(plan_id)`
+- `PaypalAPI::SubscriptionPlans.update(plan_id)`
+- `PaypalAPI::SubscriptionPlans.activate(plan_id)`
+- `PaypalAPI::SubscriptionPlans.deactivate(plan_id)`
+- `PaypalAPI::SubscriptionPlans.update_pricing(plan_id)`
+
+### Transaction Search [docs](https://developer.paypal.com/docs/api/transaction-search/v1/)
 
 - `PaypalAPI::TransactionSearch.list_transactions`
 - `PaypalAPI::TransactionSearch.list_all_balances`
+
+### Webhooks Management [docs](https://developer.paypal.com/docs/api/webhooks/v1/)
+
+- `PaypalAPI::Webhooks.create`
+- `PaypalAPI::Webhooks.list`
+- `PaypalAPI::Webhooks.show(webhook_id)`
+- `PaypalAPI::Webhooks.update(webhook_id)`
+- `PaypalAPI::Webhooks.delete(webhook_id)`
+- `PaypalAPI::Webhooks.event_types(webhook_id)`
+- `PaypalAPI::Webhooks.verify`
+
+<!-- -->
+
+- `PaypalAPI::WebhookEvents.available`
+- `PaypalAPI::WebhookEvents.list`
+- `PaypalAPI::WebhookEvents.show(event_id)`
+- `PaypalAPI::WebhookEvents.resend(event_id)`
+- `PaypalAPI::WebhookEvents.simulate`
+
+<!-- -->
+
+- `PaypalAPI::WebhookLookups.create`
+- `PaypalAPI::WebhookLookups.list`
+- `PaypalAPI::WebhookLookups.show(webhook_lookup_id)`
+- `PaypalAPI::WebhookLookups.delete(webhook_lookup_id)`
 
 ## Development
 
