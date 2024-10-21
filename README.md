@@ -30,7 +30,7 @@ bundle add paypal-rest-api
 PaypalAPI.client = PaypalAPI::Client.new(
   client_id: ENV['PAYPAL_CLIENT_ID'],
   client_secret: ENV['PAYPAL_CLIENT_SECRET'],
-  live: false
+  live: ENV['PAYPAL_LIVE'] == 'true'
 )
 
 # Use this API to create order
