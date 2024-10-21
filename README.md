@@ -59,7 +59,7 @@ PaypalAPI::Webhooks.delete(webhook_id)
 client = PaypalAPI::Client.new(
   client_id: ENV['PAYPAL_CLIENT_ID'],
   client_secret: ENV['PAYPAL_CLIENT_SECRET'],
-  live: false
+  live: ENV['PAYPAL_LIVE'] == 'true'
 )
 
 # Show order
@@ -92,7 +92,7 @@ response = client.delete(path, query: query, body: body, headers: headers)
 
 ```ruby
 PaypalAPI.client = PaypalAPI::Client.new(
-  live: false,
+  live: ENV['PAYPAL_LIVE'] == 'true',
   client_id: ENV['PAYPAL_CLIENT_ID'],
   client_secret: ENV['PAYPAL_CLIENT_SECRET']
 )
@@ -156,7 +156,7 @@ When `live` is `false` all requests will be send to the sandbox endpoints.
 
 ```ruby
 client = PaypalAPI::Client.new(
-  live: true
+  live: ENV['PAYPAL_LIVE'] == 'true'
   # ...
 )
 ```
