@@ -292,7 +292,7 @@ Arguments:
 - `:after_network_error` - (request, context, error)
 
 `Context` argument contains `retries_enabled`, `retries_count` and
-`retry_number` options by default. 
+`retry_number` options by default.
 On `:after_fail` and `:after_network_error` there are also the
 `:will_retry` boolean option.
 
