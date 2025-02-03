@@ -12,7 +12,9 @@ yard doc --no-cache --quiet && yard stats --list-undoc
 pip3 install codespell \
   && gem update --system \
   && bundle update && bundle update --bundler \
-  && BUNDLE_GEMFILE=gemfiles/old.gemfile bundle update \
+  && BUNDLE_GEMFILE=gemfiles/2.4.22.gemfile bundle update \
+  && BUNDLE_GEMFILE=gemfiles/2.5.23.gemfile bundle update \
+  && BUNDLE_GEMFILE=gemfiles/2.6.3.gemfile bundle update \
   && bundle exec rspec \
   && bundle exec rubocop -A \
   && codespell --skip="./sig,./doc,./coverage"
@@ -20,28 +22,44 @@ pip3 install codespell \
 
 1. Update version number in VERSION file
 
-1. Checkout to new release branch
-
-```
-git co -b "v$(cat "VERSION")"
-```
-
 1. Repeat
 
 ```
 bundle update \
-  && BUNDLE_GEMFILE=gemfiles/old.gemfile bundle update \
+  && BUNDLE_GEMFILE=gemfiles/2.4.22.gemfile bundle update \
+  && BUNDLE_GEMFILE=gemfiles/2.5.23.gemfile bundle update \
+  && BUNDLE_GEMFILE=gemfiles/2.6.3.gemfile bundle update \
   && bundle exec rspec \
   && bundle exec rubocop -A \
   && codespell --skip="./sig,./doc,./coverage"
 ```
 
-1. Revert BUNDLED_WITH to 2.4.22 in old.gemfile.lock
+1. Revert BUNDLED_WITH in gemfile.lock files
+
+```console
+sed --null-data --in-place \
+  's/BUNDLED WITH\n   [0-9]\+\.[0-9]\+\.[0-9]\+/BUNDLED WITH\n   2.4.22/' \
+  gemfiles/2.4.22.gemfile.lock
+
+sed --null-data --in-place \
+  's/BUNDLED WITH\n   [0-9]\+\.[0-9]\+\.[0-9]\+/BUNDLED WITH\n   2.5.23/' \
+  gemfiles/2.5.23.gemfile.lock
+
+sed --null-data --in-place \
+  's/BUNDLED WITH\n   [0-9]\+\.[0-9]\+\.[0-9]\+/BUNDLED WITH\n   2.6.3/' \
+  gemfiles/2.6.3.gemfile.lock
+```
 
 1. Add CHANGELOG, README notices, test them:
 
 ```
 mdl README.md RELEASE.md CHANGELOG.md
+```
+
+1. Checkout to new release branch
+
+```
+git co -b "v$(cat "VERSION")"
 ```
 
 1. Commit all changes.
