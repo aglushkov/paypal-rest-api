@@ -46,6 +46,11 @@ module PaypalAPI
         Orders.new(self)
       end
 
+      # @return [OrdersV1] DEPRECATED: Orders V1 APIs collection
+      def orders_v1
+        OrdersV1.new(self)
+      end
+
       # @return [PartnerReferrals] PartnerReferrals APIs collection
       def partner_referrals
         PartnerReferrals.new(self)

@@ -487,6 +487,13 @@ All API endpoints accept `query:`, `body:` and `headers:` **optional** **keyword
 - `PaypalAPI::Orders.track(order_id)`
 - `PaypalAPI::Orders.update_tracker(order_id, tracker_id)`
 
+### Orders V1 (Deprecated on PayPal) [docs](https://developer.paypal.com/docs/api/orders/v1/)
+
+- `PaypalAPI::OrdersV1.create`
+- `PaypalAPI::OrdersV1.show(order_id)`
+- `PaypalAPI::OrdersV1.cancel(order_id)`
+- `PaypalAPI::OrdersV1.pay(order_id)`
+
 ### PartnerReferrals [docs](https://developer.paypal.com/docs/api/partner-referrals/v2/)
 
 - `PaypalAPI::PartnerReferrals.create`

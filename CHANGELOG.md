@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Add Orders V1 APIs (collection is deprecated on PayPal)
+
 ## [0.5.1] - 2024-09-30
 
 - Fix links in gem specification
