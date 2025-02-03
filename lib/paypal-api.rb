@@ -137,6 +137,10 @@ module PaypalAPI
     #   @macro api_collection
     #   @return [Orders]
     #
+    # @!method orders_v1
+    #   @macro api_collection
+    #   @return [OrdersV1]
+    #
     # @!method partner_referrals
     #   @macro api_collection
     #   @return [PartnerReferrals]
@@ -210,6 +214,7 @@ module PaypalAPI
       invoice_templates
       invoices
       orders
+      orders_v1
       partner_referrals
       payment_experience_web_profiles
       payment_tokens
@@ -272,6 +277,7 @@ require_relative "paypal-api/api_collections/disputes"
 require_relative "paypal-api/api_collections/invoice_templates"
 require_relative "paypal-api/api_collections/invoices"
 require_relative "paypal-api/api_collections/orders"
+require_relative "paypal-api/api_collections/orders_v1"
 require_relative "paypal-api/api_collections/partner_referrals"
 require_relative "paypal-api/api_collections/payment_experience_web_profiles"
 require_relative "paypal-api/api_collections/payment_tokens"

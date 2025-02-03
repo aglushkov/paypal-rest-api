@@ -72,6 +72,7 @@ RSpec.describe PaypalAPI::Client do
       invoice_templates: PaypalAPI::InvoiceTemplates,
       invoices: PaypalAPI::Invoices,
       orders: PaypalAPI::Orders,
+      orders_v1: PaypalAPI::OrdersV1,
       partner_referrals: PaypalAPI::PartnerReferrals,
       payment_experience_web_profiles: PaypalAPI::PaymentExperienceWebProfiles,
       payment_tokens: PaypalAPI::PaymentTokens,
