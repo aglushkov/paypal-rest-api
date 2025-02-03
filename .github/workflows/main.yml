@@ -16,6 +16,8 @@ jobs:
         include:
           - ruby: "head"
             gemfile: "Gemfile"
+          - ruby: "3.4"
+            gemfile: "Gemfile"
           - ruby: "3.3"
             gemfile: "Gemfile"
           - ruby: "3.2"
@@ -28,9 +30,9 @@ jobs:
             gemfile: "gemfiles/old.gemfile"
           - ruby: "2.6"
             gemfile: "gemfiles/old.gemfile"
-          - ruby: "jruby-9.4.8"
+          - ruby: "jruby-9.4.11"
             gemfile: "gemfiles/old.gemfile"
-          - ruby: "truffleruby-24.0.2"
+          - ruby: "truffleruby-24.1.2"
             gemfile: "Gemfile"
 
     env:
