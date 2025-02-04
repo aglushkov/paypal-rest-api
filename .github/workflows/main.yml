@@ -40,34 +40,34 @@ jobs:
       CC_TEST_REPORTER_ID: 195b4c2b433a5c635a8e2d84f4b79c95a363d37a9b8706d7a4faa6d4da1ad5e8
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: ${{ matrix.ruby }}
-        bundler-cache: true
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
 
-    - name: Install codespell
-      if: startsWith(matrix.ruby, '3.4')
-      run: |
-        python -m pip install --upgrade pip
-        pip install codespell==2.3.0
-    - name: Check spelling with codespell
-      if: startsWith(matrix.ruby, '3.4')
-      run: codespell --skip="./sig,./doc,./coverage,./vendor" || exit 1
+      - name: Install codespell
+        if: startsWith(matrix.ruby, '3.4')
+        run: |
+          python -m pip install --upgrade pip
+          pip install codespell==2.3.0
+      - name: Check spelling with codespell
+        if: startsWith(matrix.ruby, '3.4')
+        run: codespell --skip="./sig,./doc,./coverage,./vendor" || exit 1
 
-    - name: Check Code Standards
-      if: startsWith(matrix.ruby, '3.4')
-      run: bundle exec rubocop
+      - name: Check Code Standards
+        if: startsWith(matrix.ruby, '3.4')
+        run: bundle exec rubocop
 
-    - name: Markdown linter
-      if: startsWith(matrix.ruby, '3.4')
-      run: bundle exec mdl README.md CHANGELOG.md RELEASE.md
+      - name: Markdown linter
+        if: startsWith(matrix.ruby, '3.4')
+        run: bundle exec mdl README.md CHANGELOG.md RELEASE.md
 
-    - name: Run Tests
-      run: bundle exec rspec
+      - name: Run Tests
+        run: bundle exec rspec
 
-    # https://github.com/paambaati/codeclimate-action
-    - name: Publish code coverage to code-climate
-      uses: paambaati/codeclimate-action@v9.0.0
-      if: (github.event_name == 'push') && startsWith(matrix.ruby, '3.4')
+      # https://github.com/paambaati/codeclimate-action
+      - name: Publish code coverage to code-climate
+        uses: paambaati/codeclimate-action@v9.0.0
+        if: (github.event_name == 'push') && startsWith(matrix.ruby, '3.4')
