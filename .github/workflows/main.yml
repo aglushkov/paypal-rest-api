@@ -37,10 +37,12 @@ jobs:
 
     env:
       BUNDLE_GEMFILE: ${{ matrix.gemfile }}
-      CC_TEST_REPORTER_ID: 195b4c2b433a5c635a8e2d84f4b79c95a363d37a9b8706d7a4faa6d4da1ad5e8
 
     steps:
+      # https://github.com/actions/checkout
       - uses: actions/checkout@v4
+
+      # https://github.com/ruby/setup-ruby
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -56,18 +58,27 @@ jobs:
         if: startsWith(matrix.ruby, '3.4')
         run: codespell --skip="./sig,./doc,./coverage,./vendor" || exit 1
 
+      # We want to run this only on newest stable ruby
       - name: Check Code Standards
         if: startsWith(matrix.ruby, '3.4')
         run: bundle exec rubocop
 
+      # We want to run this only on newest stable ruby
       - name: Markdown linter
         if: startsWith(matrix.ruby, '3.4')
         run: bundle exec mdl README.md CHANGELOG.md RELEASE.md
 
-      - name: Run Tests
+      # This should be run on all ruby versions
+      # (except 3.4, it will be run in nexy command together with coverage)
+      - name: Test
+        if: ${{ ! startsWith(matrix.ruby, '3.4') }}
         run: bundle exec rspec
 
-      # https://github.com/paambaati/codeclimate-action
-      - name: Publish code coverage to code-climate
+      # Coverage is generated only in ruby3.4 as configured in spec/simplecov_helper.rb
+      - name: Test & publish code coverage
+        if: startsWith(matrix.ruby, '3.4')
         uses: paambaati/codeclimate-action@v9.0.0
-        if: (github.event_name == 'push') && startsWith(matrix.ruby, '3.4')
+        env:
+          CC_TEST_REPORTER_ID: 195b4c2b433a5c635a8e2d84f4b79c95a363d37a9b8706d7a4faa6d4da1ad5e8
+        with:
+          coverageCommand: bundle exec rspec
